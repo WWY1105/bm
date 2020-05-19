@@ -2654,13 +2654,16 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             console.log(ruletem.category)
             // 如果是充值活动   处理一下分账规则
             if (ruletem.category == 'CHARGE') {
-                ruletem.rules.detail.ALL.forEach(function (item) {
-                    if (item.allocates && item.allocates.length) {
-                        console.log('附近的萨克发货的比较萨克洛夫的话就撒开发')
-                        console.log(item.allocates[0].id)
-                        item.allocate = item.allocates[0].id;
-                    }
-                })
+                if(ruletem.rules&& ruletem.rules.detail){
+                    ruletem.rules.detail.ALL.forEach(function (item) {
+                        if (item.allocates && item.allocates.length) {
+                            console.log('附近的萨克发货的比较萨克洛夫的话就撒开发')
+                            console.log(item.allocates[0].id)
+                            item.allocate = item.allocates[0].id;
+                        }
+                    })
+                }
+              
             }
             if (ruletem.category.indexOf('_') > 0) {
                 $scope.tem.activityCategory = ruletem.category.split('_')[0];
