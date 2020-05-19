@@ -1,0 +1,26 @@
+<div class="v-shadow">
+  <!--<form class="col-sm-12 mt15" name="orderSend"-->
+        <!--style="display: flex;display: -webkit-box;display: -moz-box;display: -ms-flexbox;display: -webkit-flex;justify-content:space-between">-->
+    <!--<div>-->
+      <!--<input type="text" class="form-control" id="inputSuccess2" ng-model="search.param"-->
+             <!--placeholder="手机号/上宾号" required/>-->
+    <!--</div>-->
+    <!--<a class="btn btn-primary"  ng-click="postSend()">查询</a>-->
+  <!--</form>-->
+  <label class="left-tag" style="margin: 20px 0">顾客管理</label>
+
+  <div class="list-group click">
+    <a class="list-group-item" ng-class="{'active':config.breadset[0].class=='customer'}"  ng-click="goto('customer')">顾客筛选</a>
+    <a class="list-group-item" ng-class="{'active':config.breadset[0].class=='tag'}" ng-click="goto('customer/tag')">标签管理</a>
+  </div>
+  <div>
+    <label class="left-tag">顾客查询</label>
+
+    <form class="col-sm-12" name="orderSend">
+      <input type="text" class="form-control" id="inputSuccess2" ng-model="search.param"
+             placeholder="手机号/上宾号" required/>
+      <a class="btn btn-primary btn-block" style="margin-top: 10px" ng-click="postSend()">查询</a>
+      <a href="#/customer/add" style="margin-top: 23px" class="btn btn-default btn-block">添加会员</a>
+    </form>
+  </div>
+</div>

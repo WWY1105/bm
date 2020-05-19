@@ -1,0 +1,12 @@
+<div class="v-shadow">
+  <label class="left-tag" style="margin: 20px 0">营销活动</label>
+
+  <div class="list-group click">
+      <a class="list-group-item" ng-class="{'active':config.breadset[0].class=='front'}" ng-click="goto('rule/front')">首页广告管理</a>
+    <a class="list-group-item" ng-class="{'active':config.breadset[0].class=='rule'}"  ng-click="goto('rule')">活动管理</a>
+    <a class="list-group-item" ng-class="{'active':config.breadset[0].class=='member'}" ng-click="goto('rule/member')">会员管理</a>
+    <a class="list-group-item" ng-class="{'active':config.breadset[0].class=='coupon'}" ng-click="goto('rule/coupon')">券管理</a>
+    <a class="list-group-item" ng-class="{'active':config.breadset[0].class=='reward'}" ng-click="goto('rule/reward')">代用币管理</a>
+    <a class="list-group-item" ng-class="{'active':config.breadset[0].class=='source'}" ng-click="goto('rule/source')">海报管理</a>
+  </div>
+</div>

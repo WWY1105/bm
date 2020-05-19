@@ -1,0 +1,140 @@
+<div class="row">
+  <div class="v-shadow">
+    <div class="mt15">
+      <label class="left-tag">报表类型</label>
+      <buttons></buttons>
+    </div>
+    <div>
+      <label class="left-tag">搜索订单号</label>
+
+      <form class="col-sm-12 mt15" name="orderSend" ng-submit="sendOrder()">
+        <input type="text" class="form-control" id="inputSuccess2" ng-model="posts.order"
+               placeholder="请填入订单号" required/>
+        <button class="input-search"><span class="glyphicon glyphicon-search text-primary"></span></button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="v-shadow-content bgw">
+    <div class="bg-primary">历史累计：<span >{{view.title.total}}</span>&nbsp;<span>| &nbsp;当前剩余：{{view.title.amount}}</span><span>(&nbsp;本金：{{view.title.principal}}</span>
+     <span>| &nbsp;赠送：{{view.title.given}})</span>
+      <span ng-if="view.title.hasOwnProperty('usedAmount')">使用：{{view.title.usedAmount}}/{{view.title.usedCount||0}}笔</span>
+    </div>
+    <search-by-date></search-by-date>
+    <div ng-if="!view.direct">
+      <p class="direct">您好，我是您的上宾助理，小宾。<br/>
+        您可以从“选择门店和时间段”开始，查询出您需要的报表。<br/>
+        起止日期不能超过31天哟~</p>
+    </div>
+    <div class="animate-switch-container" ng-switch="posts.selector">
+      <div class="animate-switch" ng-switch-default="">
+        <div ng-if="view.direct === 1" statistics-relation need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-relation-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+      <div class="animate-switch" ng-switch-when="1">
+        <div ng-if="view.direct === 1" statistics-other need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-other-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+      <!-- 充值报表 -->
+      <div class="animate-switch" ng-switch-when="2">
+        <div ng-if="view.direct === 1" statistics-recharge need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-recharge-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+      <div class="animate-switch" ng-switch-when="3">
+        <div ng-if="view.direct === 1" statistics-upgrade need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-upgrade-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+      <div class="animate-switch" ng-switch-when="4">
+        <div ng-if="view.direct === 1" statistics-gratuity need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-gratuity-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+      <div class="animate-switch" ng-switch-when="5">
+        <div statistics-groupon need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+
+      <div class="animate-switch" ng-switch-when="6">
+        <div ng-if="view.direct === 1" statistics-lottery need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-lottery-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+      <div class="animate-switch" ng-switch-when="7">
+        <div ng-if="view.direct === 1" statistics-mall need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-mall-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+      <div class="animate-switch" ng-switch-when="8">
+        <div ng-if="view.direct === 1" statistics-point need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-point-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+      <div class="animate-switch" ng-switch-when="9">
+        <div ng-if="view.direct === 1" statistics-coupon need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-coupon-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+
+      <div class="animate-switch" ng-switch-when="10">
+        <div ng-if="view.direct === 1" statistics-reward need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-reward-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+
+      <div class="animate-switch" ng-switch-when="11">
+        <div ng-if="view.direct === 1" statistics-sms need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-sms-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+
+      <div class="animate-switch" ng-switch-when="12">
+        <div ng-if="view.direct === 1" statistics-profits need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+        <div ng-if="view.direct === 2" statistics-profits-detail need-search="view.needSearch"
+             page="view.page" count="view.count" total="view.total" post="posts"></div>
+      </div>
+
+     <div class="animate-switch" ng-switch-when="13">
+     <div ng-if="view.direct === 1" statistics-marketing need-search="view.needSearch"
+          page="view.page" count="view.count" total="view.total" post="posts"></div>
+     <div ng-if="view.direct === 2" statistics-marketing-detail need-search="view.needSearch"
+          page="view.page" count="view.count" total="view.total" post="posts"></div>
+     </div>
+
+     <div class="animate-switch" ng-switch-when="14">
+     <div ng-if="view.direct === 1" statistics-card need-search="view.needSearch"
+          page="view.page" count="view.count" total="view.total" post="posts"></div>
+     <div ng-if="view.direct === 2" statistics-card-detail need-search="view.needSearch"
+          page="view.page" count="view.count" total="view.total" post="posts"></div>
+     </div>
+
+
+    </div>
+    <div class="col-sm-12 text-center" ng-if="!view.total&&view.direct">
+      <div style="border: 1px solid #e1e1e1;height: 240px">
+        <img src="public/img/tv.svg" style="margin-bottom: 95px;margin-top: 63px;">没有可查询的信息
+      </div>
+    </div>
+    <div class="col-sm-12" ng-if="view.total>15&&view.direct">
+      <pagination items-per-page="view.count" boundary-links="true" rotate="false" max-size="20"
+                  total-items="view.total" ng-model="view.page"
+                  class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                  first-text="&laquo;" last-text="&raquo;"></pagination>
+    </div>
+  </div>
+</div>

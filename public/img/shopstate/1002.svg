@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="34px" viewBox="0 0 33 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>已停@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="240" y="64" width="432" height="960"></rect>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-3" x="0" y="0" width="44" height="44" rx="3"></rect>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="44" height="44" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+    </defs>
+    <g id="门店管理（管理员）" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0.门店管理（管理员）" transform="translate(-268.000000, -296.000000)">
+            <g id="border" opacity="0.900000036">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <rect id="border" fill="#EFEFEF" x="239.913013" y="263" width="431.774278" height="100"></rect>
+            <g id="Group" transform="translate(263.000000, 291.000000)">
+                <use id="Rectangle-5" stroke="#E0E0E0" mask="url(#mask-4)" stroke-width="2" fill="#FFFFFF" xlink:href="#path-3"></use>
+                <g id="Group-6" transform="translate(5.000000, 5.000000)">
+                    <g id="shop">
+                        <rect id="Rectangle-path" fill="#DBDBDB" x="10.9761094" y="5.01798176" width="20.5890996" height="22.2224722"></rect>
+                        <g id="Group" transform="translate(1.417969, 4.959180)">
+                            <rect id="Rectangle-path" fill="#E1E1E1" x="9.55814063" y="22.2813384" width="20.5890996" height="5.73480869"></rect>
+                            <rect id="Rectangle-path" fill="#C8C8C8" x="0.0168222656" y="0.0588017063" width="9.54131836" height="11.182951"></rect>
+                            <rect id="Rectangle-4" fill="#FFFFFF" x="14.6194144" y="11.3866143" width="10.1775701" height="2.77570093"></rect>
+                        </g>
+                        <rect id="Rectangle-path" fill="#B9B9B9" x="1.43479102" y="16.2009328" width="9.54131836" height="16.7743943"></rect>
+                        <rect id="Rectangle-5" fill="#E75040" x="1.23364486" y="5.01798176" width="30.2242991" height="28.0654206"></rect>
+                        <path d="M10.9761094,5.01798176 C10.9761094,8.06646058 13.4492402,10.5377424 16.5,10.5377424 L17.934791,3.58426348 L10.9761094,5.01798176 Z" id="Shape" fill="#D8D8D8"></path>
+                        <path d="M16.5,3.58426348 L16.5,10.5377424 C19.5507598,10.5377424 22.0238906,8.06646058 22.0238906,5.01798176 L16.5,3.58426348 Z" id="Shape" fill="#B9B9B9"></path>
+                        <path d="M5.52389063,10.5377424 C8.57465039,10.5377424 11.0477813,8.06646058 11.0477813,5.01798176 L5.52389063,3.58426348 L0,5.01798176 C0,8.06646058 2.47313086,10.5377424 5.52389063,10.5377424 Z" id="Shape" fill="#F2F2F2"></path>
+                        <path d="M21.9521543,5.01798176 C21.9521543,8.06646058 24.4252852,10.5377424 27.4760449,10.5377424 C30.5268047,10.5377424 33,8.06646058 33,5.01798176 L27.4761094,3.58426348 L21.9521543,5.01798176 Z" id="Shape" fill="#C8C8C8"></path>
+                        <polygon id="Shape" fill="#E1E1E1" points="31.565209 0 16.5 0 16.5 5.01798176 33 5.01798176"></polygon>
+                        <polygon id="Shape" fill="#C4C4C4" points="1.43479102 0 0 5.01798176 16.5 5.01798176 16.5 0"></polygon>
+                    </g>
+                    <text id="开店-审核" font-family="PingFangSC-Regular, PingFang SC" font-size="8" font-weight="normal" line-spacing="9" fill="#FFFFFF">
+                        <tspan x="8" y="21">开店</tspan>
+                        <tspan x="8" y="30">审核</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,24 @@
+<div class="out ruleadd2">
+  <div class="col-sm-2 text-right ">
+    <span class="title">活动详情</span>
+  </div>
+  <div class="col-sm-10">
+    <div class="" ng-repeat="content in view.rules[name].content track by $index">
+      <div ng-repeat="(key, value) in content.text">
+        <span ng-bind="(value.name||'全员')+':'"></span>
+
+        <p class="col-sm-offset-1" ng-bind="value.content"></p>
+        <hr/>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="out ruleadd2">
+  <div class="col-sm-2 text-right ">
+    <span class="title">数量</span>
+  </div>
+  <div class="col-sm-10" ng-repeat="(key, value) in view.rules[name].content" ng-if="$index==0">
+      <div ng-bind="(value.countLimit&& ('前'+value.countLimit+'人有效'))||'数量无限制'"></div>
+      <!-- 					<div class=" form-control-static text-left" ng-bind="(value.amount&& '消费满'+value.amount+'元使用')||'无消费限制'" ></div> -->
+  </div>
+</div>

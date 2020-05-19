@@ -1,0 +1,108 @@
+<div class="row bg-white">
+  <div ng-include="'/admin/rule/leftmenu.html'"></div>
+  <div class="v-shadow-content ruleadd">
+    <div class="col-md-12 shopshow">
+      <div class="col-sm-12 mb15">
+        <button type="button" class="btn btn-primary pull-right" ng-click="openFn()">新增
+        </button>
+      </div>
+
+      <table class="table table-bordered" ng-if="view.list.items">
+        <thead>
+        <tr class="plan-title">
+          <th>序号</th>
+          <th>评价类型</th>
+          <th>标签</th>
+          <th>得分</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody class="slide-down">
+        <tr ng-repeat="item in view.list.items">
+          <td ng-bind="((view.list.page-1)*view.list.count)+$index+1"></td>
+          <td ng-bind="item.positive?'好评':'差评'"></td>
+          <td ng-bind="item.content"></td>
+          <td ng-bind="item.score"></td>
+          <td>
+            <a  ng-click="openFn($index)">编辑</a>
+            <a  ng-click="remove($index)">删除</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="col-sm-12" ng-if="view.list.pageSize>1">
+        <pagination items-per-page="view.list.count" boundary-links="true" rotate="false" max-size="20"
+                    total-items="view.list.total" ng-model="view.list.page"
+                    class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                    first-text="&laquo;" last-text="&raquo;" ng-change="pageChange()"></pagination>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div id="tags" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>评价标签管理</span>
+        <button type="button" class="close" data-dismiss="modal" ng-click="closeModal()">
+          <span aria-hidden="true" class="text-orange">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <form name="add_form">
+        <div class="modal-body" style="min-height: 300px">
+          <div class="ruleadd ruleadd2 form-inline">
+            <div class="out" ng-if="!post.id">
+              <div class="col-sm-2">
+                <span class="title">*类型 :</span>
+              </div>
+              <div class="col-sm-10">
+                <label>
+                  <input type="radio" ng-model="post.positive" value="true" name="proportion" required>满意
+                </label>
+                <label>
+                  <input type="radio" ng-model="post.positive" value="false" name="proportion" required>不满意
+                </label>
+              </div>
+            </div>
+            <div class="out">
+              <div class="col-sm-2">
+                <span class="title">*名称 :</span>
+              </div>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="post.content" maxlength="10" required/>
+              </div>
+            </div>
+            <div class="out">
+              <div class="col-sm-2">
+                <span class="title">*分数 :</span>
+              </div>
+              <div class="col-sm-10">
+                <input type="number" min="1" max="10" step="1" placeholder="1-10之间" class="form-control" ng-model="post.score" required/>
+                <span class="form-control-static">分</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-3 col-md-offset-3">
+            <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+          </div>
+          <div class="col-md-3 col-md-setoff-1">
+            <div class="btn btn-primary btn-block" ng-click="sendJsons()" type="submit" ng-disabled="!add_form.$valid">
+              确定
+            </div>
+          </div>
+        </div>
+
+      </form>
+      <!--</div>-->
+      <!--</div>-->
+      <!--</div>-->
+    </div>
+  </div>
+
+</div>

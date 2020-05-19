@@ -1,0 +1,78 @@
+<div class="doc">
+  <ul class="bg-muted">
+    <li>合计：{{title.amount||0}}元</li>
+    <li>支付宝途径：{{title.alipay||0}}元 （{{title.alipayCount||0}}笔）</li>
+    <li>微信支付途径：{{title.wechatpay||0}}元（{{title.wechatCount||0}}笔）</li>
+  </ul>
+  <div ng-if="post.staffId">
+    <table class="table" ng-if="view.result.items">
+      <thead>
+      <tr>
+        <td>序号</td>
+        <td>订单号</td>
+        <td>
+          <div>收费金额</div>
+          <div>(元)</div>
+        </td>
+        <td>方式</td>
+        <td>操作员</td>
+        <td>时间</td>
+      </tr>
+      </thead>
+      <tbody class="slide-down">
+      <tr ng-repeat="row in view.result.items">
+        <td ng-bind="((page-1)*count)+$index+1"></td>
+        <td><a ng-click="goto('doc/detail/'+ row.orderNo)">{{row.orderNo}}</a></td>
+        <td ng-bind="row.amount||0"></td>
+        <td ng-bind="row.payMode"></td>
+        <td ng-bind="row.staffName||'自助'"></td>
+        <td ng-bind="row.time"></td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div ng-if="!post.staffId">
+    <table class="table" ng-if="view.result.items">
+      <thead>
+      <tr>
+        <td>序号</td>
+        <td>服务员</td>
+        <td>
+          <div>总金额</div>
+          <div>(元)</div>
+        </td>
+        <td>
+          <div>总笔数</div>
+        </td>
+        <td>
+          <div>微信金额</div>
+          <div>(元)</div>
+        </td>
+        <td>
+          <div>微信笔数</div>
+        </td>
+        <td>
+          <div>支付宝金额</div>
+          <div>(元)</div>
+        </td>
+        <td>
+          <div>支付宝笔数</div>
+        </td>
+      </tr>
+      </thead>
+      <tbody class="slide-down">
+      <tr ng-repeat="row in view.result.items">
+        <td ng-bind="((page-1)*count)+$index+1"></td>
+        <td ng-bind="row.staffName"></td>
+        <td ng-bind="row.amount||0"></td>
+        <td ng-bind="row.count||0"></td>
+        <td ng-bind="row.wechatpay||0"></td>
+        <td ng-bind="row.wechatCount||0"></td>
+        <td ng-bind="row.alipay||0"></td>
+        <td ng-bind="row.alipayCount||0"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,157 @@
+<div class="row bg-white">
+  <div ng-include="'/keeper/Table/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <div class="container contents bgw ">
+      <h3>可供预定的桌台 <a style="margin-right: 4%" ng-click="openFn()" class="btn btn-primary pull-right">新增</a></h3>
+
+      <div class="user-list">
+        <div class="col-sm-12 tablelist">
+          <table class="table table-bordered">
+            <thead>
+            <tr class="plan-title">
+              <td>序号</td>
+              <td>桌号</td>
+              <td>桌名</td>
+              <td>标签</td>
+              <td>描述</td>
+              <td>操作</td>
+            </tr>
+            </thead>
+            <tbody class="slide-down">
+            <tr ng-repeat="row in view.rules">
+              <td ng-bind="$index+1"></td>
+              <td ng-bind="row.tableNo"></td>
+              <td ng-bind="row.tableName"></td>
+              <td ng-bind="row.tags[0]"></td>
+              <td style="max-width: 315px">
+                <div ng-repeat="text in row.text">{{text.name}}:{{text.content[0]}}</div>
+              </td>
+              <td>
+                <a ng-click="openFn($index)">修改</a>
+                <a ng-click="tableDelFn($index)">删除</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="col-sm-12 plan-son text-left" ng-if="!view.rules">
+            无查询结果
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 65%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          &times;
+        </button>
+        <h4 class="modal-title">添加预定桌台</h4>
+      </div>
+      <div class="modal-body" style="overflow: hidden">
+        <form name="ruleForm" class="couponadd" role="form" ng-submit="sendJsons()">
+          <div class="form-group row">
+            <label class="col-sm-4 text-left control-label text-red">*为必填项 (0或不填为不限制)</label>
+          </div>
+
+          <div class="form-inline">
+            <label class="control-label col-sm-2 text-right"><span class="text-red">*</span>桌号</label>
+
+            <div class="form-group">
+              <select ng-model="post.rule.tableId" class="form-control"
+                      ng-options="item.id as (item.no + (item.name?'('+item.name+')':'')) for item in view.tables"
+                      required></select>
+            </div>
+          </div>
+          <div class="form-inline">
+            <label class="control-label col-sm-2 text-right"><span class="text-red">*</span>标签</label>
+
+            <div class="form-group">
+              <input type="text" class="form-control" maxlength="4" placeholder="1-4个字" ng-model="post.rule.tags" required/>
+            </div>
+          </div>
+
+          <div class="form-inline">
+            <label class="control-label col-sm-2 text-right"><span class="text-red">*</span>规则</label>
+
+            <div class="col-sm-10">
+              <div ng-repeat="item in post.rule.detail">
+                <div class="form-inline"
+                     style="border: 1px dotted #d5d5d5;padding: 16px;width: 82%;float: left;margin-top: 10px">
+                  <div style="padding: 5px 0">
+                    <select ng-model="item.id" class="form-control"
+                            ng-options="item.id as item.name for item in view.factor.MEMBERGRADE" name="member"
+                            required></select>
+                    <input type="number" min="0" step="0.01" class="form-control"
+                           ng-model="item.value.amount" required/>
+                    <span class="form-control-static">元可预定。</span>
+                    <br>
+                    <span class="form-control-static">预订成功后，准时到店还可获得</span>
+                    <div ng-repeat="coupon in item.value.value" style="display: inline-block">
+
+                      <select ng-model="coupon.category" class="form-control"
+                              ng-options="item.id as item.name for item in view.category" required></select>
+                      <select ng-model="coupon.id" class="form-control" ng-change="changeCoupon(coupon)"
+                              ng-if="coupon.category=='COUPON'"
+                              ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.factor.COUPON"
+                              name="" required></select>
+                      <select ng-model="coupon.id" class="form-control"
+                              ng-if="coupon.category=='REWARD'" ng-change="changeReward(coupon)"
+                              ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.factor.REWARD"
+                              name="" required></select>
+                      <input type="text" ng-if="coupon.category" class="form-control" ng-model="coupon.count"
+                             required/>
+                      <span ng-if="coupon.category" class="form-control-static"> 张</span>
+
+                      <div class="ruleadd2" style="display: inline-block;vertical-align: middle;padding: 10px">
+                        <a class="add click" ng-if="$first" ng-click="addCouponFn(item.value.value)"> <i
+                                class="glyphicon glyphicon-plus"></i>
+                        </a>
+                        <a class="remove click" ng-if="!$first" ng-click="removeCouponFn(item.value.value,$index)">
+                          <i
+                                  class="glyphicon glyphicon-remove"></i></a>
+                      </div>
+                    </div>
+                    <br>
+                    <span class="form-control-static">成功预订的桌台将为您额外保留</span>
+
+                    <input type="number" min="0" step="1" max="1440" class="form-control"
+                           ng-model="item.value.limit" placeholder="24小时以内" required/>
+                    <span class="form-control-static">分钟</span>
+
+
+                  </div>
+                </div>
+                <div class="ruleadd2" style="display: inline-block;vertical-align: middle;padding: 10px">
+                  <a class="add click" ng-if="$first" ng-click="addRuleFn(post.rule.detail)"> <i
+                          class="glyphicon glyphicon-plus"></i>
+                  </a>
+                  <a class="remove click" ng-if="!$first" ng-click="removeFn($index)"> <i
+                          class="glyphicon glyphicon-remove"></i></a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="form-inline">
+            <label class="control-label col-sm-2 text-right">说明</label>
+
+            <div class="form-group timecheck">
+              <div class="form-control-static">已预定的桌台在活动下线后仍有效</div>
+            </div>
+
+            <div class="form-inline">
+              <button class="btn btn-primary col-sm-3 col-sm-push-2" ng-disabled="!ruleForm.$valid">确定</button>
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal -->
+

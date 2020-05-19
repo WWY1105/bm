@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <div class="shoplogo">
+    <div class="in-shadow header-logo">
+    </div>
+    <div class="header-title click" ng-click="goto('')">
+      <div title="{{config.staff.brand}}" style="width: 12rem;white-space: nowrap;overflow: hidden;">{{config.staff.brand}}</div>
+      <div style="color: #919191;font-size: 12px">上宾智能运营管理系统</div>
+    </div>
+  </div>
+  <div class="menu">
+    <ul class="menushow slide-left">
+      <li ng-class="{'active':active==(''||'shops')}" class="click" ng-click="goto('')"><span class="combine indexIcon"></span>首页
+      </li>
+      <li ng-class="{'active':active=='shop'}" class="click" ng-click="goto('shop')"><span
+              class="combine shopIcon"></span>我的门店
+      </li>
+      <li ng-class="{'active':active=='rule'}" class="click" ng-click="goto('rule')"><span
+              class="combine salesIcon"></span>活动管理
+      </li>
+      <li ng-class="{'active':active=='mall'}" class="click" ng-click="goto('mall/buy')"><span
+              class="combine dishIcon"></span>商品管理
+      </li>
+      <li ng-class="{'active':active=='table'}" ng-if="config.staff.shopType == 1001" class="click" ng-click="goto('table/regions')"><span
+              class="combine tableIcon"></span>桌台管理
+      </li>
+      <li ng-class="{'active':active=='customer'}" class="click" ng-click="goto('customer')"><span
+              class="combine userIcon"></span>顾客管理
+      </li>
+      <li ng-class="{'active':active=='staff'}" class="click" ng-click="goto('staff')"><span
+              class="combine staffIcon"></span>员工管理
+      </li>
+      <li ng-class="{'active':active=='devices'}" class="click"
+          ng-click="goto('devices')"><span
+              class="combine settingIcon"></span>设备管理
+      </li>
+      <!--<li ng-class="{'active':active=='statistics'}" class="click" ng-click="goto('statistics')"><span-->
+      <!--class="combine logIcon"></span>统计报表-->
+      <!--</li>-->
+      <li ng-class="{'active':active=='doc'}" class="click" ng-click="goto('doc')"><span
+              class="combine logIcon"></span>统计报表
+      </li>
+      <li ng-class="{'active':active=='finance'}" class="click" ng-click="goto('finance')"><span
+              class="combine financeIcon"></span>财务报表
+      </li>
+      <li ng-class="{'active':active=='achieve'}" class="click" ng-click="goto('achieve')"><span
+              class="combine achieveIcon"></span>评价管理
+      </li>
+    </ul>
+    <div class="pull-right" style="line-height: 4;color: black;cursor: pointer">
+      <div class="dropdown">
+        <div class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+          <span ng-bind="config.staff.nickname || config.staff.name"></span>
+          <span class="label label-primary">店长</span>
+          <span class="caret"></span>
+        </div>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+          <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="goto('password')">修改密码</a></li>
+          <li role="presentation" class="divider"></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="logout()">退出登录</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>

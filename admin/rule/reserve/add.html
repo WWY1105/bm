@@ -1,0 +1,122 @@
+<div class="row bg-white">
+  <div ng-include="'/admin/rule/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <div class="container contents bgw">
+      <div class="col-sm-12 ruleadd">
+        <form class="form-horizontal" name="ruleForm" ng-submit="sendJsons()">
+          <div class="out">
+            <div class="col-sm-2">
+              <span class="title">名称</span>
+            </div>
+            <div class="col-sm-8">
+              <div class="form-group ">
+                <div class="col-sm-5">
+                  <input type="text" ng-model="post.name" name="name" class="form-control"
+                         placeholder="请输入活动名称" ng-minlength='2' ng-maxlength='20'
+                         ng-pattern="config.textCheckJson.nickname"
+                         required/>
+                </div>
+                <div class="col-sm-5">
+              <span class="help-block text-red" ng-messages="ruleForm.name.$error">
+	                        <span ng-message="required">不能为空</span>
+	                        <span ng-message="minlength">需大于2个字符</span>
+	                        <span ng-message="maxlength">需小于20字符</span>
+	                        <span ng-message="pattern" ng-bind="config.textCheckErrorJson.nickname">
+                            </span>
+              </span>
+                  <span class="help-block" ng-show="ruleForm.name.$untouched&&ruleForm.name.$pristine">
+              2-20字符的汉字、英文、数字或者它们的组合
+              </span>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="out">
+            <div class="col-sm-2">
+              <span class="title">有效期</span>
+            </div>
+            <div class="col-sm-8" my-date-picker data="view.date" date-range="view.dateRange"
+                 is-edit="post.isEdit"></div>
+            <!--<div class="col-sm-8" my-date-picker data="view.date" date-range="view.dateRange" is-edit="view.isEdit"></div>-->
+          </div>
+          <div class="out">
+            <div class="col-sm-2">
+              <span class="title">参与门店</span>
+            </div>
+            <div class="col-sm-8">
+              <div class="form-control-stack">
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="view.shopAll" ng-change="checkAllShops()">全选</label>
+              </div>
+              <div class="form-control-stack">
+                <label class="checkbox-inline" ng-repeat="(key,shops) in view.shops" ng-class="{ml30:$index==0}">
+                  <input type="checkbox" ng-model="post.shops[key]" ng-true-value="{{shops.id}}">
+                  <span ng-bind="shops.name"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="out">
+            <div class="col-sm-2">
+              <span class="title">有效时段</span>
+            </div>
+            <div class="col-sm-8">
+
+              <div class="timecheck form-inline">
+                <div ng-repeat="value in view.times">
+                  <label class="btn glyphicon  btn-default" style="width: 95px"
+                         ng-class="{active:post.reserveTimes.hasOwnProperty(value)}" ng-click="settime(value)"
+                         ng-bind="view.timeType[value]">
+                  </label>
+                  <input type="time" ng-if="post.reserveTimes.hasOwnProperty(value)" ng-model="post.reserveTimes[value]" name="time" class="form-control" required/>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="out">
+            <div class="col-sm-2">
+              <span class="title">广告活动</span>
+            </div>
+            <div class="col-sm-8">
+              <ads id="post.advertisement.id"></ads>
+
+            </div>
+          </div>
+          <div class="out">
+            <div class="col-sm-2">
+              <span class="title">备注</span>
+            </div>
+            <div class="col-sm-8">
+              <div class="form-group ">
+                <div class="col-sm-5">
+                  <textarea ng-model="post.additional" name="name" class="form-control"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="out ">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8 mt20">
+                <div class="form-group ">
+                  <div class="col-sm-3 col-sm-offset-1 ">
+                    <a class="btn btn-default btn-block" back-button>返回</a>
+                  </div>
+                  <div class="col-sm-3 col-sm-offset-1 ">
+                    <!--ng-disabled="ruleForm.$invalid"-->
+                    <button class="btn btn-primary btn-block"><span ng-if="view.id">提交</span><span
+                            ng-if="!view.id">下一步</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

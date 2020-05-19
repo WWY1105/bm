@@ -1,0 +1,32 @@
+<div class="doc">
+  <ul class="bg-muted">
+    <li>合计（元）</li>
+    <li>发放积分：{{title.amount||0}}</li>
+    <li>已使用积分：{{title.usedAmount||0}}</li>
+  </ul>
+  <table class="table" ng-if="view.result.items">
+    <thead>
+    <tr>
+      <td>序号</td>
+      <td>分店</td>
+      <td>
+        <div>发放积分</div>
+        <div>(分)</div>
+      </td>
+      <td>
+        <div>使用积分</div>
+        <div>(分)</div>
+      </td>
+    </tr>
+    </thead>
+    <tbody class="slide-down">
+    <tr ng-repeat="row in view.result.items">
+      <td  ng-bind="((page-1)*count)+$index+1"></td>
+      <td ng-bind="row.shopName||'品牌虚拟店'"></td>
+      <td ng-bind="row.amount||0"></td>
+      <td ng-bind="'-' + (row.usedAmount||0)"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

@@ -1,0 +1,194 @@
+<div class="v-shadow">
+  <div style="padding: 10px 20px;">
+    <div style="font-size: 18px">{{view.user.nickname}}</div>
+    <div class="media" style="border-width: 0">
+      <img class="inline-block" style="width: 60px;height: 60px;border-radius: 50%;" ng-src="{{view.user.avatarUrl}}">
+
+      <div class="inline-block" style="vertical-align: middle;margin-left: 10px">
+        <div><span class="tag">{{view.user.memberGradeName||'无'}}</span></div>
+        <div style="padding-top: 5px"><span class="label label-danger"> {{view.user.gender=="F"?'女':view.user.gender=="M"?'男':"保密"}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="media">
+    <div class="media-left">
+      <span class="glyphicon glyphicon-credit-card" style="font-size: 23px;margin-top: 3px"></span>
+    </div>
+    <div class="media-body" style="width: inherit;line-height: 2">
+      <h4 class="media-heading">基本信息</h4>
+
+      <div>上宾号{{view.user.username}} </div>
+      <div>绑定手机{{view.user.phone||'无'}}</div>
+      <div>生日日期{{view.user.birthday||'无'}}</div>
+      <div>会员卡号{{view.user.memberCardNo||'无'}}</div>
+      <div>加入时间{{view.user.firstJoinTime||'无'}}</div>
+      <div>最近消费{{view.user.lastConsumeTime||'无'}}</div>
+      <div>消费累计￥{{view.user.totalConsume||0}}</div>
+      <div>消费次数{{view.user.consumeCount||0}}次</div>
+    </div>
+  </div>
+  <div class="media" ng-if="view.user.tags">
+    <div class="media-left">
+      <span class="glyphicon glyphicon-tags" style="font-size: 23px;margin-top: 3px"></span>
+    </div>
+    <div class="media-body" style="width: inherit;line-height: 2">
+      <h4 class="media-heading">顾客分组</h4>
+
+      <div ng-repeat="tag in view.user.tags track by $index"><span class="glyphicon glyphicon-tag"></span> {{tag}}</div>
+    </div>
+  </div>
+  <div class="addon media">
+    <div class="media-left">
+      <span class="glyphicon glyphicon-credit-card" style="font-size: 23px;margin-top: 3px"></span>
+    </div>
+    <div class="media-body" style="width: inherit;">
+      <h4 class="media-heading">操作本顾客的权益</h4>
+      <a style="display : block;font-size : 14px; padding: 10px 0 ;" target="_blank" ng-href="{{'#/customer/charge/' + view.user.id}}">充值</a>
+      <a style="display : block;font-size : 14px; padding: 10px 0 ;"  target="_blank" href="{{'#/customer/point/'+ view.user.id}}">积分</a>
+      <a style="display : block;font-size : 14px; padding: 10px 0 ;"  target="_blank" href="{{'#/customer/coupon/'+ view.user.id}}">发券</a>
+      <a style="display : block;font-size : 14px; padding: 10px 0 ;" target="_blank" href="{{'#/customer/upgrade/'+ view.user.id}}">升级</a>
+    </div>
+  </div>
+
+</div>
+<div class="v-shadow-content bgw">
+  <div class="tabs" ng-init="view.tab='consume'">
+    <div class="item" ng-class="{'active':view.tab=='consume'}" ng-click="consumeFn()">
+      <div>消费次数</div>
+      <div>{{view.user.consumeCount||0}}</div>
+    </div>
+    <div class="item" ng-class="{'active':view.tab=='charge'}" ng-click="chargeFn()">
+      <div>充值余额</div>
+      <div>￥{{view.user.charge||0}}</div>
+    </div>
+    <div class="item" ng-class="{'active':view.tab=='point'}" ng-click="pointFn()">
+      <div>积分余额</div>
+      <div>{{view.user.point||0}}</div>
+    </div>
+    <div class="item" ng-class="{'active':view.tab=='coupon'}" ng-click="couponFn()">
+      <div>可用券</div>
+      <div>{{view.user.couponCount||0}}</div>
+    </div>
+    <div class="item" ng-class="{'active':view.tab=='reward'}" ng-click="rewardFn()">
+      <div>代用币</div>
+      <div>{{view.user.reward||0}}</div>
+    </div>
+    <!--<div class="item" ng-class="{'active':view.tab=='upgrade'}" ng-click="view.tab='upgrade'">-->
+    <!--<div>会员升级</div>-->
+    <!--<div>{{view.user.memberGradeName}}</div>-->
+    <!--</div>-->
+  </div>
+  <!-- 消费表格 -->
+  <table  class="table detailTab"ng-if="view.user.chargeSub&&view.tab=='charge'" style="width : 100% ; border:1px solid #e8e8e8" >
+    <thead>
+      <tr >
+        <th>店名</th>
+        <th>本金(元)</th>
+        <th>赠送(元)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in view.user.chargeSub" style="width : 33.3%">
+        <td>{{item.name}}</td>
+        <td>{{item.principal}}</td>
+        <td>{{item.given}}</td>
+      </tr>
+      <!-- <tr>
+        <td>A店</td>
+        <td>300</td>
+        <td>200</td>
+      </tr>
+      <tr>
+        <td>B店</td>
+        <td>300</td>
+        <td>200</td>
+      </tr> -->
+    </tbody>
+  </table>
+  <highchart id="charts" title='view.charts.title' series="view.charts.series" ng-if="view[view.tab].total&&view.tab!=='coupon'" options="view.charts.options">
+  </highchart>
+  <div ng-switch="view.tab" style="border: 1px solid #E0E0E0">
+    <div ng-switch-default="">
+      <div class="media" ng-repeat="item in view.consume.items">
+        <div class="media-left">
+          <span style="color:#428bca;line-height: 2"> ◌</span>
+        </div>
+        <div class="media-body" style="width: inherit">
+          <p>{{item.consumptionTime}}  <span style="color:#000000">{{item.shopName}}</span></p>
+          <h4 class="media-heading">订单号 : {{item.no}}</h4>
+          <h4 class="media-heading">原单金额 : ￥{{item.amount}}</h4>
+          <h4 class="media-heading">实际收款 : ￥{{item.amount-item.reduceAmount}} <span style="margin-left : 15px;"> 支付方式 : {{item.paymentModeText}}</span></h4>  
+          <h4 class="media-heading">完成时间 : {{item.checkTime}}</h4>         
+          <h4 class="media-heading" ng-if="item.staffName">服务员 : {{item.staffName}}</h4>
+          
+        </div>
+      </div>
+      <div class="contents ml15" ng-hide="view.consume.items">没有可用的结果</div>
+
+    </div>
+    <div ng-switch-when="charge">
+      <div class="media" ng-repeat="item in view.charge.items">
+        <div class="media-left">
+          <span style="color:#428bca;line-height: 2"> ◌</span>
+        </div>
+        <div class="media-body" style="width: inherit">
+          <p>{{item.time}} <span style="color:#000000">{{item.shopName}}</span> <span style="color:#000000;margin-left : 15px;">订单号 : {{item.no}}</span></p>
+          <h4 class="media-heading"> {{item.cause}} ￥ {{item.amount}}</h4>
+        </div>
+      </div>
+      <div class="contents ml15" ng-hide="view.charge.items">没有可用的结果</div>
+
+    </div>
+    
+    <div ng-switch-when="point">
+
+      <div class="media" ng-repeat="item in view.point.items">
+        <div class="media-left">
+          <span style="color:#428bca;line-height: 2"> ◌</span>
+        </div>
+        <div class="media-body" style="width: inherit">
+          <p>{{item.time}} <span style="color:#000000">{{item.shopName}}</span> <span style="color:#000000;margin-left : 15px;">订单号 : {{item.no}}</span></p>
+          <h4 class="media-heading"> {{item.cause}} {{item.amount}}积分</h4>
+        </div>
+      </div>
+      <div class="contents ml15" ng-hide="view.point.items">没有可用的结果</div>
+    </div>
+    <div ng-switch-when="coupon" >
+      <div class="media" ng-repeat="item in view.coupon.items">
+        <div class="media-left">
+          <span style="color:#428bca;line-height: 2"> ◌</span>
+        </div>
+        <div class="media-body" style="width: inherit">
+          <h4 class="media-heading">{{item.name}} <span style="color:#000000" ng-if="item.code"> 券号:{{item.code}}</span></h4>
+          <!-- <h4 class="media-heading">{{item.}}</h4>-->
+          <div ng-repeat="content in item.content">{{content}}</div>
+          <div>券有效期：{{item.times}}</div>
+        </div>
+      </div>
+      <div class="contents ml15" ng-hide="view.coupon.items">没有可用的结果</div>
+    </div>
+    <div ng-switch-when="reward">
+      <div class="media" ng-repeat="item in view.reward.items">
+        <div class="media-left">
+          <span style="color:#428bca;line-height: 2"> ◌</span>
+        </div>
+        <div class="media-body" style="width: inherit">
+          <p>{{item.time}} <span style="color:#000000">{{item.shopName}}</span> <span style="color:#000000;margin-left : 15px;">订单号 : {{item.no}}</span></p>
+          <h4 class="media-heading"> {{item.cause}} {{item.amount}}元</h4>
+        </div>
+      </div>
+      <div class="contents ml15" ng-hide="view.reward.items">没有可用的结果</div>
+    </div>
+
+  </div>
+  <div class="col-sm-12" ng-if="view[view.tab].pageSize>1">
+    <pagination items-per-page="view[view.tab].count" boundary-link="true" rotate="false" max-size="20"
+                total-items="view[view.tab].total"
+                ng-model="view[view.tab].page" class="pagination-sm" previous-text="&lsaquo;"
+                next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                ng-change="pageChange()"></pagination>
+
+  </div>
+
+</div>

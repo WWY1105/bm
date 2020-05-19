@@ -1,0 +1,47 @@
+<div class="container contents bgw">
+
+
+  <table class="table table-bordered" ng-if="view.devices.items">
+    <thead>
+    <tr class="plan-title">
+      <th>序号</th>
+      <th>激活码</th>
+      <th>设备名称</th>
+      <th>设备类型</th>
+      <th>激活日期</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody class="slide-down">
+    <tr ng-repeat="device in view.devices.items|orderBy:'createTime':true" ng-mouseenter="view.show=$index +1"
+        ng-mouseleave="view.show=0">
+      <td ng-bind="((view.devices.page-1)*view.devices.count)+$index+1"></td>
+      <td>
+        <div>{{device.code|splitcode}}</div>
+        <qrcode style="padding-top:10px" size="100" data="{{device.code}}" ng-if="view.show == $index+1"></qrcode>
+      </td>
+      <td ng-bind="device.deviceName||'无'"></td>
+      <td ng-bind="device.type?device.type==0?'子机':'主机':'无'"></td>
+      <td ng-bind="(device.activateTime|date:'yyyy-MM-dd')||'无'"></td>
+      <td>
+        <a ng-if="device.activateTime" ng-click="unbind($index)">解绑</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <div class="col-sm-12" ng-if="view.divices.pageSize>1">
+    <pagination items-per-page="view.devices.count" boundary-links="true" total-items="view.devices.total"
+                ng-model="view.devices.page" class="pagination-sm" previous-text="&lsaquo;" ng-change="pageChange()"
+                next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+
+  </div>
+
+  <div class="col-sm-2 col-sm-offset-9 mt15">
+    <button ng-if="config.staff.roleType=='K'" class="btn btn-primary btn-block" ng-click="jihuo()">新增激活码</button>
+  </div>
+  <div class="col-sm-12">
+    <h4 ng-if="!view.devices&&loading">读取中请稍后...</h4>
+  </div>
+</div>

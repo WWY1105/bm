@@ -1,0 +1,252 @@
+<div class="bgw">
+  <div class="row">
+    <div ng-include="'/admin/customer/leftmenu.html'"></div>
+    <div class="v-shadow-content">
+      <div class="customer">
+        <div class="title">
+          <P>请选择筛选条件：</P>
+          <div class="btnsBox">
+            <div ng-if="view.search" style="padding: 2px 10px;overflow: auto">
+              <a class="btn btn-default pull-right btn-warning" ng-click="searchFn()">确认筛选</a>
+            </div>
+            <div class="click" style="float: right;padding:6px 10px;color: #ffffff;background: #27b1e5"
+              ng-click="view.search = !view.search">
+              <span ng-if="view.search">- 收起</span><span ng-if="!view.search">+ 展开</span>
+            </div>
+          </div>
+        </div>
+        <div class="search" ng-if="view.search">
+          <div class="col-sm-6">
+            <div class="left">顾客级别</div>
+            <div class="right">
+              <span ng-click="post.type = ''" ng-class="{'active':!post.type}">全部顾客</span>
+              <span ng-click="post.type = '9002'" ng-class="{'active':post.type =='9002'}">非会员</span>
+              <span ng-click="post.type = '9001'" ng-class="{'active':post.type =='9001'}">会员</span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="left">生日日期</div>
+            <div class="right">
+              <input type="date" class="form-control limit-date" ng-model="post.birthdayStart" placeholder="起始时间">-
+              <input type="date" ng-model="post.birthdayEnd" class="form-control limit-date" placeholder="结束时间">
+            </div>
+          </div>
+          <div ng-if="post.type == '9001'" class="col-sm-12" style="margin-top: -1px;background: #ffffff">
+            <div style="background: #E2E2E2;padding-left: 11%;line-height: 41px;">
+              <span ng-repeat="grade in view.memberGrades">
+                <input type="checkbox" ng-model="post.memberGradeIds[$index]" id="{{'grade' + $index}}"
+                  ng-true-value="{{grade.id}}"><label for="{{'grade' + $index}}">{{grade.name}}</label>
+              </span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="left">顾客性别</div>
+            <div class="right">
+              <!--<span ng-class="{'active':post.genders.length == 0}" ng-click="post.genders =[]">全部性别</span>-->
+              <span ng-class="{'active':post.genders[0] =='M'}"
+                ng-click="post.genders[0]=post.genders[0]=='M'?'':'M'">男士</span>
+              <span ng-class="{'active':post.genders[1] =='F'}"
+                ng-click="post.genders[1]=post.genders[1]=='F'?'':'F'">女士</span>
+              <span ng-class="{'active':post.genders[2] =='N'}"
+                ng-click="post.genders[2]=post.genders[2]=='N'?'':'N'">保密</span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="left">加入时间</div>
+            <div class="right">
+              <input type="date" class="form-control limit-date" ng-model="post.joinStartDate" placeholder="起始时间">-
+              <input type="date" ng-model="post.joinEndDate" class="form-control limit-date" placeholder="结束时间">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="left">有券待用</div>
+            <div class="right" ng-init="post.hasCoupon =''">
+              <span ng-class="{'active':post.hasCoupon === ''}" ng-click="post.hasCoupon =''">不限</span>
+              <span ng-class="{'active':post.hasCoupon === true}" ng-click="post.hasCoupon =true">账户中有未使用的券</span>
+              <span ng-class="{'active':post.hasCoupon === false}" ng-click="post.hasCoupon =false">账户中没有券</span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="left">账户余额</div>
+            <div class="right">
+              余额范围：
+              <input type="number" class="form-control limit-date" ng-model="post.chargeMin" placeholder="0">-
+              <input type="number" ng-model="post.chargeMax" class="form-control limit-date" placeholder="300">
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="col-sm-6">
+              <div class="left">最近消费</div>
+              <div class="right">
+                <span ng-click="post.unConsume = true" ng-class="{'active':post.unConsume == true}">非消费</span>
+                <span ng-click="post.unConsume = ''" ng-class="{'active':post.unConsume ==''}">消费</span>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="left">加入门店</div>
+
+              <div class="right">
+                <select name="" id="" class="form-control" ng-model="post.shopId">
+                  <option value="{{i.id}}" ng-repeat="i in shopList.items">{{i.name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div ng-if="post.unConsume == ''" class="col-sm-12" style="margin-top: -1px;background: #ffffff">
+            <div style="background: #E2E2E2;padding-left: 11%;line-height: 41px;">
+              筛选出 <input type="number" ng-model="post.minArrivalDays" class="form-control limit-date" placeholder="300">
+              天以上未到店消费的顾客
+            </div>
+          </div>
+          <pre>
+            统计某个时间段内新注册会员的消费频次方法：先按消费频次排序，再输入加入时间，最后点确认筛选
+            统计某个时间段内消费人数方法（无法统计频次）：n天内消费人数=总人数-n天未到店人数-非消费人数
+            总人数：直接查看
+            非消费人数：最近消费选择非消费，筛选，记录人数
+            n天未到店人数（不包含非消费人数）：最近消费选择消费，输入n，筛选记录人数
+            n天未到店人数（包含非消费人数）：n天未到店人数（不包含非消费人数）+ 非消费人数</pre>
+        </div>
+
+        <!-- <div style="overflow: auto;clear: both">
+          
+         
+        </div> -->
+        <div class="form-inline col-sm-12" ng-if="view.customer.pageSize>0">
+          <div class="" style="float: left; width: 94px;margin-top: 19px;">
+            <select ng-model="view.customer.count" class="form-control">
+              <option>20</option>
+              <option>50</option>
+              <option>100</option>
+            </select>
+          </div>
+          <pagination items-per-page="view.customer.count" boundary-link="true" rotate="false" max-size="20"
+            total-items="view.customer.total" ng-model="view.customer.page" class="pagination-sm"
+            previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+            ng-change="pageChange()"></pagination>
+          <div class="pull-right mt15">
+            <span class="form-control-static">跳转到</span> <input style="width: 50px" class="form-control"
+              ng-model="page"> 页
+            <div class="btn btn-primary" ng-disabled="tableform.$invalid"
+              ng-click="view.customer.page=page;pageChange()">确定
+            </div>
+
+          </div>
+
+          <div class="result">
+            <div class="content"> {{view.customer.total||0}}个筛选结果</div>
+            <div ng-if="view.customer.total"><input type="checkbox" ng-model="view.check" id="all"><label
+                for="all">全选本页</label>
+              <button ng-click="tagName()" class="button"><span class="glyphicon glyphicon-tag"></span>
+                打标签
+              </button>
+              <div class="pull-right" ng-init="post.sort =1030 ">
+                <span class="click sort" ng-repeat="(key, value) in view.sort" ng-class="{'active':post.sort ==  key}"
+                  ng-click="post.sort = key;searchFn()"> <span
+                    class="glyphicon glyphicon-sort-by-attributes-alt"></span>{{value}} </span>
+              </div>
+            </div>
+            <div class="media" ng-click="refer('customer/details/'+ item.id)" style="position: relative"
+              ng-mouseenter="view.index[$index]=1" ng-mouseleave="view.index[$index]=0"
+              ng-repeat="item in view.customer.items">
+              <div class="media-left">
+                <input type="checkbox" style="margin-top: 17px" ng-click="$event.stopPropagation()"
+                  ng-model="tag.user[$index]" ng-true-value="{{item.id}}" ng-false-value="" />
+                <span>{{view.customer.count*(view.customer.page-1)+$index +1}}</span>
+              </div>
+              <div class="media-left">
+                <img class="media-object" src="/public/img/avatar.png" ng-src="{{item.avatarUrl}}" alt="...">
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">{{item.nickname}}</h4>
+
+                <p> 上宾号 {{item.username}} <span class="glyphicon glyphicon-phone"></span>{{item.phone}} <span
+                    class="glyphicon glyphicon-user"></span> {{item.gender=="F"?'女':item.gender=="M"?'男':"保密"}}
+                  加入时间:{{item.firstJoinTime}}</p>
+
+                <p class="text-gold" ng-if="item.memberCardNo"><span
+                    class="tag">{{item.memberGradeName}}</span>会员卡号：{{item.memberCardNo}}
+                </p>
+              </div>
+              <div class="media-body text-right">
+                <p>
+                  <span ng-repeat="tag in item.tags track by $index">
+                    <span class="glyphicon glyphicon-tag" style="margin-left: 8px"></span> {{tag}}
+                  </span>
+                </p>
+
+                <p class="text-black">{{item.lastConsumeTime?"最近消费"+ item.lastConsumeTime:"未消费"}} | 消费累计￥
+                  <span class="text-red">{{item.totalConsume||0}}</span>({{item.consumeCount}}次)
+                </p>
+
+                <p class="text-black">券 <span class="text-red">{{item.couponCount}}</span>张
+                  | 积分 <span class="text-red">{{item.point||0}}</span> | 余额 <span
+                    class="text-red">{{item.charge||0}}</span> | 代用币 <span class="text-red">{{item.reward||0}}</span>
+                </p>
+
+
+              </div>
+              <div class="addon" ng-if="view.index[$index]" ng-click="$event.stopPropagation()">
+                <div style="line-height: 1;">操作本顾客的权益</div>
+                <a class="c-charge" target="_blank" ng-href="{{'#/customer/charge/' + item.id}}">充值</a>
+                <a class="c-point" target="_blank" href="{{'#/customer/point/'+ item.id}}">积分</a>
+                <a class="c-coupon" target="_blank" href="{{'#/customer/coupon/'+ item.id}}">发券</a>
+                <a class="c-coupon" target="_blank" href="{{'#/customer/upgrade/'+ item.id}}">升级</a>
+                <!--<a class="c-detail" href="{{'#/customer/details/'+ item.id}}">查看详情</a>-->
+                <!--<a onclick="goto('customer/coupon/'+ item.id)">升级</a>-->
+                <!--<a onclick="goto('customer/coupon/'+ item.id)">通知</a>-->
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 plan-son text-left" ng-if="!view.customer.total">
+            无查询结果
+          </div>
+          <!--old-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="tagName" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form name="tableform">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">分组顾客</h4>
+        </div>
+        <div class="modal-body form-horizontal" style="overflow:hidden">
+          <p>从历史标签中选择</p>
+
+          <p><span class="tag1" ng-class="{'active': view.checkName == name.id}" ng-repeat="name in view.tagName"
+              ng-click="view.checkName = view.checkName == name.id?'': name.id">{{name.name}}</span>
+          </p>
+
+          <p>新建标签</p>
+
+          <div class="form-inline">
+            <input ng-model="tag.name" name="no" ng-minlength='1' ng-maxlength='10' class="form-control"
+              placeholder="请输入新建标签名称">
+
+            <div class="form-control-static">2-20个字符以内</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-6">
+            <div class="btn btn-primary btn-block" ng-disabled="tableform.$invalid" ng-click="tagFn()">确定
+            </div>
+          </div>
+          <div class="col-md-6 ">
+            <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

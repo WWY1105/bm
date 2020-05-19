@@ -1,0 +1,64 @@
+<div class="out ruleadd2" >
+  <div class="col-sm-2 text-right ">
+    <span class="title">活动详情</span>
+  </div>
+  <div class="col-sm-10 content mb0">
+    <div class="col-sm-12">
+      <div class="form-group mt15"  ng-repeat="(key, detail) in posts.COUPONFREE.COUPONFREE.detail">
+        <div class="form-inline mb22"  ng-repeat="details in detail" ng-init="details.id=key">
+          <select ng-model="details.id" class="form-control"
+          ng-options="item.id as item.name for item in view.member" name="member" required>
+        </select>
+        <div class="form-group" ng-repeat="dv in details.value">
+          <span class="form-control-static">可领取</span>
+          <select class="form-control coupon-select" ng-model="dv.id" ng-change="ruleFn.changeCoupon(details.value, dv)" ng-options="item.id as item.name group by view.counponType[item.type] for item in view.coupons" required>
+            <option value="">--请选择券--</option>
+          </select>
+          <input type="text" class="form-control-static sr-only" ng-model="dv.name">
+          <input type="number" class="form-control-static sr-only" ng-model="dv.count" ng-init="dv.count=1" placeholder="请输入领取张数">
+          <span class="form-control-static">一张。</span>
+        </div>
+        <div  class="form-group">
+          <a class="add click" ng-if="$parent.$first&&$first" ng-click="view.rules.COUPONFREE.addFunc('COUPONFREE')"> <i class="glyphicon glyphicon-plus"></i></a>
+          <a class="remove click" ng-if="!$first||!$parent.$first" ng-click="ruleFn.removeFn('COUPONFREE',key,$index)"> <i class="glyphicon glyphicon-remove"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3 btn btn-primary" ng-click="ruleFn.openOrClose()">新增券</div>
+  <div class="form-group" ng-if="isOpenOrClose" >
+    <div class="col-sm-12">
+      <coupon-new add-ok="ruleFn.testAddOk(result)" add-fail="ruleFn.testAddFail(result)"></coupon-new>
+    </div>
+  </div>
+</div>
+
+
+<div class="out ruleadd2">
+  <div class="col-sm-2 text-right ">
+    <span class="title">限制</span>
+  </div>
+  <div class="col-sm-10 content2 mb0">
+    <div class="form-inline mb22">
+      <span class="form-control-static">每人可领取</span>
+      <input ng-model="posts.COUPONFREE.COUPONFREE.timesLimit" type="number" class="form-control" min="1" placeholder="请输入领取次数" required/>
+      <span class="form-control-static">次。</span>
+    </div>
+    <div class="form-inline mb22" ng-if="posts.COUPONFREE.COUPONFREE.timesLimit>1">
+      <span class="form-control-static">再次领取的条件</span>
+      <select  class="form-control coupon-select" ng-model="posts.COUPONFREE.COUPONFREE.obtainCategory" ng-options="item.id as item.name for item in obtainRepeatCategory" required>
+        <option value="">--请选择--</option>
+      </select>
+    </div>
+    <div class="form-inline mb0" >
+      <span class=" form-control-static">前</span>
+      <input type="number" min="0" ng-model="posts.COUPONFREE.COUPONFREE.countLimit" class="form-control" placeholder="请输入人数限制" />
+      <span class="form-control-static">
+        人有效
+        <span style="color:#999;padding-left:20px">(0表示不限制)</span>
+      </span>
+    </div>
+  </div>
+</div>
+</div>

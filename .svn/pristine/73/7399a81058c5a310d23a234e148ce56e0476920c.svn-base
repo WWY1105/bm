@@ -1,0 +1,33 @@
+<div class="out ruleadd2">
+  <div class="col-sm-2 text-right ">
+    <span class="title">活动详情</span>
+  </div>
+
+  <div class="col-sm-10 content mb0">
+    <div ng-repeat="(key,detail) in posts.CHARGEFREE.CHARGEFREE.detail">
+      <div class="form-inline mb22" ng-repeat="details in detail" ng-init="details.id=key;temp = details.value">
+        <div class="col-sm-10 mb22">
+          <select ng-model="details.id" class="form-control "
+                  ng-options="item.id as item.name for item in view.member" name="member" required></select>
+          <span class="form-control-static ">消费时，单次消费满</span>
+          <input ng-model="details.amount" type="number" class="form-control" min="0.01" step="0.01" name="amount"
+                 required/>
+          <span class="form-control-static ">元，充值</span>
+          <input ng-model="details.limit" type="number" class="form-control" min="1" name="amount" placeholder="1-10之间"
+                 required/>
+          <span class="form-control-static"  style="margin-top: 10px">倍消费金额时，则本次消费免单</span>
+        </div>
+        <div class="col-sm-2">
+          <a class="add click" ng-if="$parent.$first&&$first" ng-click="view.rules.CHARGEFREE.addFunc(name)"> <i
+                  class="glyphicon glyphicon-plus"></i>
+          </a>
+          <a class="remove click" ng-if="!$first||!$parent.$first" ng-click="ruleFn.removeFn(name,key,$index)"> <i
+                  class="glyphicon glyphicon-remove"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

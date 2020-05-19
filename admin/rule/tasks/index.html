@@ -1,0 +1,409 @@
+<div class="row bg-white">
+    <div ng-include="'/admin/rule/leftmenu.html'"></div>
+    <div class="v-shadow-content ruleadd">
+      <div class="col-md-12 shopshow">
+        <div class="col-sm-12 mb15">
+          <button type="button" class="btn btn-primary pull-right" ng-click="openFn()">新增
+          </button>
+        </div>
+  
+        <table class="table table-bordered" ng-if="view.list.items">
+          <thead>
+          <tr class="plan-title">
+            <th>序号</th>
+            <th>名称</th>
+            <th>门店</th>
+            <th>待发布个数</th>
+            <th>已发布个数</th>
+            <th>已完成个数</th>
+            <th>有效领取数</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody class="slide-down">
+          <tr ng-repeat="item in view.list.items">
+            <td ng-bind="((view.list.page-1)*view.list.count)+$index+1"></td>
+            <td ng-bind="item.name"></td>
+            <td ng-bind="item.shopName"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td ng-bind="item.createTime"></td>
+            <td>
+                <a  ng-click="detailFn(item)">查看</a>
+              <a  ng-click="editFn(item)">编辑</a>
+              <a ng-if="!item.on" ng-click="tasksTurn($index,'on')">上线</a>
+              <a ng-if="item.on" ng-click="tasksTurn($index,'off')">下线</a>
+              <a  ng-click="remove($index)">删除</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="col-sm-12" ng-if="view.list.pageSize>1">
+          <pagination items-per-page="view.list.count" boundary-links="true" rotate="false" max-size="20"
+                      total-items="view.list.total" ng-model="view.list.page"
+                      class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                      first-text="&laquo;" last-text="&raquo;" ng-change="pageChange()"></pagination>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  <!-- 新增标签 -->
+  <div id="addtasks" class="modal fade" tabindex="-1" role="dialog"
+       aria-labelledby="mySmallModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span>添加任务</span>
+          <button type="button" class="close" data-dismiss="modal" ng-click="closeModal()">
+            <span aria-hidden="true" class="text-orange">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+        </div>
+        <form name="add_form">
+          <div class="modal-body" style="min-height: 300px">
+            <div class="ruleadd ruleadd2 form-inline">
+              
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">任务名称 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" ng-model="post.name" maxlength="10" required/>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">赏金 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.amount" required/>
+                  <span class="form-control-static">元</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">完成人数 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.recipientsLimit" required/>
+                  <span class="form-control-static">人</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title"><span class="text-red">*</span>任务封面图</span>
+                </div>
+                <div class="col-sm-8">
+                  <div>*最佳比例：375 X 220(2倍以上不会失真)</div>
+                  <pic-send style="padding: 15px 0" pic-url="post.picUrl" min-width="" min-height=""></pic-send>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">门店 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <label ng-repeat="item in shops">
+                    <input type="radio" ng-model="post.shopId" value="{{item.id}}" name="proportion" required>{{item.name}}
+                  </label>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">距离 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.distanceLimit" required/>
+                  <span class="form-control-static">m</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">完成时间 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.timesLimit" required/>
+                  <span class="form-control-static">小时</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">领取红包 :</span>
+                </div>
+                <div class="col-sm-10">
+                    <select ng-model="view.coupons" class="form-control"
+                    ng-options="item as (item.name + (item.alias?'('+item.alias+')':'')) for item in coupons"
+                    name="" required></select>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">下次领取时间 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.nextRedEnvelopesLimit" required/>
+                  <span class="form-control-static">天</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-md-3 col-md-offset-3">
+              <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+            </div>
+            <div class="col-md-3 col-md-setoff-1">
+              <div class="btn btn-primary btn-block" ng-click="sendJsons()" type="submit">
+                确定
+              </div>
+            </div>
+          </div>
+  
+        </form>
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+      </div>
+    </div>
+  
+  </div>
+
+  <div id="edittasks" class="modal fade" tabindex="-1" role="dialog"
+       aria-labelledby="mySmallModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span>编辑任务</span>
+          <button type="button" class="close" data-dismiss="modal" ng-click="closeModal()">
+            <span aria-hidden="true" class="text-orange">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+        </div>
+        <form name="add_form">
+          <div class="modal-body" style="min-height: 300px">
+            <div class="ruleadd ruleadd2 form-inline">
+              
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">任务名称 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" ng-model="post.name" maxlength="10" required/>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">赏金 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.amount" required/>
+                  <span class="form-control-static">元</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">完成人数 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.recipientsLimit" required/>
+                  <span class="form-control-static">人</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title"><span class="text-red">*</span>任务封面图</span>
+                </div>
+                <div class="col-sm-8">
+                  <div>*最佳比例：375 X 220(2倍以上不会失真)</div>
+                  <pic-send style="padding: 15px 0" pic-url="post.picUrl" min-width="" min-height=""></pic-send>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">门店 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <label ng-repeat="item in shops">
+                    <input type="radio" ng-model="post.shopId" value="{{item.id}}" name="proportion" required>{{item.name}}
+                  </label>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">距离 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.distanceLimit" required/>
+                  <span class="form-control-static">m</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">完成时间 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.timesLimit" required/>
+                  <span class="form-control-static">小时</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">领取红包 :</span>
+                </div>
+                <div class="col-sm-10">
+                    <select ng-model="view.coupons" class="form-control"
+                    ng-options="item as (item.name + (item.alias?'('+item.alias+')':'')) for item in coupons"
+                    name="" required></select>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">下次领取时间 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.nextRedEnvelopesLimit" required/>
+                  <span class="form-control-static">天</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-md-3 col-md-offset-3">
+              <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+            </div>
+            <div class="col-md-3 col-md-setoff-1">
+              <div class="btn btn-primary btn-block" ng-click="sendJsons(post.id)" type="submit">
+                确定
+              </div>
+            </div>
+          </div>
+  
+        </form>
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+      </div>
+    </div>
+  
+  </div>
+
+  <div id="detailtasks" class="modal fade" tabindex="-1" role="dialog"
+       aria-labelledby="mySmallModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span>查看任务</span>
+          <button type="button" class="close" data-dismiss="modal" ng-click="closeModal()">
+            <span aria-hidden="true" class="text-orange">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+        </div>
+        <form name="add_form">
+          <div class="modal-body" style="min-height: 300px">
+            <div class="ruleadd ruleadd2 form-inline">
+              
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">任务名称 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" ng-model="post.name" maxlength="10" required disabled/>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">赏金 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.amount" required disabled/>
+                  <span class="form-control-static">元</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">完成人数 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.recipientsLimit" required disabled/>
+                  <span class="form-control-static">人</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title"><span class="text-red">*</span>任务封面图</span>
+                </div>
+                <div class="col-sm-8">
+                  <div>*最佳比例：375 X 220(2倍以上不会失真)</div>
+                  <pic-send style="padding: 15px 0" pic-url="post.picUrl" min-width="" min-height="" disabled></pic-send>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">门店 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <label ng-repeat="item in shops">
+                    <input type="radio" ng-model="post.shopId" value="{{item.id}}" name="proportion" required disabled>{{item.name}}
+                  </label>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">距离 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.distanceLimit" required disabled/>
+                  <span class="form-control-static">m</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">完成时间 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.timesLimit" required disabled/>
+                  <span class="form-control-static">小时</span>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">领取红包 :</span>
+                </div>
+                <div class="col-sm-10">
+                    <select ng-model="view.coupons" class="form-control"
+                    ng-options="item as (item.name + (item.alias?'('+item.alias+')':'')) for item in coupons"
+                    name="" required disabled></select>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2">
+                  <span class="title">下次领取时间 :</span>
+                </div>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" ng-model="post.nextRedEnvelopesLimit" required disabled/>
+                  <span class="form-control-static">天</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-md-3 col-md-offset-3">
+              <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+            </div>
+          </div>
+  
+        </form>
+        <!--</div>-->
+        <!--</div>-->
+        <!-- </div> -->
+      </div>
+    </div>
+  
+  </div>
+  

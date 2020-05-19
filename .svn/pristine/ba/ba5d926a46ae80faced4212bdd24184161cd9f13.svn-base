@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$USER_HOME$/WebstormProjects/vue/mweb/src/sui_assets/scss/index.scss" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin/customer/details.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin/mall/buy/add.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/guest.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/keeper/Staff/duty/edit.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/keeper/Staff/duty/index.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/keeper/Staff/duty/templateDuty.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/keeper/Table/regions.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/css/fullcalendar.css" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/css/loading-bar.css" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/css/loading-bar.min.css" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/img/combine.svg" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/js/calendar/angular-locale_zh-cn.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/js/calendar/calendar.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/js/calendar/fullcalendar.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/js/calendar/moment.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/js/calendar/ui-bootstrap-tpls-0.9.0.js" charset="UTF-8" />
+    <file url="PROJECT" charset="GBK" />
+  </component>
+</project>

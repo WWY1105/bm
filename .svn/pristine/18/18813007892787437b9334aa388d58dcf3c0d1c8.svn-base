@@ -1,0 +1,189 @@
+<div class="row" xmlns="http://www.w3.org/1999/html">
+  <div class="v-shadow">
+    <div>
+      <label class="left-tag" style="margin: 20px 0">搜索门店</label>
+
+      <form class="col-sm-12" name="orderSend"
+            style="display: flex;display: -webkit-box;display: -moz-box;display: -ms-flexbox;display: -webkit-flex;justify-content:space-between">
+        <div>
+          <input type="text" class="form-control" id="inputSuccess2" ng-model="name"
+                 placeholder="店名" required/>
+          <!--<button class="input-search" style="right: 109px"><span class="glyphicon glyphicon-search text-primary"></span>-->
+          <!--</button>-->
+        </div>
+        <a class="btn btn-primary">查询</a>
+      </form>
+    </div>
+
+    <div class="mt15">
+      <label class="left-tag" style="margin: 20px 0">所有门店</label>
+
+      <div class="list-group click" ng-init="active=''" ng-click="select()">
+        <a class="list-group-item" ng-class="{'active':!active}" ng-click="active = ''">全部</a>
+        <a class="list-group-item" ng-class="{'active':active == 1001}" ng-click="active = 1001">创建中</a>
+        <a class="list-group-item" ng-class="{'active':active == 1002}" ng-click="active = 1002">认证审核中</a>
+        <a class="list-group-item" ng-class="{'active':active == 1003}" ng-click="active = 1003">已通过审核</a>
+        <a class="list-group-item" ng-class="{'active':active == 1004}" ng-click="active = 1004">关闭审核中</a>
+        <a class="list-group-item" ng-class="{'active':active == 1005}" ng-click="active = 1005">停用</a>
+      </div>
+    </div>
+    <div class="left-bottom">
+      <a href="#/shops/add" class="btn btn-primary btn-block">添加门店</a>
+    </div>
+  </div>
+  <div class="v-shadow-content half bgw">
+    <div class="bg-primary text-center">共{{shops.total||0}}个门店</div>
+    <div ng-init="detailShow=-1" style="border: 1px solid #E0E0E0">
+      <div class="media" ng-repeat="shop in shops.items" ng-class="{'active':detailShow == $index}"
+           ng-click="detail(shop.id,$index)">
+        <div class="media-left media-middle">
+          <div class="border">
+            <img class="" ng-src="{{'../public/img/shopstate/'+shop.state+'.svg'}}">
+          </div>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">{{shop.name}}</h4>
+
+          <div>店长：{{shop.shopKeeper||'暂无'}}</div>
+          <div>员工：{{shop.staffCount}}名</div>
+        </div>
+        <div class="media-body" align="right">
+          <div>创建时间：{{shop.createTime}}</div>
+          <p class="btn btn-default btn-xs" ng-bind="text[shop.state]+shop.updateTime"></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12" ng-if="shops.total>10">
+      <pagination items-per-page="shops.count" boundary-links="true" total-items="shops.total" ng-model="shops.page"
+                  class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                  first-text="&laquo;" last-text="&raquo;"></pagination>
+    </div>
+  </div>
+
+  <div class="v-shadow-content half" style="padding: 20px;margin-left: 0;width:45%" ng-if="detailShow>=0">
+    <div style="min-height: 37px;"><button class="btn btn-danger pull-right click" ng-click="deleteShopFn()" ng-if="shop.state == 1003">申请停用本店</button></div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h4 class="inline-block">{{shop.name}}</h4><a ng-click="qrcodeFn()" class="click"> 查看二维码图片</a>
+
+        <div>创建时间：{{shop.createTime||'暂无'}} 店长:{{shop.shopKeeper||'暂无'}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="shopshow">
+                  <div class="row">
+                    <div class="col-sm-4">电话:</div>
+                    <div class="col-sm-8" ng-bind="shop.tel"></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-4">菜系:</div>
+                    <div class="col-sm-8" ng-bind="shop.cuisineText"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">本店规模:</div>
+                    <div class="col-sm-8">包厢-{{shop.boxNum||0}} 散台-{{shop.tableNum||0}}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">人均消费:</div>
+                    <div class="col-sm-8" ng-bind="shop.avgprice+'元'"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">开业时间:</div>
+                    <div class="col-sm-8" ng-bind="shop.openingDay|date:'yyyy/MM/dd'"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">地址:</div>
+                    <div class="col-sm-8" ng-bind="shop.areaText + shop.address"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">停车位:</div>
+                    <div class="col-sm-8" ng-bind="shop.parkingDescription||'暂未填写'"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">营业时间:</div>
+                    <div class="col-sm-8">
+                      <div ng-repeat="time in shop.businessTimes">
+                        {{bussniessTime[time.type]}}:{{time.startTime+'-'+time.endTime}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="mb15">本店员工</div>
+                <div class="panel panel-default" ng-repeat="staff in shop.staffs">
+                  <div class="panel-body">
+                    {{staff.nickname}}
+                    <span class="label label-success pull-right" ng-if="staff.gender==1">男</span>
+                    <span class="label label-pink pull-right" ng-if="staff.gender==2">女</span>
+                    <span class="label label-primary pull-right" ng-if="staff.gender==0">保密</span>
+                    <span class="pull-right" style="padding: 1px"></span>
+                    <span class="label label-yellow pull-right" ng-if="staff.roleType=='K'">店长</span>
+                    <span class="label label-black pull-right" ng-if="staff.roleType=='S'">服务员</span>
+                  </div>
+                </div>
+                <a ng-href="{{'#/staff/'+shop.id}}" class="btn btn-default center-block">共{{shop.staffCount}}位员工
+                  点击查看</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h4>本店图片 </h4>
+
+            <div ng-if="!shop.picUrls">暂无</div>
+            <img ng-repeat="pic in shop.picUrls" ng-src="{{pic.url}}" width="44%" style="margin: 3%">
+            <h4>门店介绍 </h4>
+
+            <div>暂无</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="qrcode" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title">二维码图片</h4>
+      </div>
+      <div class="modal-body form-horizontal" style="overflow:hidden">
+        <div ng-repeat="code in qrcode  | orderBy : '-type'">
+          <div ng-if="code.type=='103'">上宾二维码</div>
+          <div ng-if="code.type=='104'">微信专属二维码</div>
+          <div ng-if="code.type=='106'">快速付款二维码</div>
+          <div class="inline-block" style="width: 57%;padding: 10px 17%;">
+            <img ng-src="{{code.url}}" style="width: 120px;" class="inline-block">
+          </div>
+          <div class="inline-block">
+            <img ng-src="{{code.urlWithLogo}}" style="width: 120px" class="inline-block">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+

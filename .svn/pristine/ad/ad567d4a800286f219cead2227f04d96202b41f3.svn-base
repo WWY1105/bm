@@ -1,0 +1,44 @@
+<form class="form-inline time-search" ng-class="{'project':view.projects}" name="searchData" ng-submit="doSearch()">
+  <div class="form-group" ng-if="view.shops" ng-mouseenter="posts.check=1" ng-mouseleave="posts.check=0">
+    <label>门店：</label>
+
+    <div class="select_showbox" ng-model="posts.shopId">{{posts.shopName || "请点击选择"}} <span
+            class="caret pull-right" style="margin-top: 7px"></span>
+    </div>
+    <div style="height: 5px"></div>
+    <ul class="select_option" ng-show="posts.check">
+      <li ng-click="posts.shopId = '';posts.shopName = '所有';posts.check=0">所有</li>
+      <li ng-click="posts.shopId = 'brand';posts.shopName = '品牌虚拟店';posts.check=0">品牌虚拟店</li>
+      <li ng-repeat="o in view.shops.items" ng-click="posts.shopId = o.id;posts.shopName = o.name;posts.check=0">
+        {{o.name}}
+      </li>
+      <li class="select_last text-center">没有更多了</li>
+    </ul>
+  </div>
+  <div class="form-group" ng-if="view.projects"  ng-mouseenter="posts.check1=1" ng-mouseleave="posts.check1=0">
+    <label>项目：</label>
+
+    <div class="select_showbox" ng-model="posts.reason">{{posts.name || "请点击选择项目"}} <span
+            class="caret pull-right" style="margin-top: 7px"></span>
+    </div>
+    <div style="height: 5px"></div>
+    <ul class="select_option" ng-show="posts.check1">
+      <li ng-click="posts.reason = '';posts.name = '所有';posts.check1=0">所有</li>
+      <li ng-repeat="o in view.projects" ng-click="posts.reason = o.id;posts.name = o.name;posts.check1=0">
+        {{o.name}}
+      </li>
+      <li class="select_last text-center">没有更多了</li>
+    </ul>
+  </div>
+  <div class="form-group">
+    <label>时间：</label>
+    <input type="date" style="color: #18A0D4" ng-model="posts.startTime" class="form-control" placeholder="起始时间"
+           name="startDate" required/>
+    ~
+    <input type="date" style="color: #18A0D4;margin-right: 90px" ng-model="posts.endTime" class="form-control" placeholder="结束时间"
+           name="endDate" required/>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-default btn-primary" ng-disabled="searchData.$invalid">查询明细</button>
+  </div>
+</form>

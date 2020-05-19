@@ -1,0 +1,194 @@
+<div class="keepershopadd">
+  <div class="container contents bgw">
+    <form class="row" ng-submit="postSend()" name="add_form">
+      <div class="col-sm-9 col-sm-offset-2 ">
+        <label>散台</label>
+        <a ng-click="download()" class="btn">批量生成二维码图片</a>
+        <a ng-if="result" ng-click="getZip()" class="btn">下载</a>
+        <div class="row ">
+          <div class="user-list">
+            <div class="col-sm-12 tablelist">
+              <div class="tablesout" ng-repeat="tables in view.tables"
+                   ng-mouseover="tables.show=1" ng-mouseleave="tables.show=0">
+                <div ng-class="{'blur':tables.show}" class="tables out pull-left">
+                  <Div class="remove text"></Div>
+                  <Div class="seat">{{tables.no}}号</Div>
+                  <Div class="seat">{{tables.seatNum}}座桌台</Div>
+                </div>
+                <div class="editdialog" ng-show="tables.show==1">
+                  <div class="delete"><i ng-click="tableDelFn(tables,$index)" class="glyphicon glyphicon-remove"></i>
+                  </div>
+                  <span ng-click="editTableFn('tables',$index)">编辑</span>
+                  <a ng-click="download(tables.id)">下载</a>
+                  <a ng-click="open(tables.id)">查看</a>
+                </div>
+              </div>
+
+              <div class="user-list inline-block">
+                <div class="add" style="width:100px" ng-click="modaladd('table')">
+                    <span class="iconadd"> <i class=" glyphicon glyphicon-plus"></i>
+                    </span>
+                </div>
+              </div>
+            </div>
+          </Div>
+        </div>
+      </div>
+      <div class="col-sm-9 col-sm-offset-2">
+        <label>包厢</label>
+
+        <div class="row ">
+          <Div class="user-list">
+            <div class="col-sm-12 tablelist">
+              <div class="tablesout" ng-repeat="boxs in view.boxs|orderBy:['seatNum','no']" ng-mouseover="boxs.show=1"
+                   ng-mouseleave="boxs.show=0">
+                <div ng-class="{'blur':boxs.show}" class="tables out pull-left">
+                  <Div class="seat">{{boxs.name}}</Div>
+                  <Div class="seat">房间号:{{boxs.no}}</Div>
+                  <Div class="seat">{{boxs.seatNum}}座</Div>
+                </div>
+                <div class="editdialog " ng-show="boxs.show==1">
+                  <div class="delete"><i ng-click="tableDelFn(boxs,$index)" class="glyphicon glyphicon-remove"></i>
+                  </div>
+                  <span ng-click="editTableFn('boxs',$index)">编辑</span>
+                  <a ng-click="open(boxs.id)">下载</a>
+                </div>
+              </div>
+
+              <div class="user-list inline-block">
+                <div class="add" style="width:100px" ng-click="modaladd('box')">
+									<span class="iconadd"> <i class=" glyphicon glyphicon-plus"></i>
+									</span>
+
+                </div>
+              </div>
+            </div>
+          </Div>
+        </div>
+
+      </div>
+      <div class="col-sm-10 col-sm-offset-2">
+        <div class="row">
+          <div class="col-sm-3">
+            <a class="btn btn-default btn-block" ng-click="goto('shop')">返回</a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="addtable" aria-hidden="true">
+  <div class="modal-dialog modal-sm" style="display:block;">
+    <div class="modal-content ">
+      <form enctype="multipart/form-data" name="tableform">
+        <div class="modal-header ">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" ng-bind="view.modalname"></h4>
+
+          <div class="text-red">*桌号不能重复</div>
+        </div>
+        <div class="modal-body form-horizontal" style="overflow:hidden">
+          <div class="form-group">
+            <label for="tableNo" class="col-sm-3 control-label text-right">桌号</label>
+
+            <div class="col-sm-9 " id="tableNo">
+              <input ng-model="post.no" name="no" ng-minlength='1' ng-maxlength='10' class="form-control"
+                     placeholder="1-10个字符" required>
+
+              <div class="help-block" ng-messages="tableform.no.$error">
+                <div ng-message="required">桌号不能为空</div>
+                <div ng-message="maxlength">桌号需小于10个字符</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group ">
+            <label for="tableNum" class="col-sm-3 control-label text-right">座位数</label>
+
+            <div class="col-sm-9 " id="tableNum">
+              <input ng-model="post.seatNum" min="1" type="number" class="form-control" name="seatNum" required>
+
+              <div class="help-block" ng-messages="tableform.seatNum.$error">
+                <div ng-message="required">座位数不能为空</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="form-group" ng-if="tem.nameshow">
+            <label for="name" class="col-sm-3 control-label text-right">名称</label>
+
+            <div class="col-sm-9 " id="name">
+              <input ng-model="post.name" class="form-control" name="name" required>
+
+              <div class="help-block" ng-messages="tableform.name.$error">
+                <div ng-message="required">名称不能为空</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-6">
+            <div class="btn btn-primary btn-block" ng-disabled="tableform.$invalid"
+                 ng-click="dispatchAction()">确定
+            </div>
+          </div>
+          <div class="col-md-6 ">
+            <div class="btn btn-default btn-block" ng-click="cancelAction()" data-dismiss="modal">关闭</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<div class="modal fade bs-example-modal-sm" id="generate" aria-hidden="true">
+  <div class="modal-dialog modal-sm" style="display:block;">
+    <div class="modal-content ">
+      <form enctype="multipart/form-data" name="tableform">
+        <div class="modal-header ">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">设置</h4>
+
+        </div>
+        <div class="modal-body form-horizontal" style="overflow:hidden">
+          <div class="form-group">
+
+            <div class="col-sm-12">
+
+              <div class="">用户扫描二维码，如用户未关注公众号，则跳转到公众号关注页面</div>
+              <input type="checkbox" id="wx" ng-model="download.useWx"><label for="wx">微信二维码</label>
+              <input type="checkbox" id="wx1" ng-model="download.useWx" ng-true-value="false"><label
+                    for="wx1">不使用微信二维码</label>
+
+            </div>
+          </div>
+          <!--  <div class="form-group">
+
+              <div class="col-sm-12">
+                <input type="checkbox" id="logo" ng-model="download.useLogo"><label for="logo">使用惠买单logo</label>
+              </div>
+            </div>-->
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-6">
+            <div class="btn btn-primary btn-block" ng-click="generate()">确定
+            </div>
+          </div>
+          <div class="col-md-6 ">
+            <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

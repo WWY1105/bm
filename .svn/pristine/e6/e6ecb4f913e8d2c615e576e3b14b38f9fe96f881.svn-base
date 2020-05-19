@@ -1,0 +1,27 @@
+<div class="container contents bg-white">
+	<!---->
+	<div class="row" id="member">
+		<ul class="nav nav-tabs">
+			<li role="presentation" class="active"><a><strong>会员等级设定 </strong></a>
+			</li>
+		</ul>
+		<table id="upgrade-table" class="table">
+			<tr ng-repeat="members in view.member">
+				<td class="vertical-middle">
+					<div class="radius-through">
+						<div class="radius"></div>
+					</div>
+					<div class="radius-text"><span class="orange-radius">{{members.toGrade}}</span>{{members.toName}}</div>
+				</td>
+				<td style="text-align: left">
+					<ul>
+						<li ng-repeat="strategy in members.strategies">
+							<span class="text-orange">》</span> {{strategy}}
+						</li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+		<!---->
+	</div>
+</div>

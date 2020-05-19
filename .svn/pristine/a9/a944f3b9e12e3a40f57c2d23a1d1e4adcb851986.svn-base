@@ -1,0 +1,182 @@
+<div class="container contents bgw">
+  <div class="col-sm-12 ruleadd">
+    <form class="form-horizontal" name="ruleForm" ng-submit="sendJsons()">
+      <div class="out">
+        <div class="col-sm-2 text-right ">
+          <span class="title">名称</span>
+        </div>
+        <div class="col-sm-8 content">
+          <div class="form-group ">
+            <div class="col-sm-5">
+              <input type="text" ng-model="posts.name" name="name" class="form-control" id="Formname"
+                     placeholder="请输入活动名称" ng-minlength='2' ng-maxlength='20' ng-pattern="config.textCheckJson.nickname"
+                     required></div>
+						<span class="help-block " ng-messages="ruleForm.name.$error">
+							<div ng-message="required">2-20字符的汉字英文数字</div>
+							<div class="text-red" ng-message="minlength">需大于2个字符</div>
+							<div class="text-red" ng-message="maxlength">需小于20字符</div>
+							<div class="text-red" ng-message="pattern">
+                              <span ng-bind="config.textCheckErrorJson.nickname"></span>
+                            </div>
+
+						</span>
+            <span class="help-block" ng-show="ruleForm.name.$valid">输入正确</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="out ">
+        <div class="col-sm-2 text-right">
+          <span class="title">类型</span>
+        </div>
+        <div class="animate-switch-container"
+             ng-switch on="posts.hasRules">
+          <div class="animate-switch" ng-switch-when="true">
+            <div class="col-sm-8 content">
+              <div class="form-group timecheck">
+                <div class="col-sm-12 ml2 form-control-stack text-left" id="check-son">
+                  <span ng-bind="categoryName(posts.activityCategory)"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="animate-switch" ng-switch-when="false">
+            <div class="col-sm-8 content">
+              <div class="form-group timecheck">
+                <div class="col-sm-12 ml25 form-control-stack text-left" id="check-son">
+                  <label class="radio-inline" ng-repeat="item in ruleCategory">
+                    <input type="radio" ng-model="posts.activityCategory" value="{{item.id}}"
+                           ng-checked="posts.activityCategory===item.id">
+                    <span ng-bind="item.name"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="out">
+        <div class="col-sm-2 text-right">
+          <span class="title">有效期</span>
+        </div>
+        <div my-date-picker data="view.data" date-range="view.dateRange" is-edit="view.isEdit"></div>
+      </div>
+      <div ng-hide="posts.activityCategory=='COUPONFREE'||posts.activityCategory=='CHARGE'||posts.activityCategory=='EXCHANGE'">
+        <div class="out">
+          <div class="col-sm-2 text-right">
+            <span class="title">参与门店</span>
+          </div>
+          <div class="col-sm-8 content">
+            <div class="col-sm-12 ml25 form-control-stack text-left">
+              <label class="checkbox-inline">
+                <input type="checkbox" ng-model="set.shopAll" ng-click="checkAllShops()">全选</label>
+            </div>
+            <div class="col-sm-12  form-control-stack text-left" id="check-son">
+              <label class="checkbox-inline" ng-repeat="shops in set.list" ng-class="{ml15:$index==0}">
+                <input type="checkbox" ng-checked="posts.shops[$index]" ng-model="posts.shops[$index]"
+                       id="inlineCheckbox1" ng-true-value="{{shops.id}}" ng-false-value="{{null}}" value="{{shops.id}}"
+                       ng-init="set.list2[$index]=shops.id">
+                <span ng-bind="shops.name"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="out ">
+          <div class="col-sm-2 text-right">
+            <span class="title">有效时段</span>
+          </div>
+          <div class="col-sm-8 content">
+            <div class="form-group timecheck">
+              <div class="col-sm-12 ">
+                <label class="btn glyphicon  btn-default" ng-repeat="(key, value) in set.time"
+                       ng-class="{active:view.periods[$index]}" ng-click="settime($index,key)" ng-bind="value"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="out ">
+          <div class="col-sm-2 text-right">
+            <span class="title">不参与商品</span>
+          </div>
+          <div class="col-sm-8 "
+               ng-class="{'content2':shareRuleCategory.length==0,'content':shareRuleCategory.length>0}">
+            <div class="col-sm-12 ml25 text-left" id="checknon">
+              <input type="checkbox" ng-model="posts.nonParticipationId" ng-true-value="{{set.nonParticipation._id}}"
+                     ng-false-value="" ng-checked="posts.nonParticipationId===set.nonParticipation._id"
+                     ng-if="set.nonParticipation">
+              <span ng-bind="set.nonParticipation.items"></span>
+
+              <div class="add-rad" ng-click="addNonParticipation()" style="display:inline-block"
+                   ng-if="!set.nonParticipation"><i class="glyphicon glyphicon-plus"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="out " ng-if="shareRuleCategory.length>0">
+          <div class="col-sm-2 text-right">
+            <span class="title">同享的活动</span>
+          </div>
+          <div class="col-sm-8 content2">
+            <div class="col-sm-12 ml25 form-control-stack text-left" id="check-son">
+              <label class="checkbox-inline" ng-repeat="item in shareRuleCategory">
+                <input type="checkbox" ng-model="posts.shared[$index]" ng-true-value="{{item.id}}">
+                <span ng-bind="item.name"></span>
+              </label>
+            </div>
+            <div class="col-sm-12 ml25 form-control-stack">
+              <label class="checkbox-inline" ng-if="filterShared().length>0">
+                <input type="checkbox" ng-model="posts.excludeAmount">
+                <span>参与本活动的部分不再参与同享</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="out ">
+        <div class="col-sm-2 text-right"></div>
+        <div class="col-sm-8 mt20">
+          <div class="form-group ">
+            <div class="col-sm-3 col-sm-offset-1 ">
+              <a class="btn btn-default btn-block" back-button>返回</a>
+            </div>
+            <div class="col-sm-3 col-sm-offset-1 ">
+              <button class="btn btn-primary btn-block" ng-disabled="ruleForm.$invalid">保存</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal fade " id="NonParticipation" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form class="form-horizontal" name="addno" ng-submit="NonParticipationSend()">
+          <div class="modal-header ">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+              <span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">添加不参与活动的商品</h4>
+          </div>
+          <div class="modal-body" style="overflow:hidden">
+            <div class="form-group">
+              <div class="form-control-static pull-left ml25">输入多种商品时，用逗号分开</div>
+              <div class="col-sm-11 mt20 ml25">
+                <input ng-model="goods.name" class="form-control" min="1" required/>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-sm-3 col-sm-setoff-6">
+              <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+
+            </div>
+            <div class="col-sm-3">
+              <button class="btn btn-primary btn-block" ng-disabled="!addno.$valid">添加</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

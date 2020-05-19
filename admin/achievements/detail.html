@@ -1,0 +1,48 @@
+<div class="bgw">
+  <div class="contents" style="font-size: 16px;border-bottom: 1px solid #e1e1e1;padding-left: 15px">
+    开始时间：<span class="text-primary">{{post.startTime}}</span> 结束时间：<span class="text-primary">{{post.endTime}}</span>
+    <span ng-if="post.shopName">来自门店： <span class="text-primary">{{post.shopName}}</span></span>
+  </div>
+  <div class="bgw row" style="margin: 0">
+    <div class="doc col-sm-12">
+      <table class="table" ng-if="view.data.total">
+        <thead>
+        <tr>
+          <td>序号</td>
+          <td>消费订单</td>
+          <td ng-if="!post.shopId">门店</td>
+          <td>服务员</td>
+          <td>上宾号</td>
+          <td>打赏金额</td>
+          <td>时间</td>
+          <td>标签</td>
+        </tr>
+        </thead>
+        <tbody class="slide-down" ng-repeat="item in view.data.items">
+        <tr>
+          <td ng-bind="((view.data.page-1)*view.data.count)+$index+1"></td>
+          <td><a ng-click="goto('doc/detail/'+ item.orderNo)">{{item.orderNo}}</a></td>
+          <td ng-if="!post.shopId">{{item.shopName}}</td>
+          <td ng-bind="item.staffName"></td>
+          <td><a ng-click="goto('customer/details/'+ item.userId)">{{item.username}}</a></td>
+          <td ng-bind="item.gratuityAmount||0"></td>
+          <td ng-bind="item.time"></td>
+          <td><span ng-repeat=" tag in item.tags">#{{tag}} </span></td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="text-center" ng-if="!view.data">
+        <div style="border: 1px solid #e1e1e1;height: 240px">
+          <img src="public/img/tv.svg" style="margin-bottom: 95px;margin-top: 63px;">没有可查询的信息
+        </div>
+      </div>
+      <div class="col-sm-12" ng-if="view.data&&view.data.pageSize>1">
+        <pagination items-per-page="view.data.count" boundary-links="true" rotate="false" max-size="20"
+                    total-items="view.data.total" ng-model="view.data.page" ng-change="pageChange()"
+                    class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                    first-text="&laquo;" last-text="&raquo;"></pagination>
+      </div>
+    </div>
+  </div>
+</div>

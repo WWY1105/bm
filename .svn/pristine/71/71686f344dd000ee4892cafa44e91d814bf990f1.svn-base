@@ -1,0 +1,114 @@
+<div class="col-sm-8 content">
+  <div class="form-group mb15">
+    <div class="col-sm-2" style="text-align: left" ng-repeat="item in topDateRangeCategory">
+      <a class="btn btn-default" ng-class="{'btn-primary':data.dateType===item.type}" ng-click="clickBtn(item.type)"
+         ng-bind="item.name"></a>
+    </div>
+  </div>
+
+  <div class="animate-switch-container" ng-switch="data.dateType">
+    <div class="animate-switch" ng-switch-when="PERMANENT">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label class="form-label">自活动上线之日起即时生效且永久有效
+          </label>
+        </div>
+        <div class="col-sm-12">
+          <label class="checkbox-inline mb15">
+            <input type="checkbox" ng-model="dateRange.selectCategory" ng-true-value="EXCLUDE" ng-false-value="NONE">排除指定日期</input>
+          </label>
+          <my-special-date special-date="dateRange" ng-if="dateRange.selectCategory==='EXCLUDE'"></my-special-date>
+        </div>
+      </div>
+    </div>
+
+    <div class="animate-switch" ng-switch-when="CONTINUOUS">
+      <div class="row">
+        <div class="col-sm-6">
+          <label class="control-label pull-left mr35">开始</label>
+
+          <p class="input-group">
+            <input class="form-control" datepicker-popup ng-model="dateRange.startDate" is-open="opened.startTime"
+                   min-date="dateOptions.dftDate" max-date="dateOptions.maxDate" datepicker-options="dateOptions"
+                   date-disabled="disabled(date, mode)" ng-required="true" show-weeks="flase" ng-change="changeEnd()"
+                   name="startTime"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="open($event,'startTime')"><i
+                          class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+          </p>
+        </div>
+        <div class="col-sm-6">
+
+          <label class="control-label pull-left mr35">结束</label>
+
+          <p class="input-group">
+            <input class="form-control" datepicker-popup ng-model="dateRange.endDate" is-open="opened.endTime"
+                   min-date="dateOptions.minDate" max-date="dateOptions.maxDate" datepicker-options="dateOptions"
+                   date-disabled="disabled(date, mode)" ng-required="true" show-weeks="flase"
+                   ng-change="changeEnd()" name="endTime"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="open($event,'endTime')"><i
+                          class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+          </p>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="dateRange.selectCategory" ng-true-value="EXCLUDE" ng-false-value="NONE">排除指定日期</input>
+        </label>
+        <my-special-date special-date="dateRange" ng-if="dateRange.selectCategory==='EXCLUDE'"></my-special-date>
+      </div>
+    </div>
+
+    <div class="animate-switch" ng-switch-when="BIRTHDAY">
+      <div class="col-sm-12">
+        <label class="checkbox-inline mt15">
+          <input type="checkbox" ng-model="data.subType" ng-true-value="AROUND_FIX_DATE">请设置在生日当天的前后几天可参加本活动</input>
+        </label>
+
+        <div class="col-sm-10" ng-if="data.subType==='AROUND_FIX_DATE'">
+          <div class="form-inline">
+                  <span class="form-control-static">
+                  如生日前后都写0天，则表示生日当天</span>
+          </div>
+          <div class="form-inline mb15">
+            <span class="form-control-static">生日前</span>
+            <label class="sr-only"></label>
+            <input class="form-control" type="number" min="0" ng-model="dateRange.beforeDays" placeholder="可填写0"
+                   name="beforeDays" required/>
+            <span class="form-control-static">天</span>
+          </div>
+          <div class="form-inline">
+            <span class="form-control-static">生日后</span>
+            <label class="sr-only"></label>
+            <input class="form-control" type="number" min="0" ng-model="dateRange.afterDays" placeholder="可填写0"
+                   name="afterDays" required/>
+            <span class="form-control-static">天</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="data.subType" ng-true-value="MONTH_EFFECTIVE">生日当月皆可参加本活动</input>
+        </label>
+      </div>
+
+      <div class="col-sm-12 form-control-stack text-left" ng-if="data.subType==='MONTH_EFFECTIVE'">
+        <label class="checkbox-inline mt15 ml15">
+          <input type="checkbox" ng-model="dateRange.selectCategory" ng-true-value="EXCLUDE" ng-false-value="NONE">排除指定日期</input>
+        </label>
+        <my-special-date special-date="dateRange" ng-if="dateRange.selectCategory==='EXCLUDE'"></my-special-date>
+      </div>
+
+    </div>
+
+    <div class="animate-switch" ng-switch-when="SELECTED_DATES">
+      <label class="form-label">请选择指定日期</label>
+      <my-special-date special-date="dateRange" ng-init="dateRange.selectCategory='INCLUDE'"></my-special-date>
+    </div>
+  </div>
+
+</div>

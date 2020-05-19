@@ -1,0 +1,54 @@
+<div class="row bg-white">
+    <div ng-include="'/keeper/rule/leftmenu.html?v12'"></div>
+    <div class="v-shadow-content ruleadd">
+        <form class="form-horizontal" name="ruleForm" ng-submit="sendJsons()">
+            <div class="out">
+            <div class="col-sm-2">
+                <span class="title"><span class="text-red">*</span>类型</span>
+              </div>
+              <div class="col-sm-8">
+                <div class="form-group">
+                  <div>
+                      <select ng-model="posts.type" class="form-control" 
+                      ng-options="item.id as item.name  for item in types"
+                      name="member" required></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="out">
+                <div class="col-sm-2">
+                    <span class="title"><span class="text-red">*</span>内容</span>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="form-group">
+                      <div >
+                        <input type="text" class="form-control" ng-model="posts.content" required />
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            <div class="out">
+                <div class="col-sm-2">
+                  <span class="title"><span class="text-red">*</span>活动封面图</span>
+                </div>
+                <div class="col-sm-8">
+                  <div>*最佳比例：375 X 220(2倍以上不会失真)</div>
+                  <pic-send style="padding: 15px 0" pic-url="posts.picUrl" min-width="" min-height=""></pic-send>
+                </div>
+              </div>
+              <div class="out">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8 mt20">
+                  <!--<div class="col-sm-3 col-sm-offset-1 ">-->
+                  <!--<a class="btn btn-default btn-block" back-button>返回</a>-->
+                  <!--</div>-->
+                  <div class="col-sm-4">
+                    <button class="btn btn-primary btn-block">保存</button>
+                  </div>
+                </div>
+              </div>
+        </form>
+    </div>
+</div>
+        

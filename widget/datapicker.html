@@ -1,0 +1,61 @@
+
+
+<div ng-init="dateun=1" class="datepicker form-inline">
+	<div class="form-group z-index2">
+		<div class="input-group">
+			<INPUT ng-model="datepickerTitle" class="form-control" ng-click="dateun=false"/>
+			<div class="input-group-addon btn btn-default" ng-click="dateun=!dateun"><i class="glyphicon glyphicon-calendar"></i></div>
+		</div>
+		<div class="datelist" ng-hide="dateun" >
+			<div class="controle">
+				<div class="col-sm-3 text-center">
+					<div class="row">
+						<div ng-click="datego(-1)"  class="btn btn-default btn-sm" ng-class="{'disabled':dare.i==0}"> <i class="glyphicon glyphicon-chevron-left"></i>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="col-sm-6 text-center">
+					<div  class="row">
+						<span class="datecontrol" ng-bind="date.year+'年'+date.month+'月'"></span>
+					</div>
+
+				</div>
+				<div class="col-sm-3 text-center">
+					<div class="row">
+						<div ng-class="{'disabled':dare.i==0}"  ng-click="datego(1)"  class="btn btn-default btn-sm"> <i class="glyphicon glyphicon-chevron-right"></i>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+			<div class="weektitle">
+				<div class="weekson" ng-repeat="week in date.week" ng-bind="week"></div>
+			</div>
+			<div class="datecontent">
+				<div class="dateout">
+					<div  ng-repeat="dates in date.dates" >
+						<div class="dateson" ng-class="{'bordert':$index<7,'borderr':($index+1)%7==0}" ng-if="dates.day">
+							<a ng-class="{'active':datepickerTitle==dates.ture,'bordert':$index<8,'borderr':($index+1)%7==0}" ng-click="join(dates.ture)" ng-bind="dates.day" ng-if="!dates.color||date.join[dates.ture]"></a>
+							<span ng-class="{'active':date.join[dates.ture],'bordert':$index<8,'borderr':($index+1)%7==0}" style="color:#ddd" ng-bind="dates.day" ng-if="dates.color&&!date.join[dates.ture]"></span>
+						</div>
+
+						<div class="dateson"  ng-class="{'bordert':$index<7,'borderr':($index+1)%7==0}"  ng-if="!dates.day"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 ">
+				<div class="btn btn-primary" ng-click="today()">今天</div>
+			</div>
+			<div class="col-sm-6 ">
+				<div class="btn btn-default" ng-click="dateun=1">收起</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="datepicker-background" ng-click="show()" ng-hide="dateun">
+			
+		</div>
+</div>

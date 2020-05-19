@@ -1,0 +1,132 @@
+<div class="container contents bgw ">
+	<div class="col-md-10 col-sm-12">
+		<form class="form-horizontal " name="customerAdd" ng-submit="send()">
+			<div class="form-group">
+				<label class="control-label col-sm-4">类型</label>
+				<div class="col-sm-4 ">
+					<div class="form-control-static">会员</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-4">日期</label>
+				<div class="col-sm-4">
+					<div class="form-control-static" ng-bind="config.time|date:'yyyy-MM-dd'"></div>
+				</div>
+			</div>
+			<div class="form-group ">
+				<label class="control-label col-sm-4"><span class="text-red">*</span>姓名</label>
+				<div class="col-sm-4">
+						<input type="text" class="form-control" name="fullname" ng-model="posts.fullname" placeholder="请输入顾客全名" ng-minlength='2' ng-maxlength='20' ng-pattern="/^[\u4e00-\u9fa5A-Za-z0-9_-]+$/" required/>
+				</div>
+				<div class="col-sm-4 form-control-static" >
+					 <span class="text-red" ng-messages="customerAdd.fullname.$error" ng-show="!customerAdd.fullname.$pristine||customerAdd.fullname.$touched">
+					 	 <span  ng-message="required">
+						  不能为空
+						  </span>
+						  <span  ng-message="minlength">
+						  不得小于2个字符
+						  </span>
+						  <span  ng-message="maxlength">
+						  不得大于20个字符
+						  </span>
+						  <span  ng-message="pattern">
+						  不能含有空格及特殊字符
+						  </span>
+					 </span>
+					 <span ng-show="customerAdd.fullname.$untouched&&customerAdd.fullname.$pristine">
+					 	2-20个字符以内
+					 </span>
+					  <span class="text-green" ng-show="customerAdd.fullname.$valid">
+					 	输入正确
+					 </span>
+				</div>
+					
+			</div>
+			<div class="form-group ">
+				<label class="control-label col-sm-4"><span class="text-red">*</span>电话</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control"  ng-model="posts.phone" name="phone" placeholder="请输入用户的手机号码" ng-pattern="/^1[\d]*$/"  ng-minlength='11' ng-maxlength='11' required>
+				</div>
+
+
+				<div class="col-sm-4 form-control-static" >
+					 <span class="text-red" ng-messages="customerAdd.phone.$error" ng-show="!customerAdd.phone.$pristine||customerAdd.phone.$touched">
+					 	 <span  ng-message="required">
+						  不能为空
+						  </span>
+						  <span  ng-message="pattern" >
+						  请输入正确电话号码
+						  </span>
+						   <span  ng-message="minlength">
+						  电话号码为11位
+						  </span>
+						  <span  ng-message="maxlength">
+						  电话号码为11位
+						  </span>
+					 </span>
+					 <span ng-show="customerAdd.phone.$untouched&&customerAdd.phone.$pristine">
+					 	2-20个字符以内
+
+					 </span>
+					  <span class="text-green" ng-show="customerAdd.phone.$valid">
+					 	输入正确
+					 </span>
+				</div>
+			</div>
+			<div class="form-group ">
+				<label class="control-label col-sm-4">性别</label>
+				<div class="col-sm-8">
+					<div class="btn-group btn-checked btn-block" data-toggle="buttons">
+						<label class="btn btn-default active"  ng-click="posts.gender=0">
+							<input type="radio" ng-model="posts.gender" value="0"  >未知</label>
+						<label class="btn btn-default " ng-click="posts.type=1">
+							<input type="radio" ng-model="posts.gender" value="1" >男</label>
+						<label class="btn btn-default " ng-click="posts.type=2">
+							<input type="radio" ng-model="posts.gender" value="2"  >女</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-4">身份证</label>
+				<div class="col-sm-4"> 
+					<input type="text" class="form-control"  ng-model="posts.id_no" name="id_no" placeholder="请输入客户的身份证号码" ng-pattern="/^[0-9x]?/"  ng-minlength='15' ng-maxlength='18'>
+				</div>
+				<div class="col-sm-4 form-control-static" >
+					 <span class="text-red" ng-messages="customerAdd.id_no.$error" ng-show="!customerAdd.id_no.$pristine||customerAdd.id_no.$touched">
+						  <span  ng-message="pattern" >
+						  请输入正确的身份证号码
+						  </span>
+						   <span  ng-message="minlength">
+						  身份证号码为15位或18位
+						  </span>
+						  <span  ng-message="maxlength">
+						  身份证号码为15位或18位
+						  </span>
+					 </span>
+					 <span ng-show="customerAdd.id_no.$untouched||customerAdd.id_no.$pristine">
+					 	2-20个字符以内
+
+					 </span>
+					  <span class="text-green" ng-show="customerAdd.id_no.$valid&&!customerAdd.id_no.$pristine">
+					 	输入正确
+					 </span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-4">生日</label>
+				<div class="col-sm-4">
+					<input type="date" class="form-control" ng-model="posts.birhtday">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 col-sm-offset-4">
+					<a class="btn btn-default btn-block" back-button>返回</a>
+				</div>
+				<div class="col-sm-2 ">
+					<button class="btn btn-primary btn-block" >确定</button>
+				</div>
+				
+			</div>
+		</form>
+	</div>
+</div>

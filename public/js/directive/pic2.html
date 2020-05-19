@@ -1,0 +1,80 @@
+<div>
+    <div class="btn btn-block btn-default ng-binding" style="width: 117px" ng-click="openFn($index)">选择图片</div>
+    <div style="margin: 10px 0">
+      <img ng-src="{{picUrl2}}" ng-if="picUrl2" style="display: inline-block;max-height: 117px">
+    </div>
+  
+    <div class="modal fade bs-example-modal-sm pic-select" id="{{view.timestamp}}"  tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+      <div class="modal-dialog" style="max-width: 866px;background: white;width: 100%">
+        <div class="modal-content">
+          <div class="modal-header ">
+            <button type="button" class="close" onclick="$('.pic-select2').modal('hide')">
+              <span aria-hidden="true">&times;</span>
+              <span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">素材选择</h4>
+          </div>
+          <div class="modal-body" style="padding: 0">
+            <div class="inner_side">
+              <div class="inner_menu_item" ng-click="groupList(-2)" ng-class="{'selected':view.leftIndex==-2}">
+                全部图片
+              </div>
+              <div class="inner_menu_item" ng-click="groupList(-1)" ng-class="{'selected':view.leftIndex==-1}">
+                未分组
+              </div>
+              <div class="inner_menu_item" ng-click="groupList($index)" ng-class="{'selected':view.leftIndex==$index}" ng-repeat="item in view.groups">
+                {{item.name}}
+              </div>
+              <div class="inner_menu_item" ng-click="view.checkName = true">
+                + 新建分组
+              </div>
+              <div class="imgover" ng-if="view.checkName">
+                <div>创建分组</div>
+                <input class="form-control" type="text" ng-model="post.name" style="margin-bottom: 15px" required>
+                <div class="btn btn-success" ng-click="sendGroup()">确定</div>
+                <div class="btn btn-default" ng-click="view.checkName = false">取消</div>
+              </div>
+            </div>
+            <div class="img_pick">
+              <div class="in_dialog">
+                <form enctype="multipart/form-data" id="iimgform">
+                  <label class="btn btn-primary pull-right" for="uploadfile">本地上传</label>
+                  <input class="hide" type="file" id="uploadfile" accept="image/bmp,image/jpeg,image/jpg,image/png,image/gif" ng-model="tempic" name="file"
+                         onchange="angular.element(this).scope().imgUpload(this)"/>
+                </form>
+              </div>
+              <div class="img-over">
+                <div class="img-pick" ng-click="changeFn($index)" ng-repeat="item in view.materials.items">
+                  <div class="pic_box">
+                    <img ng-src="{{item.url}}" style="height: 117px">
+                  </div>
+                  <div class="lbl_content">{{item.name}}</div>
+                  <div class="selected_mask" ng-if="view.select==$index">
+                    <div class="selected_mask_inner"></div>
+                    <div class="selected_mask_icon"></div>
+                  </div>
+                </div>
+                <div class="col-sm-12" ng-if="view.materials.pageSize>1">
+                  <pagination items-per-page="view.materials.count" boundary-links="true" rotate="false" max-size="20"
+                              total-items="view.materials.total" ng-model="view.materials.page"
+                              class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                              first-text="&laquo;" last-text="&raquo;" ng-change="pageChange()"></pagination>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-sm-3 col-sm-offset-3">
+              <div class="btn btn-primary btn-block" ng-click="submitFn()">确定</div>
+            </div>
+            <div class="col-sm-3 col-sm-offset-1">
+              <div class="btn btn-default btn-block" onclick="$('.pic-select2').modal('hide')"> 关闭</div>
+            </div>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+  </div>

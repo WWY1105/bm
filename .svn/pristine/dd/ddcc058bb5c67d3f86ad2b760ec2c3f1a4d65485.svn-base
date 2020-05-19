@@ -1,0 +1,26 @@
+<div class="out ruleadd2" >
+		<div class="col-sm-2 text-right ">
+			<span class="title">活动详情</span>
+		</div>
+		<div class="col-sm-10 content mb0">
+			<div class="form-group mb22"  ng-repeat="content in view.rules[name].content track by $index">
+				<div ng-repeat="(key, value) in content.text">
+					{{key+value}}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="out ruleadd2">
+		<div class="col-sm-2 text-right ">
+			<span class="title">数量</span>
+		</div>
+		<div class="col-sm-10 content2 mb0">
+			<div class="form-group mb22" >
+				<div class="form-group mb22" ng-repeat="(key, value) in view.rules[name].content">
+					<div class=" form-control-static text-left" ng-bind="(value.count&& ('仅限'+value.count+'人'))||'数量无限制'" ></div>
+					<div class=" form-control-static text-left" ng-bind="(value.countLimit&& '消费满'+value.countLimit+'元使用')||'无消费限制'" ></div>
+				</div>
+			</div>
+		</div>
+	</div>

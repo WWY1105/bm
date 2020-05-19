@@ -1,0 +1,22 @@
+<div class="row bg-white">
+  <div ng-include="'/admin/rule/leftmenu.html'"></div>
+  <div class="v-shadow-content ruleadd">
+    <div class="col-sm-12 mb15">
+      <button type="button" class="btn btn-primary pull-right" ng-click="goto('rule/exhibition/add')">新增
+      </button>
+    </div>
+    <div class="time-line1" ng-repeat="item in view.exhibition">
+      <div class="line-in">
+        <h4>{{item.name}}</h4>
+
+        <div ng-repeat="text in item.text"><p>{{text}}</p></div>
+        <div class="mt15">
+          <button type="button" class="btn btn-primary" ng-click="goto('rule/exhibition/' +item.id)">修改
+          </button>
+          <button type="button" class="btn btn-danger" ng-click="removeFn(item.id)">删除
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

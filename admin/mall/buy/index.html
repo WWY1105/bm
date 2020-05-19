@@ -1,0 +1,79 @@
+<div class="bgw">
+  <div class="row">
+    <div ng-include="'/admin/mall/leftmenu.html'"></div>
+    <div class="v-shadow-content">
+      <div class="col-sm-12 form-control-stack text-left mb22">
+        <button class="btn btn-primary" ng-click="goto('mall/buy/add')">新增</button>
+        <div>链接:https://m.ishangbin.com/admin.html#/mall?guestid={{config.staff.guestId}}</div>
+
+      </div>
+      <table class="table table-bordered">
+        <thead>
+        <tr class="plan-title">
+          <td>序号</td>
+          <td>商品</td>
+          <td>编号</td>
+          <td>总数</td>
+          <td>库存</td>
+          <td>操作</td>
+        </tr>
+        </thead>
+        <tbody class="slide-down">
+        <tr ng-repeat="row in view.mall.items" ng-class="{'active':!row.on}">
+          <td ng-bind="((view.mall.page-1)*view.mall.count)+$index+1"></td>
+          <td ng-bind="row.goods.name"></td>
+          <td ng-bind="row.code"></td>
+          <td ng-bind="row.countLimit||'不限量'"></td>
+          <td ng-bind="row.stock"></td>
+          <td>
+            <a ng-click="detailFn($index)">详情</a>
+            <a ng-if="!row.on" ng-click="goto('mall/buy/edit/'+ row.id)">修改</a>
+            <a ng-if="row.on" ng-click="turnFn($index,'off')">下架</a>
+            <a ng-if="!row.on" ng-click="turnFn($index,'on')">上架</a>
+            <a ng-click="deleteFn($index)">删除</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="col-sm-12 plan-son text-left" ng-if="!view.mall.items">
+        无查询结果
+      </div>
+      <div class="col-sm-12" ng-if="view.mall.pageSize>1">
+        <pagination items-per-page="view.mall.count" boundary-links="true" total-items="view.mall.total"
+                    ng-model="view.mall.page" class="pagination-sm" previous-text="&lsaquo;" ng-change="pageChange()"
+                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          &times;
+        </button>
+        <h4 class="modal-title">详情</h4>
+      </div>
+      <div class="modal-body">
+        <img ng-src="{{view.detail.picUrl}}" style="max-height: 100px">
+        <ul class="mt15">
+          <li>时间：{{view.detail.startDate}}-{{view.detail.endDate}}</li>
+          <li ng-if="view.detail.timesLimit">每人可领取{{view.detail.timesLimit}}次，每天最多可领取{{view.detail.dailyLimit}}次</li>
+          <li class="" ng-repeat="a in view.detail.text" ng-bind="a"></li>
+          <li ng-if="view.detail.picUrls">
+            活动详情：
+            <div ng-repeat="item in view.detail.picUrls">
+              <div>{{item.title}}</div>
+              <img style="width: 200px" ng-src="{{item.url}}">
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal -->
+</div>
+
+

@@ -1,0 +1,53 @@
+<div  class="keepershopadd" >
+	<div class="container  contents bgw">
+
+		<form class="row" ng-submit="postSend()" name="add_form">
+			<div class="col-sm-8 col-sm-offset-2 mt20">
+
+				<div class="tables">
+					<ul class="list-group tablenum text-center">
+						<ul class="list-group-item active">
+							<li class="text-center col-sm-2">时段</liP>
+							<li class="text-center col-sm-3">开始时间</li>
+							<li class="text-center col-sm-3">结束时间</li>
+							<li class="text-center col-sm-2">操作</li>
+						</ul>
+						<ul class="list-group-item" ng-repeat="(key,bunames) in view.table" ng-if="bunames.show">
+							<li class="text-center col-sm-2 h44"  ng-bind="bunames.buname">等待读取</li>
+							<li class="text-center col-sm-3"  >
+								<input class="form-control" type="time" ng-model="view.table[key].startTime" />
+							</li>
+							<li class="text-center col-sm-3"  >
+								<input class="form-control" type="time" ng-model="view.table[key].endTime" />
+							</li>
+							<li class="text-center col-sm-2"  >
+								<a class="btn btn-default" ng-click="delFn(key)">删除</a>
+							</li>
+						</ul>
+					</ul>
+				</div>
+			</div>
+
+			<div class="col-sm-6 col-sm-offset-3 mt20 mb22">
+				<div class="row">
+					<Div class="col-sm-2" ng-repeat="(key,bunames) in view.table" ng-if="!bunames.show">
+						<button class="btn btn-info " ng-click="addFn(key)">
+							<span ng-bind="'添加'+bunames.buname" ></span>
+						</button>
+					</Div>
+
+				</div>
+
+			</div>
+			<div class="col-sm-6 col-sm-offset-3">
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-2">
+						<a class="col-sm-4 btn btn-default btn-danger" ng-click="goto('shop')">返回</a>
+						<a class="col-sm-4 col-sm-offset-1 btn btn-default btn-danger" ng-click="saveFn()">确定</a>
+					</div>
+					
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

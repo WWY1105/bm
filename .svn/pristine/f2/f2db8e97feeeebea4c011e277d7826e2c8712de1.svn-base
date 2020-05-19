@@ -1,0 +1,445 @@
+<div class="keepershopadd">
+  <div class="container  contents bgw">
+
+    <div class="col-sm-8 col-sm-offset-2 stepshow">
+      <div class="step">
+        <div class="stepover" style="width:0"></div>
+        <div class="stepson step1 active">
+          <span>1</span>
+          <h5>设置基本资料</h5>
+        </div>
+        <div class="stepson step52">
+          <span>2</span>
+          <h5>设置桌台资料</h5>
+        </div>
+        <div class="stepson step2">
+          <span>3</span>
+          <h5>设置营业时间</h5>
+        </div>
+        <div class="stepson step54">
+          <span>4</span>
+          <h5>添加员工</h5>
+        </div>
+        <div class="stepson step3">
+          <span>5</span>
+          <h5>完成</h5>
+        </div>
+      </div>
+    </div>
+    <form class="row" ng-submit="postSend()" name="add_form">
+      <div class="col-md-12">
+        <div class="col-sm-10 col-sm-offset-1 form-horizontal">
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-6 text-red">*为必填项</div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="shoptel" class="col-sm-3 control-label text-right">
+                <span class="text-red">*</span>
+                电话
+              </label>
+              <div class="col-sm-9 titlePin">
+                <input type="text" class="form-control" ng-model="posts.tel" name="Tel"
+                       placeholder="输入固定电话或手机号，固定电话可以加-" ng-pattern="config.textCheckJson.telephone" id="shopTel"
+                       required ng-focus="add_form.Tel.show=1" ng-blur="add_form.Tel.show=0"></div>
+              <span class="help-block errorTitle" ng-show="add_form.Tel.show && !add_form.Tel.$valid"
+                    ng-messages="add_form.Tel.$error">
+								<div ng-message="required">
+									<span ng-bind="config.textCheckErrorJson.telephone"></span>
+								</div>
+								<div class="text-red" ng-message="pattern">
+									<span ng-bind="config.textCheckErrorJson.telephone"></span>
+								</div>
+							</span>
+
+            </div>
+
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="openingDay" class="col-sm-4 control-label text-right">
+                <span class="text-red">*</span>
+                开业时间
+              </label>
+              <div class="col-sm-8 titlePin" id="openingDay">
+                <input type="date" class="form-control" ng-model="posts.openingDay" value="{{posts.openingDay}}"
+                       name="openingDay" placeholder="输入开业日期" max="{{view.endtime|date:'yyyy-MM-dd'}}"
+                       id="shopopeningDay" required ng-focus="add_form.openingDay.show=1"
+                       ng-blur="add_form.openingDay.show=0"></div>
+
+
+              <span class="help-block errorTitle" ng-show="add_form.openingDay.show && !add_form.openingDay.$valid"
+                    ng-messages="add_form.openingDay.$error">
+								<div ng-message="required">
+									<span>请输入日期</span>
+								</div>
+							</span>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="style" class="col-sm-3 control-label text-right">
+                <span class="text-red">*</span>
+                菜系
+              </label>
+              <div class="col-sm-9 titlePin">
+                <select ng-model="posts.cuisine" name="style" id="style" class="form-control" ng-options="t.code as t.text for t in view.style"
+                        required>
+                  <option>--请选择--</option>
+                </select>
+
+                <span class="help-block errorTitle" ng-show="add_form.style.show && !add_form.style.$valid"
+                      ng-messages="add_form.style.$error">
+									<div ng-message="required">
+										<span>请选择</span>
+									</div>
+								</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="avgprice" class="col-sm-4 control-label text-right">
+                <span class="text-red">*</span>
+                人均消费
+              </label>
+              <div class="col-sm-7 titlePin">
+                <input type="text" class="form-control" ng-model="posts.avgprice" name="avgprice" placeholder="输入人均消费金额"
+                       ng-pattern="/[0-9]/" id="avgprice" required ng-focus="add_form.avgprice.show=1"
+                       ng-blur="add_form.avgprice.show=0"></div>
+              <div class=" help-block">元</div>
+              <span class="help-block errorTitle" ng-show="add_form.avgprice.show && !add_form.avgprice.$valid"
+                    ng-messages="add_form.avgprice.$error">
+								<div ng-message="required">
+									<span>请输入人均消费</span>
+								</div>
+								<div class="text-red" ng-message="pattern">
+									<span>必须为数字</span>
+								</div>
+							</span>
+
+            </div>
+
+          </div>
+          <div class="col-md-10">
+            <div class="form-group area " style="margin-left:-7%">
+              <label class="col-sm-2 control-label text-right">
+                <span class="text-red">*</span>
+                地区
+              </label>
+              <div class="col-sm-10">
+                <div class="row">
+                  <div class="col-sm-5" ng-class="{'has-error':error.shopArea.code==0}">
+                    <select ng-change="area1change()" class="form-control" ng-model="area.area1"
+                            ng-options="item.code as item.name for item in areaJson1" name="area" required>
+                      <option value="">--请选择--</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-5" ng-show="area.area2">
+                    <select class="form-control" ng-model="area.area2" name="area2"
+                            ng-options=" item.code as item.name for item in areaJson2"
+                            ng-change="area2change()"></select>
+                  </div>
+                  <!--<div class="col-sm-4" ng-show="posts.area">-->
+                  <!--<select class="form-control" ng-model="posts.area"-->
+                  <!--ng-options="item.code as  item.name for item in areaJson3"></select>-->
+                  <!--</div>-->
+                  <span class="help-block " ng-messages="add_form.area.$error">
+										<div ng-message="required">请选择地区</div>
+									</span>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--   <div class="col-md-10">
+               <div class="form-group">
+                 <label class="col-sm-2 control-label text-right">
+                   <span class="text-red">*</span>
+                   类型
+                 </label>
+
+                 <div class="col-sm-6 btn-checked">
+                   <div class="btn-group">
+                     <label class="btn btn-default " ng-repeat="shopt in shopType" ng-bind="shopt.text"
+                            ng-model="posts.shopType" btn-radio="{{shopt.code}}">
+                     </label>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div class="col-md-10">
+               <div class="form-group">
+                 <label class="col-sm-2 control-label text-right">
+                   <span class="text-red">*</span>
+                   买单状态
+                 </label>
+
+                 <div class="col-sm-6 btn-checked">
+                   <div class="btn-group">
+                     <label class="btn btn-default " ng-repeat="shopt in tableType" ng-bind="shopt.tableCheck"
+                            ng-model="posts.shopType" btn-radio="{{shopt.code}}">
+                     </label>
+                   </div>
+                 </div>
+               </div>
+             </div>-->
+          <div class="col-md-7">
+            <div class="form-group" style="margin-left:-13%">
+              <label for="shopaddress" class="col-sm-3 control-label text-right">
+                <span class="text-red">*</span>
+                地址
+              </label>
+              <div class="col-sm-9 titlePin" id="shopaddress">
+                <input type="text" class="form-control" ng-model="posts.address" name="address" placeholder="输入您的详细地址"
+                       minlength="5" required ng-focus="add_form.address.show=1" ng-blur="add_form.address.show=0">
+              </div>
+              <span class="help-block errorTitle" ng-show="add_form.address.show && !add_form.address.$valid"
+                    ng-messages="add_form.address.$error">
+								<div ng-message="required">
+									<span>请输入地址</span>
+								</div>
+                              <div ng-message="minlenth">
+									<span>地址最少填写五个字符</span>
+								</div>
+
+							</span>
+
+            </div>
+            <div class="form-group" style="margin-left:-13%">
+              <label for="shoptel" class="col-sm-3 control-label text-right">
+                停车场
+              </label>
+              <div class="col-sm-9 titlePin">
+                <textarea ng-model="posts.parkingDescription" style="resize: vertical;font-size:12px"
+                          class="form-control"></textarea>
+              </div>
+              <span class="help-block errorTitle"
+                    ng-show="add_form.parkingDescription.show && !add_form.parkingDescription.$valid"
+                    ng-messages="add_form.parkingDescription.$error">
+								<div ng-message="required">
+									<span ng-bind="config.textCheckErrorJson.text"></span>
+								</div>
+								<div class="text-red" ng-message="pattern">
+									<span ng-bind="config.textCheckErrorJson.text"></span>
+								</div>
+							</span>
+
+            </div>
+          </div>
+
+          <div class="col-md-10">
+            <div class="form-group" style="margin-left:-7%">
+              <label for="shoptel" class="col-sm-2 control-label text-right">
+                商家介绍
+              </label>
+              <div class="col-sm-10 titlePin" id="shoptel">
+                <textarea ng-model="posts.description" style="resize: vertical;font-size:12px"
+                          class="form-control"></textarea>
+              </div>
+              <span class="help-block errorTitle" ng-show="add_form.description.show && !add_form.description.$valid"
+                    ng-messages="add_form.description.$error">
+								<div ng-message="required">
+									<span ng-bind="config.textCheckErrorJson.telephone"></span>
+								</div>
+								<div class="text-red" ng-message="pattern">
+									<span ng-bind="config.textCheckErrorJson.telephone"></span>
+								</div>
+							</span>
+
+            </div>
+
+          </div>
+
+          <div class="col-md-10 ">
+            <div class="form-group user-list" style="margin-left:-7%">
+              <label for="shoptel" class="col-sm-2 control-label text-right">
+                <span class="text-red">*</span>
+                商家图片
+              </label>
+              <div class="pull-left titlePin" id="picshow">
+                <div class="btn btn-primary ng-binding"  style="margin-left: 13px;width: 105px" ng-click="addpic()">新增</div>
+
+                <table class="clear">
+                  <tr>
+                    <td>
+                      <div class="pull-left" ng-repeat="pic in view.picurl">
+                        <span class="piclist" ng-mouseover="imgedit=1" ng-mouseleave="imgedit=0">
+                          <img ng-src="{{pic.url}}"/>
+                          <div ng-show="imgedit==1" class="imgedit ">
+                            <A><i ng-click="removeImg($index)" class="glyphicon glyphicon-remove"></i></A><br>
+                            <A ng-click="bigpicshwo(pic.url)">查看大图</A>
+                            <a ng-click="setCover(pic.url)">设为封面</a>
+                          </div>
+                        </span>
+                      </div>
+                    </td>
+
+                  </tr>
+                </table>
+
+              </div>
+              <!--<div class="col-sm-2">-->
+                <!--<div class="add" style="width:100px" ng-click="addpic()">-->
+
+									<!--<span class="iconadd"> <i class=" glyphicon glyphicon-plus"></i>-->
+									<!--</span>-->
+
+                <!--</div>-->
+              <!--</div>-->
+            </div>
+
+          </div>
+
+          <div class="col-sm-10 col-sm-offset-2">
+            <div class="row">
+              <div class="col-sm-3">
+                <a class="btn btn-default btn-block" ng-click="goto('shop')">返回</a>
+              </div>
+              <div class="col-sm-3 col-sm-offset-1">
+                <button class="btn btn-primary btn-block" ng-disabled="!add_form.$valid" ng-click="senposts()">下一步
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="map" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title">选择地理位置</h4>
+      </div>
+      <div class="modal-body" id="mapin" style="height:400px"></div>
+      <div class="modal-footer">
+        <div class="col-md-3 col-md-offset-1">
+          <div class="btn btn-primary btn-block" ng-click="resetpostion()">重新定位</div>
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+          <div class="btn btn-primary btn-block" ng-click="setpostion()">确定</div>
+        </div>
+        <div class="col-md-3 col-md-setoff-1">
+          <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+        </div>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+
+<div class="modal fade bs-example-modal-sm pic-select" id="addpic" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog" style="width: 866px;background: white">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title">素材选择</h4>
+      </div>
+      <div class="modal-body" style="padding: 0">
+        <div class="inner_side">
+          <div class="inner_menu_item" ng-click="groupList(-2)" ng-class="{'selected':view.leftIndex==-2}">
+            全部图片
+          </div>
+          <div class="inner_menu_item" ng-click="groupList(-1)" ng-class="{'selected':view.leftIndex==-1}">
+            未分组
+          </div>
+          <div class="inner_menu_item" ng-click="groupList($index)" ng-class="{'selected':view.leftIndex==$index}"
+               ng-repeat="item in view.groups">
+            {{item.name}}
+          </div>
+          <div class="inner_menu_item" ng-click="view.checkName = true">
+            + 新建分组
+          </div>
+          <div class="imgover" ng-if="view.checkName">
+            <div>创建分组</div>
+            <input class="form-control" type="text" ng-model="post.name" style="margin-bottom: 15px" required>
+            <div class="btn btn-success" ng-click="sendGroup()">确定</div>
+            <div class="btn btn-default" ng-click="view.checkName = false">取消</div>
+          </div>
+        </div>
+        <div class="img_pick">
+          <div class="in_dialog">
+            <form enctype="multipart/form-data" id="iimgform">
+              <label class="btn btn-primary pull-right" for="uploadfile">本地上传</label>
+              <input class="hide" type="file" id="uploadfile"
+                     accept="image/bmp,image/jpeg,image/jpg,image/png,image/gif" ng-model="tempic" name="file"
+                     onchange="angular.element(this).scope().imgUpload(this)"/>
+            </form>
+          </div>
+          <div class="img-over">
+            <div class="img-pick" ng-click="changeFn($index)" ng-repeat="item in view.materials.items">
+              <div class="pic_box">
+                <img ng-src="{{item.url}}" style="height: 117px">
+              </div>
+              <div class="lbl_content">{{item.name}}</div>
+              <div class="selected_mask" ng-if="view.select==$index">
+                <div class="selected_mask_inner"></div>
+                <div class="selected_mask_icon"></div>
+              </div>
+            </div>
+            <div class="col-sm-12" ng-if="view.materials.pageSize>1">
+              <pagination items-per-page="view.materials.count" boundary-links="true" rotate="false" max-size="20"
+                          total-items="view.materials.total" ng-model="view.materials.page"
+                          class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                          first-text="&laquo;" last-text="&raquo;" ng-change="pageChange()"></pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-3 col-md-offset-3">
+          <div class="btn btn-primary btn-block" ng-click="submitFn()">确定</div>
+        </div>
+        <div class="col-md-3 col-md-setoff-1">
+          <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+        </div>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+
+<div class="modal fade bs-example-modal-sm" id="bigpic" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form nctype="multipart/form-data" id="iimgform">
+        <div class="modal-header ">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">查看大图</h4>
+        </div>
+        <div class="modal-body" style="overflow:hidden">
+          <img ng-src="{{view.bigpic}}" style="max-width:100%"/>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-3 col-md-setoff-1">
+            <a class="btn btn-default btn-block" href="{{view.bigpic}}" target="_blank">新窗口打开</a>
+          </div>
+          <div class="col-md-3 col-md-setoff-1">
+            <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

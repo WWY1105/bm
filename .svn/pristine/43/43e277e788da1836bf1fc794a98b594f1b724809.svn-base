@@ -1,0 +1,79 @@
+<div class="container contents bgw ">
+	<div class="col-sm-8  col-sm-offset-2">
+		<form class="form-horizontal " ng-submit="send()">
+			<div class="form-group">
+				<label class="control-label col-sm-4"></label>
+				<div class="col-sm-4">
+					<div class="avatar-lg">
+						<img ng-src="{{view.user.avatarUrl||'public/img/avatar.png'}}"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-4">姓名</label>
+				<div class="col-sm-4 ">
+					<div class="form-control-static" ng-bind="view.user.nickname"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-4">卡号</label>
+				<div class="col-sm-4">
+					<div class="form-control-static" ng-bind="view.user.memberCardNo"></div>
+				</div>
+			</div>
+			<div class="form-group ">
+				<label class="control-label col-sm-4">类型</label>
+				<div class="col-sm-8">
+					<div class="btn-group btn-checked btn-block" data-toggle="buttons" ng-init="posts.type='use'">
+						<label class="btn btn-default active"  ng-click="posts.type='use'">
+							<input type="radio" ng-model="posts.type" value="use"  >使用</label>
+						<label class="btn btn-default " ng-click="posts.type='add'">
+							<input type="radio"  ng-model="posts.type" value="add" >发放</label>
+
+					</div>
+				</div>
+
+			</div>
+			<div class="form-group ">
+				<label class="control-label col-sm-4">数量</label>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon" ng-if="posts.type=='add'">+</span>
+						<span class="input-group-addon" ng-if="posts.type=='use'">-</span>
+						<input type="number" class="form-control" min=1 max='10000'  ng-model="posts.point">
+					</div>
+
+				</div>
+			</div>
+			<div class="form-group ">
+				<label class="control-label col-sm-4">余额</label>
+				<div class="col-sm-8">
+					<div class="form-control-static" >
+						<span ng-bind="view.interest.point"></span>
+						<span ng-if="posts.point">
+							<span ng-show="posts.type=='add'" class="text-red" >
+								<span ng-bind="'+'+posts.point+'='"></span>
+								<span ng-bind="(posts.point+view.interest.point)|number"></span>
+							</span>
+							<span class="text-success" ng-show="posts.type=='use'">
+								<span ng-bind="'-'+posts.point+'='"></span>
+								<span ng-bind="(view.interest.point-posts.point)|number"></span>
+
+							</span>
+						</span>
+					</div>
+
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 col-sm-offset-4">
+					<a class="btn btn-default btn-block" back-button>返回</a>
+				</div>
+				<div class="col-sm-2 ">
+					<button class="btn btn-danger btn-block" >确定</button>
+				</div>
+				
+			</div>
+
+		</form>
+	</div>
+</div>

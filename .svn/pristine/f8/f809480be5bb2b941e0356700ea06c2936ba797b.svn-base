@@ -1,0 +1,93 @@
+var gulp = require('gulp');
+var ngAnnotate = require('gulp-ng-annotate');
+//var gutil = require('gulp-util');
+//var bower = require('bower');
+var uglify = require('gulp-uglify');
+var concat = require('gulp-concat');
+//var minifyCss = require('gulp-minify-css');
+var rename = require('gulp-rename');
+var connect = require('gulp-connect');
+//var sh = require('shelljs');
+//服务器刷新
+var livereload = require('gulp-livereload');
+var ngmin = require('gulp-ngmin');  //没错，就是她了。别忘了先用npm下载到node_modules目录然后添加到package.json里
+var stripDebug = require('gulp-strip-debug');
+
+//gulp.task('minify', function () {
+//    return gulp.src(['js/appService.js', 'js/app.js']) //注意，此处特意如此，避免顺序导致的问题
+//        .pipe(ngAnnotate())
+//        .pipe(ngmin({dynamic: false}))
+//        .pipe(stripDebug())
+//        .pipe(uglify({outSourceMap: false}))
+//        .pipe(concat('all.min.js'))
+//        .pipe(gulp.dest('js/'))
+//});
+// "public/js/indexctr.js", "public/js/config.js", "public/js/keeperctr.js",'public/js/build/statistics.js',"public/js/config.js"
+gulp.task('js', function () {
+    // 将你的默认的任务代码放在这
+    gulp.src(["public/js/adminctr.js","public/js/config.js", "public/js/keeperctr.js",'public/js/build/statistics.js'])
+        .pipe(ngAnnotate())
+        .pipe(ngmin({dynamic: false}))
+        .pipe(uglify({outSourceMap: false}))
+        //.pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest("public/js/dest"));
+
+});
+gulp.task('one', function () {
+    // 将你的默认的任务代码放在这
+    gulp.src(["public/js/qrcode.js"])
+        .pipe(ngAnnotate())
+        .pipe(ngmin({dynamic: false}))
+        .pipe(uglify({outSourceMap: false}))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest("public/js/"));
+
+});
+gulp.task('chart', function () {
+    return gulp.src(['public/highcharts/highcharts.js', 'public/highcharts/highcharts-ng.js']) //注意，此处特意如此，避免顺序导致的问题
+        .pipe(ngAnnotate())
+        .pipe(ngmin({dynamic: false}))
+        .pipe(stripDebug())
+        .pipe(uglify({outSourceMap: false}))
+        .pipe(concat('concat.min.js'))
+        .pipe(gulp.dest('public/highcharts/'))
+});
+gulp.task("watch", function () {
+    livereload.listen();
+
+    //gulp.watch("public/js/*.js", ["js"]);
+    gulp.watch("list.html", []);
+    //gulp.watch("public/js/build/*.js", ["js"]);
+});
+//定义livereload任务
+gulp.task('connect', function () {
+    connect.server({
+        livereload: true
+    });
+});
+
+
+/*
+ * 任务管理器
+ * 2016、8、16
+ *
+ * */
+
+
+
+// 文档临听
+gulp.task('watch', function () {
+    livereload.listen();
+//  // 监听所有.scss文档
+//   gulp.watch('src/styles/**/*.scss', ['styles']);
+
+// 监听所有css文档
+    gulp.watch('node_modules/bootstrap-less/bootstrap/*/*.less', ['less']);
+
+// 监听所有.js档
+    gulp.watch('public/html/js/*.js', ['scripts']);
+
+// 监听所有图片档
+    gulp.watch('public/html/img/*', ['image']);
+
+});

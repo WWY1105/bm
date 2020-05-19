@@ -1,0 +1,51 @@
+<div class="row bg-white">
+    <div ng-include="'/keeper/rule/leftmenu.html?v=12'"></div>
+    <div class="v-shadow-content ruleadd">
+        <div class="col-sm-12 mb15">
+            <button type="button" class="btn btn-primary pull-right" ng-click="goto('rule/addsource')">新增
+            </button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>标题</th>
+                    <th>内容</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in posts">
+                    <td>{{types[item.type]}}</td>
+                    <td> <p>{{item.content}}</p></td>
+                    <td>
+                        <img ng-if="item.picUrl" style="height: 100px" ng-src="{{item.picUrl||''}}">
+                       
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" ng-click="goto('rule/editsource/' +item.id)">修改
+                        </button>
+                        <button type="button" class="btn btn-danger" ng-click="removeFn(item.id)">删除
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- <div class="time-line1" ng-repeat="item in posts">
+            <div class="line-in">
+                <img ng-if="item.picUrl" style="height: 200px" ng-src="{{item.picUrl||''}}">
+
+                <div>
+                    <p>{{item.content}}</p>
+                    <p>类型:{{types[item.type]}}</p>
+                </div>
+                <div class="mt15">
+                    <button type="button" class="btn btn-primary" ng-click="goto('rule/editsource/' +item.id)">修改
+                    </button>
+                    <button type="button" class="btn btn-danger" ng-click="removeFn(item.id)">删除
+                    </button>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>

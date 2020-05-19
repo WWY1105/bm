@@ -1,0 +1,65 @@
+
+	<div class="out ruleadd2" >
+		<div class="col-sm-2 text-right ">
+			<span class="title">活动详情</span>
+		</div>
+		<div class="col-sm-10 content mb0">
+			<div    ng-repeat="(key, detail) in posts.SPEND.SPEND_AS.detail"  >
+				<div class="form-group mb22"  ng-repeat="details in detail" ng-init="details.id=key">
+					<div class="col-sm-3" >
+						<select ng-model="details.id"   class="form-control " 
+  					ng-options="item.id as item.name for item in view.member" name="member" required></select>
+					</div>
+
+					<div class=" form-control-static pull-left">花</div>
+					<div class="col-sm-3 ">
+						<input ng-model="details.amount" type="number" class="form-control" min ="1"/>	
+					</div>
+				<div class=" form-control-static pull-left">元，抵</div>
+					<div class="col-sm-3 ">
+						<input ng-model="details.value" type="number" class="form-control" min ="1"/>	
+					</div>
+					<div class="pull-left form-control-static">元</div>
+					<a class="add click" ng-if="$parent.$first&&$first" ng-click="ruleFn.addFn('SPEND_AS')"> <i class="glyphicon glyphicon-plus"></i>
+					</a>
+					<a class="remove click" ng-if="!$first||!$parent.$first" ng-click="ruleFn.removeFn('SPEND_AS',key,$index)"> <i class="glyphicon glyphicon-remove"></i>
+					</a>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<div class="out ruleadd2">
+		<div class="col-sm-2 text-right ">
+			<span class="title">数量</span>
+		</div>
+		<div class="col-sm-10 content2 mb0">
+			<div class="form-group mb22" >
+			
+				<Div class="col-sm-9">
+						<div class=" form-control-static pull-left">单次消费限用</div>
+					<div class="col-sm-4 ">
+						<input type="text" ng-model="posts.SPEND.SPEND_AS.countLimit" class="form-control" />
+					</div>
+					<div class=" form-control-static pull-left">
+						个
+						<span style="color:#999;padding-left:10px">(0为无限制)</span>
+					</div>
+					
+				</Div>
+			</div>
+			<div class="form-group mb22">
+					<Div class="col-sm-6">
+					<div class=" form-control-static pull-left">前</div>
+					<div class="col-sm-6 ">
+						<input type="text" ng-model="posts.SPEND.SPEND_AS.count" class="form-control" />
+					</div>
+					<div class=" form-control-static pull-left">
+						人有效
+						<span style="color:#999;padding-left:10px">(0为无限制)</span>
+					</div>
+				</Div>
+			</div>
+		</div>
+	</div>

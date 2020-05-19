@@ -1,0 +1,67 @@
+<div class="row bg-white">
+  <div ng-include="'/admin/rule/leftmenu.html'"></div>
+  <div class="v-shadow-content ruleadd">
+    <div class=" material">
+      <ul class="col-sm-12 nav nav-pills" role="tablist" style="padding: 0 27px;">
+        <li style="width: 5em;font-size: 14px;">分组</li>
+        <li role="presentation" ng-click="groupList(-2)" ng-class="{'active':view.leftIndex==-2}">全部图片</li>
+        <li role="presentation" ng-click="groupList(-1)" ng-class="{'active':view.leftIndex==-1}">未分组</li>
+        <li role="presentation" ng-click="groupList($index)" ng-class="{'active':view.leftIndex==$index}"
+            ng-repeat="item in view.groups">{{item.name}}
+        </li>
+        <li class="pull-right">
+          <form enctype="multipart/form-data" id="iimgform" style="display: inline-block">
+            <label class="btn btn-primary pull-right" for="uploadfile">上传文件</label>
+            <input class="hide" type="file" id="uploadfile" accept="image/bmp,image/jpeg,image/jpg,image/png,image/gif"
+                   ng-model="tempic" name="file"
+                   onchange="angular.element(this).scope().temimgshow(this)"/>
+          </form>
+          <button class="btn btn-primary pull-right" ng-click="view.checkName = true">新建分组</button>
+
+          <div class="imgover" ng-if="view.checkName" style="top: 40px">
+            <div>创建分组</div>
+            <input class="form-control" type="text" ng-model="post.name" style="margin-bottom: 15px" required>
+            <div class="btn btn-success" ng-click="submitFn()">确定</div>
+            <div class="btn btn-default" ng-click="view.checkName = false">取消</div>
+          </div>
+        </li>
+      </ul>
+      <div class="shopshow col-sm-12" style="clear: both">
+        <ul>
+          <li ng-repeat="materials in view.materials.items" class="rotate-in" style="margin:5px 20px;">
+            <div class="user-list" ng-mouseover="show=1"
+                 ng-mouseleave="show=0">
+              <div class="">
+                <!--<input type="checkbox" class="ng-pristine ng-untouched ng-valid" ng-model="posts.materials[$index]"-->
+                       <!--ng-true-value="{{materials.id}}" ng-false-value="{{null}}">-->
+                <!-- Single button -->
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                          aria-haspopup="true" style="padding: 1px 6px 2px"
+                          aria-expanded="false">
+                    分组 <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a ng-click="separateGroup()">未分组</a></li>
+                    <li ng-repeat="item in view.groups"><a
+                            ng-click="separateGroup($index,materials.id)">{{item.name}}</a>
+                    </li>
+                  </ul>
+                </div>
+                <a class="btn btn-xs btn-danger" ng-click="remove($index)">删除</a>
+              </div>
+              <div><img ng-src="{{materials.url}}" width="100%" height="130px"></div>
+              <div class="ellipsiss" title="{{materials.name}}">{{materials.name}}</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm-12 text-center" ng-if="view.materials.pageSize>1">
+        <pagination items-per-page="view.materials.count" boundary-links="true" rotate="false" max-size="20"
+                    total-items="view.materials.total" ng-model="view.materials.page"
+                    class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                    first-text="&laquo;" last-text="&raquo;" ng-click="pageChange()"></pagination>
+      </div>
+    </div>
+  </div>
+</div>

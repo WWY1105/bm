@@ -1,0 +1,89 @@
+<div class="container contents bgw ">
+
+	<div class="col-sm-8 col-sm-offset-2">
+		<div class="form-group" style="overflow:hidden">
+			<div class="col-sm-3">
+				<select class="form-control" ng-model="search.type" ng-options=" item.key as item.name  for item in dict.memberType"></select>
+			</div>
+			<div class="col-sm-5">
+				<input ng-model="search.param" class="form-control" placeholder="请输入卡号或者电话号码"></div>
+			<div class="col-sm-2">
+				<button class="btn btn-danger btn-block" ng-click="postSend()">查询</button>
+			</div>
+			<div class="col-sm-2">
+				<BUTTON class="btn btn-default  btn-block" ng-click="goto('customer/add')">添加会员</BUTTON>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-12 plan-title text-center">
+
+		<div class="col-sm-1"></div>
+		<div class="col-sm-2 text-left" style="padding-left:45px">顾客信息</div>
+		<div class="col-sm-1">来源</div>
+		<div class="col-sm-1">卡类别</div>
+		<div class="col-sm-2">最后消费时间</div>
+		<div class="col-sm-3">权益操作</div>
+		<div class="col-sm-1">
+		
+		</div>
+
+	</div>
+	<div class="col-sm-12 plan-son text-center" ng-repeat="customers in view.customer">
+		<div class="col-sm-1 avatar" >
+			<img ng-src="{{customers.avatarUrl||'public/img/avatar.png'}}" ng-mouseover="customers.show=1;interestGetFn(customers.id)" ng-mouseleave="customers.show=0">
+			<div class="popover right"  ng-hide="!customers.show"  ng-mouseover="customers.show=1" ng-mouseleave="customers.show=0">
+				<div class="arrow"></div>
+				<h3 class="popover-title" ng-bind="customers.nickname"></h3>
+				<div class="popover-content">
+					<p ng-bind="view.member[customers.grade].name||'顾客'"></p>
+					<p ng-bind="'余额:'+view.interest[customers.id].charge"></p>
+					<p ng-bind="'优惠券:'+view.interest[customers.id].couponCount"></p>
+					<p ng-bind="'积分:'+view.interest[customers.id].point"></p>
+					
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2 text-left p20" ng-class="{'line26':customers.memberCardNo&&customers.phone}">
+			<div ng-if="customers.memberCardNo"> <i class="glyphicon glyphicon-credit-card"></i>
+				{{customers.memberCardNo}}
+			</div>
+			<div ng-if="customers.phone"> <i class="glyphicon glyphicon-earphone"></i>
+				{{customers.phone}}
+			</div>
+		</div>
+
+		<div class="col-sm-1" ng-bind="dict.source[customers.source]||'未知来源'"></div>
+		<div class="col-sm-1" ng-bind="dict.cardType[customers.cardType]||'未绑定'"></div>
+		<div class="col-sm-2" ng-bind="customers.lastConsumeTime||'无消费信息'"></div>
+		<div class="col-sm-3">
+			<div class="row">
+
+				<button class="btn btn-default " ng-click="goto('customer/charge/'+customers.id)">充值</button>
+
+				<button class="btn btn-default " ng-click="goto('customer/point/'+customers.id)">积分</button>
+
+				<button class="btn btn-default " ng-click="goto('customer/coupon/'+customers.id)">券</button>
+
+			</div>
+
+		</div>
+		<div class="col-sm-1">
+			<BUTTON class="btn btn-default">发送验证码</BUTTON>
+		</div>
+	</div>
+		<div class="col-sm-12 plan-son text-left" ng-if="!view.customer[0]">
+			无查询结果
+		</div>
+</div>
+
+<script>
+	$(function(){
+		$('.popover').each(function () {
+			width=$(this).prev().outerWidth();
+			height=$(this).prev().outerHeight();
+			console.log($(this).parent().width());
+			$(this).css({"left":($(this).parent().outerWidth()-width)/2+width+2,"top":-($(this).outerHeight()-height-2)/2})
+		})
+		
+	})
+</script>

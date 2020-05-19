@@ -1,0 +1,69 @@
+<div class="row bg-white">
+  <div ng-include="'/keeper/rule/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <table class="table table-bordered">
+      <thead>
+      <tr class="plan-title">
+        <td>序号</td>
+        <td>名称</td>
+        <td>别名</td>
+        <td>编号</td>
+        <td>类型</td>
+        <td>总数</td>
+        <td>明细</td>
+        <td>创建时间</td>
+        <td>操作</td>
+      </tr>
+      </thead>
+      <tbody class="slide-down">
+      <tr ng-repeat="row in view.coupons.items" ng-class="{'active':!row.on}">
+        <td ng-bind="((view.coupons.page-1)*view.coupons.count)+$index+1"></td>
+        <td ng-bind="row.name"></td>
+        <td ng-bind="row.alias"></td>
+        <td ng-bind="row.code"></td>
+        <td ng-bind="view.type[row.category]"></td>
+        <td ng-bind="row.total||0"></td>
+        <td>
+          <div ng-repeat="(a,b) in row.count">{{view.state[a]+": "+b}}</div>
+        </td>
+        <td ng-bind="row.createTime"></td>
+        <td>
+          <a ng-click="detailFn(row.id)">详情</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="col-sm-12 plan-son text-left" ng-if="!view.coupons.items[0]">
+      无查询结果
+    </div>
+    <div class="col-sm-12" ng-if="view.coupons.pageSize>1">
+
+      <pagination items-per-page="view.coupons.count" boundary-link="true" rotate="false" max-size="20"
+                  total-items="view.coupons.total"
+                  ng-model="view.coupons.page" class="pagination-sm" previous-text="&lsaquo;"
+                  next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                  ng-change="pageChange()"></pagination>
+    </div>
+
+    <div class="modal fade" id="show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              &times;
+            </button>
+            <h4 class="modal-title" ng-bind="coupon.name"></h4>
+          </div>
+          <div class="modal-body">
+            <div ng-if="coupon.category == '904'">价值{{coupon.amount}}元</div>
+            <div class="" ng-repeat="a in coupon.content" ng-bind="a">
+            </div>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal -->
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="shopadd">
+
+    <div class="container  contents bgw">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 stepshow">
+                <div class="step">
+                    <div class="stepover" style="width:100%"></div>
+                    <div class="stepson step1 active">
+                        <span>1</span>
+                        <h5>设置基本资料</h5>
+                    </div>
+                    <div class="stepson step2 active">
+                        <span>2</span>
+                        <h5>分配店长账号</h5>
+                    </div>
+                    <div class="stepson step3 active">
+                        <span>3</span>
+                        <h5>完成</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="col-sm-12  text-center">
+                    <div class="well">
+                        <h3 class="text-success">恭喜您，新门店添加成功!</h3>
+                        <h4 class="text-danger">请通知店长尽快完善门店信息！</h4>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <a ng-click="goto('shops')" class="btn btn-primary btn-block">进入门店列表</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {//
+        $("#shoptype").popover({content: "直营店是指", trigger: "hover"});
+    })
+</script>

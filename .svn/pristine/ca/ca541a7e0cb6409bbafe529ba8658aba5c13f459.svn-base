@@ -1,0 +1,161 @@
+<div class="row bgw">
+  <div ng-include="'/admin/notice/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <div class="nav-title">
+      <div class="active">
+        关注提醒
+      </div>
+    </div>
+    <!---->
+    <div class="">
+      <div class="col-sm-10 col-sm-offset-1 validate">
+        <label> <input type="checkbox" ng-model="posts[132].enabled"/>关注微信时回复 [以下项目可不设置（使用默认配置），也可单独配置某一项]</label>
+
+        <div class="check-add">
+          <div class="form-group">
+            <div class="form-inline">
+              <span class="form-control-static">标题</span>
+              <input type="text" class="form-control" min="2" ng-model="posts[132].title"/>
+            </div>
+            <div class="form-inline mt15">
+              <span class="form-control-static">描述</span>
+              <textarea class="form-control" maxlength="50" ng-model="posts[132].description"/>
+            </div>
+            <div class="form-inline mt15">
+              <span class="form-control-static">链接</span>
+              <input type="url" class="form-control" ng-model="posts[132].url"/>
+            </div>
+            <div class="form-inline mt15">
+              <label class="form-control-static">图文消息图片</label>
+
+              <div>
+                <pic-send pic-url="posts[132].picUrl"></pic-send>
+                <!--<div class="btn btn-block btn-default ng-binding" ng-click="addpic(131)">选择图片</div>-->
+                <!--<div style="margin-top: 10px"><img ng-src="{{posts[131].picUrl}}"></div>-->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="">
+      <div class="col-sm-10 col-sm-offset-1 validate">
+        <label> <input type="checkbox" ng-model="posts[130].enabled"/>关注微信时推送免费领卡消息 [以下项目可不设置（使用默认配置），也可单独配置某一项]</label>
+
+        <div class="check-add">
+          <div class="form-group">
+            <div class="form-inline">
+              <span class="form-control-static">标题</span>
+              <input type="text" class="form-control" min="2" ng-model="posts[130].title"/>
+            </div>
+            <div class="form-inline mt15">
+              <span class="form-control-static">描述</span>
+              <textarea class="form-control" maxlength="50" ng-model="posts[130].description"/>
+            </div>
+            <div class="form-inline mt15">
+              <span class="form-control-static">链接</span>
+              <input type="url" class="form-control" ng-model="posts[130].url"/>
+            </div>
+            <div class="form-inline mt15">
+              <label class="form-control-static">图文消息图片</label>
+            </div>
+            <pic-send pic-url="posts[130].picUrl"></pic-send>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="">
+      <div class="col-sm-10 col-sm-offset-1 validate">
+        <label> <input type="checkbox" ng-model="posts[131].enabled"/>关注微信时推送关注有礼活动</label>
+
+        <div class="check-add">
+          <div class="form-group">
+            <div class="form-inline">
+              <span class="form-control-static">标题</span>
+              <input type="text" class="form-control" min="2" ng-model="posts[131].title"/>
+            </div>
+            <div class="form-inline mt15">
+              <span class="form-control-static">描述</span>
+              <textarea class="form-control" maxlength="50" ng-model="posts[131].description"/>
+            </div>
+            <div class="form-inline mt15">
+              <span class="form-control-static">链接</span>
+              <input type="url" class="form-control" ng-model="posts[131].url"/>
+            </div>
+            <div class="form-inline mt15">
+              <label class="form-control-static">图文消息图片</label>
+
+              <div>
+                <pic-send pic-url="posts[131].picUrl"></pic-send>
+                <!--<div class="btn btn-block btn-default ng-binding" ng-click="addpic(131)">选择图片</div>-->
+                <!--<div style="margin-top: 10px"><img ng-src="{{posts[131].picUrl}}"></div>-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-10 col-sm-offset-1 mt20 mb10">
+      <button type="button" ng-click="postSend()" class="btn btn-primary">保存设置</button>
+    </div>
+  </div>
+  <div class="modal fade bs-example-modal-sm" id="addpic" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form enctype="multipart/form-data" id="iimgform">
+          <div class="modal-header ">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+              <span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">上传图片</h4>
+          </div>
+          <div class="modal-body" style="overflow:hidden">
+            <div class="col-md-12">
+              <div class="col-sm-6">
+                <div class="picin">
+                  <img ng-src="{{tempic}}" ng-show="tempic" class="tempic"/>
+
+                  <div class="emputy" ng-hide="tempic"></div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="picerror"></div>
+                <div class="pictitle">
+                  图片必须为以下格式:
+                  <br>
+                  png(推荐),jpeg,jpg,gif,bmp,
+                  <br>图片大小小于5M
+                  <br>图片尺寸为 360 X 200
+                </div>
+
+                <div class="upload">
+                  <label class="btn btn-block btn-default" for="uploadfile">选择要上传的图片</label>
+                  <input class="hide" type="file" id="uploadfile" ng-model="tempic"
+                         onchange="angular.element(this).scope().temimgshow(this)"
+                         name="file"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-md-3 col-md-offset-3">
+              <div class="btn btn-primary btn-block" ng-click="sendimg(this)">确定</div>
+            </div>
+            <div class="col-md-3 col-md-setoff-1">
+              <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+</div>

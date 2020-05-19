@@ -1,0 +1,28 @@
+<div class="row bg-white">
+  <div ng-include="'/keeper/Table/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <div class="container contents bgw">
+      <div class="time-line1" ng-repeat="item in view.list.items">
+        <div class="line-in">
+          <h4>{{item.name}} <span class="text-red">{{item.on?'正在进行中':'已下线'}}</span></h4>
+
+          <div ng-repeat="text in item.text"><p>{{text}}</p></div>
+          <div class="mt15">
+            <button type="button" class="btn btn-primary" ng-click="goto('table/reserve/' +item.id)">包含的桌台
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12" ng-if="view.list.pageSize>1">
+        <pagination items-per-page="view.list.count" boundary-link="true" rotate="false" max-size="20"
+                    total-items="view.list.total"
+                    ng-model="view.list.page" class="pagination-sm" previous-text="&lsaquo;"
+                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                    ng-change="pageChange()"></pagination>
+
+      </div>
+
+
+    </div>
+  </div>
+</div>

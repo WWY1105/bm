@@ -1,0 +1,44 @@
+<div class="row bgw">
+  <div ng-include="'/admin/notice/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <div class="nav-title">
+      <div class="active">
+        抽奖提醒
+      </div>
+    </div>
+    <!---->
+    <!---->
+    <div class="ruleadd">
+      <div class="row">
+        <div class="col-sm-2">
+          <span class="title">抽奖进度提醒</span>
+        </div>
+        <div class="col-sm-10">
+          <label> <input type="checkbox" ng-model="posts[171].path" ng-true-value="101"/>智能路由推送</label>
+          <div class="check-add">默认使用公众号消息推送，如顾客尚未关注公众号则使用短信推送</div>
+          <push hand="posts[171].path"></push>
+          <div class="padding form-inline" style="margin-top: 5px">
+            通知周期： 每 <input type="number" class="form-control" ng-model="posts[171].times" placeholder="1-30" ng-change="change()"/>天通知一次
+          </div>
+          * 微信消息发送时间：16：00
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-2">
+          <span class="title">抽奖通知</span>
+        </div>
+        <div class="col-sm-10">
+          <label> <input type="checkbox" ng-model="posts[170].path" ng-true-value="101"/>智能路由推送</label>
+
+          <div class="check-add">默认使用公众号消息推送，如顾客尚未关注公众号则使用短信推送</div>
+          <push hand="posts[170].path"></push>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="clear: both;margin-left: 30%">
+      <button type="button" ng-click="postSend()" class="btn btn-primary">保存设置</button>
+    </div>
+  </div>
+</div>

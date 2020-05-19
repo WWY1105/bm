@@ -1,0 +1,46 @@
+<div class="container contents bgw">
+    <div class="col-sm-6 customer-view">
+        <div class="col-sm-2 avatar"><img ng-src="{{view.user.avatarUrl||'public/img/avatar.png'}}">
+            <br/> <br/>
+            <a class="btn btn-default btn-block" back-button>返回</a>
+        </div>
+        <div class="col-sm-9 col-sm-offset-1 line26">
+            <div>姓名：{{view.user.nickname}}</div>
+            <div>手机号：{{view.user.phone}}</div>
+            <div>上宾号：{{view.user.username}}</div>
+            <div> 特殊标签：...</div>
+            <div ng-show="view.user.memberCardNo">卡号：{{view.user.memberCardNo}}</div>
+            <div>级别：{{view.user.memberGradeName||'顾客'}}</div>
+            <div>积分：{{view.benefit.point}}</div>
+            <div>充值余额：{{view.benefit.charge}}</div>
+            <div>优惠券：<a class="btn btn-success" ng-click="showCouponList()" title="平铺显示">{{view.benefit.couponCount}}张券</a></div>
+            <div>用户来源：{{dict.relationSourceType[view.user.source]}}</div>
+            <div> 首次进入店铺：{{view.relation.shopId}}</div>
+            <div> 最近往来时间：{{view.relation.createTime}}</div>
+            <div> 历史往来记录：消费【<a style="cursor: pointer" ng-click="consumeList()">{{view.statrelation.consumeAmount}}</a>】 权益变动【{{view.statrelation.benefitChangeAmount}}】</div>
+            <div> 评论总数：{{view.statcomment.commentAmount}}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-sm-offset-2">
+        <a class="btn btn-info btn-block" ng-click="consumeCharts()">顾客消费分析</a>
+    </div>
+</div>
+
+<div id="coupon" ng-show="view.coupon.show">
+    <div ng-repeat="coupon in view.coupon.list">
+        <p class="bg-info"> {{$index+1}}</p>
+        {{coupon.content}}<br/>
+    </div>
+</div>
+<div id="consume" ng-show="view.consume.show">
+    <div ng-repeat="consume in view.consume.list">
+        <div class="col-sm-6"> {{consume.shopName}}</div>
+        <div class="col-sm-2"> {{consume.amount}}</div>
+        <div class="col-sm-4"> {{consume.consumptionTime}}</div>
+    </div>
+</div>
+<div id="charts" ng-show="view.charts.show">
+    <highchart title='view.charts.title' series="view.charts.series" options="view.charts.options">
+    </highchart>
+</div>

@@ -1,0 +1,52 @@
+<div class="doc">
+  <div class="bg-muted" style="min-height: 113px;">
+    <div class="text-gold text-left">本店共{{title.count||0}}笔消费，共计（元）</div>
+    <div class="text-white" style="float: left;margin-top:10px">
+      <div>账单金额: {{title.amount||0}}</div>
+      <div>权益抵扣: {{title.deduct||0}}</div>
+      <div>实际付款: {{title.revenue||0}}</div>
+    </div>
+    <ul class="bg-mute-inner icons" ng-if="title.deductDetail">
+      <li ng-repeat="item in title.deductDetail"><span class="icon"  ng-class="ConsumeTypeCategory[item.type]"></span>{{item.amount}}元</li>
+    </ul>
+  </div>
+  <table class="table" ng-if="view.result.total">
+    <thead>
+    <tr>
+      <td>序号</td>
+      <td>分店</td>
+      <td>
+        <div>账单笔数</div>
+        <div>(笔)</div>
+      </td>
+      <td>
+        <div>账单金额</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>权益抵扣</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>实际付款</div>
+        <div>(元)</div>
+      </td>
+    </tr>
+    </thead>
+    <tbody class="slide-down">
+    <tr ng-repeat="row in view.result.items">
+      <td ng-bind="((page-1)*count)+$index+1"></td>
+      <td ng-bind="row.shopName||'品牌虚拟页'"></td>
+      <td ng-bind="row.count||0"></td>
+      <td ng-bind="row.amount|number"></td>
+      <td ng-bind="row.deduct|number">/</td>
+      <td ng-bind="row.revenue|number"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+

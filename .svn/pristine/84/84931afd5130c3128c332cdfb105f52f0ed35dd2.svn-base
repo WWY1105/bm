@@ -1,0 +1,49 @@
+<div class="container">
+ 	<Div class="col-xs-12">
+ 		<div class="row">
+ 			<div class="col-xs-5 shoplogo">
+ 				<div class="row">
+ 					<Div class="col-sm-2">
+ 					<div class="in-shadow header-logo-out">
+
+ 						</div>
+ 						<img class="header-logo " src="public/img/shopLogo.png" />
+ 					</Div>
+ 					<Div class="col-sm-10 header-title text-left" >
+ 						<h1 class="col-sm-12" ng-bind="config.staff.guestName+'管理系统'"></h1>
+ 						<div class="col-sm-12" >
+ 							<div  class="row">
+	 							<div class="col-sm-8" ng-bind="config.time|date:'yyyy-MM-dd HH:mm:ss'"></div>
+	 							<div class="col-sm-4">
+									<div class="dropdown">
+										  <a id="mybt"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										  <span ng-bind="config.staff.nickname"></span>
+										   <span class="caret"></span>
+										  </a>
+										  <ul class="dropdown-menu" role="menu" aria-labelledby="mybt">
+										  	<li><a ng-click="goto('password')">修改密码</a></li>
+										  	<li><a ng-click="logout()">退出登录</a></li>
+										  </ul>
+										</div>
+	 							</div>
+ 							</div>
+ 						</div>
+ 					</Div>
+ 				</div>
+ 			</div>
+ 			<div class="col-xs-7 menu ">
+ 				<ul class="menushow pull-right">
+ 				<li ng-class="{'active':active=='index'}"><A ng-click="goto('')"><span  class="menuicon indexIcon"></span>首页</A></li>
+ 					<li ng-class="{'active':active=='shop'}" class="click" ng-click="goto('shop')"><span  class="menuicon shopIcon"></span>门店管理</li>
+ 					<li ng-class="{'active':active=='rule'}" class="click" ng-click="goto('rule')"><span  class="menuicon salesIcon"></span>活动管理</li>
+ 					<li ng-class="{'active':active=='customer'}" class="click" ng-click="goto('customer')"><span  class="menuicon userIcon"></span>顾客管理</li>
+ 					<li ng-class="{'active':active=='staff'}" class="click" ng-click="goto('staff')"><span  class="menuicon staffIcon"></span>员工管理</li>
+          <li ng-class="{'active':active=='devices'}" class="click" ng-click="goto('devices')"><span  class="menuicon settingIcon"></span>设备管理</li>
+          <li ng-class="{'active':active=='statistics'}" class="click" ng-click="goto('statistics')"><span  class="menuicon logIcon"></span>统计报表</li>
+ 					<!--<li><A href=""><span  class="menuicon logIcon"></span>日志管理</A></li>
+ 					<li><A href=""><span  class="menuicon settingIcon"></span>系统管理</A></li>
+ 					-->
+ 				</ul>
+ 			</div>
+ 		</Div>
+ 	</div>

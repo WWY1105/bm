@@ -1,0 +1,31 @@
+<div class="bgw">
+    <div class="row">
+        <div ng-include="'/keeper/mall/leftmenu.html'"></div>
+        <div class="v-shadow-content">
+            <div class="header" style="margin-bottom:20px;height:30px ;">
+                <button class="btn btn-primary pull-right" ng-click="addTag()">新增</button>
+                <input type="text" ng-model="name" class="form-control pull-right" style="width: 200px;"
+                    placeholder="请输入标签名称">
+            </div>
+            <table class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <th>序号</th>
+                    <th>名称</th>
+                    <th>操作</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in data">
+                        <td>{{$index+1}}</td>
+                        <td>
+                            <input type="text" class="form-control " ng-model="item.name">
+                            </td>
+                        <td>
+                            <button ng-click="putTag(item) " class="btn btn-info ">提交修改</button>
+                            <button class="btn btn-danger " ng-click="delTag(item.id)">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="table col-sm-12">
+    <div class="col-sm-12 plan-title text-center">
+      <div class="col-sm-2">门店</div>
+      <div class="col-sm-4">发放积分</div>
+      <div class="col-sm-4">使用积分</div>
+      <div class="col-sm-2">明细</div>
+    </div>
+
+    <div class="col-sm-12 plan-son text-center slide-down" ng-repeat="row in view.result.items">
+      <div class="col-sm-2" ng-bind="row.shopName"></div>
+      <div class="col-sm-4" ng-bind="row.amount|number"></div>
+      <div class="col-sm-4" ng-bind="row.usedAmount|number"></div>
+      <div class="col-sm-2" >
+        <button class="btn btn-danger" ng-click="showDetail(row.shopId)">查看明细</button>
+      </div>
+    </div>
+</div>

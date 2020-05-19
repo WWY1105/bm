@@ -1,0 +1,40 @@
+<div class="row bg-white">
+  <div ng-include="'/admin/rule/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <div class="container contents bgw">
+      <div class="col-sm-12 text-right" style="margin-bottom: 20px;">
+        <a ng-click="goto('rule/reserve/add')" class="btn btn-primary">新增</a>
+      </div>
+      <div class="time-line1" ng-repeat="item in view.list.items">
+        <div class="line-in">
+          <h4>{{item.name}} <span class="text-red">{{item.state=='DISABLED'?'已结束':''}}</span></h4>
+
+          <div ng-repeat="text in item.text"><p>{{text}}</p></div>
+          <div class="mt15">
+            <button type="button" ng-if="!item.on" class="btn btn-primary" ng-click="goto('rule/reserve/add/' +item.id)">修改活动范围
+            </button>
+            <button type="button" ng-if="!item.on" class="btn btn-primary" ng-click="goto('rule/reserve/add2/' +item.id)">修改活动详情
+            </button>
+            <button type="button" class="btn btn-warning" ng-if="item.on" ng-click="stateFn(item.id,'off')" ng-if="item.on">下线
+            </button>
+            <button type="button" class="btn btn-warning" ng-if="!item.on" ng-click="stateFn(item.id,'on')" ng-if="item.on">上线
+            </button>
+            <button type="button" class="btn btn-danger" ng-click="removeFn(item.id)"
+                    ng-if="!item.on">删除
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12" ng-if="view.list.pageSize>1">
+        <pagination items-per-page="view.list.count" boundary-link="true" rotate="false" max-size="20"
+                    total-items="view.list.total"
+                    ng-model="view.list.page" class="pagination-sm" previous-text="&lsaquo;"
+                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                    ng-change="pageChange()"></pagination>
+
+      </div>
+
+
+    </div>
+  </div>
+</div>

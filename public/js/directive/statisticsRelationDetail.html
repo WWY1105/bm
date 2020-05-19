@@ -1,0 +1,116 @@
+<div class="doc">
+  <div class="bg-muted" style="min-height: 113px;">
+    <div class="text-gold text-left">本店共{{title.count||0}}笔消费，共计（元）</div>
+    <div class="text-white" style="float: left;margin-top:10px">
+      <div>账单金额: {{title.amount||0}}</div>
+      <div>权益抵扣: {{title.deduct||0}}</div>
+      <div>实际付款: {{title.revenue||0}}</div>
+    </div>
+    <ul class="bg-mute-inner icons" ng-if="title.deductDetail">
+      <li ng-repeat="item in title.deductDetail"><span class="icon" ng-class="ConsumeTypeCategory[item.type]"></span>{{item.amount}}元
+      </li>
+    </ul>
+  </div>
+  <table class="table" ng-if="view.result.total"
+         ng-init="types={'1000':'刷卡','1001':'现金','1003':'微信','1004':'微信', '1005':'微信','1101':'支付宝','1201':'第三方'}">
+    <thead>
+    <tr>
+      <td>序号</td>
+      <td>订单号</td>
+      <td>桌台</td>
+      <td>上宾号</td>
+      <td>
+        <div>消费总额</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>权益抵扣</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>实收金额</div>
+        <div>(元)</div>
+      </td>
+      <td>支付方式</td>
+      <td>操作员</td>
+      <td>状态</td>
+      <td>时间</td>
+    </tr>
+    </thead>
+    <tbody class="slide-down" ng-repeat="item in view.result.items">
+    <tr>
+      <td ng-bind="((page-1)*count)+$index+1"></td>
+      <td><a ng-click="goto('doc/detail/'+ item.no)">{{item.no}}</a></td>
+      <td ng-bind="item.tableNo"></td>
+      <td><a ng-click="goto('customer/details/'+ item.userId)">{{item.userName}}</a></td>
+      <td ng-bind="item.amount"></td>
+      <td ng-class="{'triangle':item.strategy.used||item.strategy.got||item.strategy.nonPart}"
+          ng-bind="item.reduceAmount"></td>
+      <td ng-bind="item.strategy.finalAmount"></td>
+      <td ng-bind="types[item.paymentMode]"></td>
+      <td ng-bind="item.staffName||'自助'"></td>
+      <td ng-bind="item.state=='909'?'已付款':'已退款'"></td>
+      <td ng-bind="item.checkTime"></td>
+    </tr>
+    <tr ng-if="item.strategy.used||item.strategy.got||item.strategy.nonPart">
+      <td></td>
+      <td colspan="9" style="line-height: 2" class="bg-blue icons row text-left">
+        <div class="row">
+          <div class="col-sm-2 remain text-muted">抵扣：</div>
+          <div class="col-sm-4 remain">
+            <div ng-repeat="use in item.strategy.used">
+              <span class="icon" ng-class="ConsumeTypeCategory[use.type]"></span><span
+                    class="text-muted">{{use.content}}</span><span
+                    class="text-primary">- {{use.amount}}</span>
+            </div>
+          </div>
+          <div class="col-sm-2 text-muted text-left"
+               ng-if="item.strategy.got||item.strategy.upgrades||item.strategy.charges"
+               style="border-left: 1px solid;">获得：
+          </div>
+          <div class="col-sm-4 text-left">
+            <div ng-repeat="get in item.strategy.got">
+              <span ng-if="get.category == '1016'">
+                 <span class="COUPON icon"></span><span
+                      class="text-muted">{{get.name}}</span><span
+                      class="text-primary"> {{get.count}}张</span>
+              </span>
+              <span ng-if="get.category == '1015'">
+                <span class="POINT icon"></span><span
+                      class="text-muted">积分</span><span
+                      class="text-primary"> {{get.point}}</span>
+              </span>
+            </div>
+            <div ng-if="item.strategy.upgrades"><span class="GIVENUPGRADE icon"></span>
+              <span class="text-primary" ng-repeat="up in item.strategy.upgrades">
+                  <span ng-if="up.category == '1013'">{{up.originalName}}升级为{{up.name}}</span>
+                  <span ng-if="up.category != '1013'">获得{{up.name}}{{up.amount}} {{up.count?(up.count+'张'):''}}</span>
+              </span>
+            </div>
+            <div ng-if="item.strategy.charges"><span class="CHARGE icon"></span>
+              <span class="text-primary" ng-repeat="up in item.strategy.charges">
+                  <span ng-if="up.category != '1015'">{{up.name}}{{up.amount?(up.amount+'元'):''}} {{up.count?(up.count+'张'):''}}</span>
+                  <span ng-if="up.category == '1015'">{{up.amount}}{{up.name}}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row text-left" ng-if="item.strategy.nonPart">
+          <div class="col-sm-2 text-muted">不参与项：</div>
+          <div class="col-sm-10">
+            <span class="text-muted">{{item.strategy.nonPart.name}}</span>
+            <span class="text-primary">{{item.strategy.nonPart.amount}}</span>
+          </div>
+        </div>
+        <!--<div class="click" ng-hide="show" style="position: absolute;top: 15px;right: 20px;color: black"-->
+        <!--ng-click="show=1">-->
+        <!--展开详情 <span class="glyphicon glyphicon-chevron-down"></span>-->
+        <!--</div>-->
+        <!--<div ng-show="show" style="position: absolute;right: 20px;bottom: 10px" ng-click="show=0" class="click">-->
+        <!--收起 <span class="glyphicon glyphicon-remove"></span>-->
+        <!--</div>-->
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

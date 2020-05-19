@@ -1,0 +1,107 @@
+<div class="container contents bgw ">
+  <div class="col-sm-12">
+    <div class="form-group" style="overflow:hidden">
+      <div class="col-sm-2">
+        <select class="form-control" ng-model="search.shopId">
+          <option value="">所有门店</option>
+          <option ng-repeat="item in view.shops" value="{{item.id}}">{{item.name}}</option>
+        </select>
+      </div>
+      <div class="col-sm-2">
+        <select class="form-control" ng-model="search.gradeId">
+          <option value="">所有会员</option>
+          <option ng-repeat="item in view.memberGrades" value="{{item.id}}">{{item.name}}</option>
+        </select>
+      </div>
+      <div class="col-sm-2">
+        <select class="form-control" ng-model="search.quota">
+          <option value="">消费额度</option>
+          <option ng-repeat="item in dict.consumptionQuotas" value="{{item.value}}">{{item.name}}</option>
+        </select>
+      </div>
+      <div class="col-sm-2">
+        <select class="form-control" ng-model="search.times">
+          <option value="">消费次数</option>
+          <option ng-repeat="item in dict.consumptionTimes" value="{{item.value}}">{{item.name}}</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <input ng-model="search.keyword" class="form-control" placeholder="卡号、手机号、上宾号"></div>
+      <div class="col-sm-1">
+        <button class="btn btn-primary btn-block" ng-click="postSend()">查询</button>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-sm-12 plan-title text-center">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-2">昵称</div>
+    <div class="col-sm-1">电话</div>
+    <div class="col-sm-2">生日</div>
+    <div class="col-sm-1">卡号</div>
+    <div class="col-sm-1">级别</div>
+    <!--    <div class="col-sm-1">来源</div> -->
+    <div class="col-sm-2">加入时间</div>
+    <div class="col-sm-2">最后消费时间</div>
+  </div>
+  <div class="col-sm-12 plan-son text-center slide-down" ng-repeat="customers in view.customer.items">
+    <div class="col-sm-1 avatar">
+      <img ng-src="{{customers.avatarUrl||'public/img/avatar.png'}}"
+           ng-mouseover="customers.show=1;interestGetFn(customers.userId)" ng-mouseleave="customers.show=0" ng-click="viewDetail(customers.userId)" title="点击进入顾客消费分析">
+      <div class="popover right slide-right" ng-hide="!customers.show" ng-mouseover="customers.show=1"
+           ng-mouseleave="customers.show=0">
+        <div class="arrow"></div>
+        <h3 class="popover-title" ng-bind="customers.nickname"></h3>
+        <div class="popover-content">
+          <!--
+              <p ng-bind="customers.memberGradeName||'顾客'"></p>
+          -->
+          <p ng-bind="'充值余额:'+view.interest[customers.userId].charge"></p>
+          <p ng-bind="'积分:'+view.interest[customers.userId].point"></p>
+          <p ng-bind="'优惠券:'+view.interest[customers.userId].couponCount"></p>
+
+        </div>
+      </div>
+    </div>
+    <!--
+    <div class="col-sm-2 text-left p20" ng-class="{'line26':customers.memberCardNo&&customers.phone}">
+      <div ng-if="customers.memberCardNo"><i class="glyphicon glyphicon-credit-card"></i>
+        {{customers.memberCardNo}}
+      </div>
+      <div ng-if="customers.phone"><i class="glyphicon glyphicon-earphone"></i>
+        {{customers.phone}}
+      </div>
+    </div>
+    -->
+    <div class="col-sm-2" ng-bind="customers.nickname"></div>
+    <div class="col-sm-1" ng-bind="customers.phone"></div>
+    <div class="col-sm-2" ng-bind="customers.birthday|date:'MM-dd'"></div>
+    <div class="col-sm-1" ng-bind="customers.memberCardNo||'无'"></div>
+    <div class="col-sm-1" ng-bind="customers.memberGradeName||'顾客'"></div>
+   <!-- <div class="col-sm-1" ng-bind="dict.source[customers.source]||'未知'"></div> -->
+    <div class="col-sm-2" ng-bind="customers.firstJoinTime"></div>
+    <div class="col-sm-2" ng-bind="customers.lastConsumeTime||'无消费信息'"></div>
+
+  </div>
+  <div class="col-sm-12 plan-son text-left" ng-if="!view.customer.items[0]">
+    无查询结果
+  </div>
+  <div class="col-sm-12">
+    <pagination items-per-page="view.customer.count" boundary-links="true" total-items="view.customer.total"
+                ng-model="view.customer.page" class="pagination-sm" previous-text="&lsaquo;" ng-change="pageChange()"
+                next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+
+  </div>
+  <script>
+    $(function () {
+      $('.popover').each(function () {
+        width = $(this).prev().outerWidth();
+        height = $(this).prev().outerHeight();
+        $(this).css({
+          "left": ($(this).parent().outerWidth() - width) / 2 + width + 2,
+          "top": -($(this).outerHeight() - height - 2) / 2
+        })
+      })
+
+    })
+  </script>

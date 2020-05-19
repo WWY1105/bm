@@ -1,0 +1,141 @@
+<div class="out ruleadd2" >
+
+    <div class="col-sm-2 text-right ">
+        <span class="title">邀请码</span>
+    </div>
+    <div class="col-sm-10 content mb0">
+      <div class="col-sm-12">
+        <div class="form-group mt15" >
+          <div class="form-inline mb22" >
+            <div class="" >
+              <div style="margin-bottom : 5px;">多个邀请码中间请用逗号( , )隔开 </div>
+              <input type="text" style="width : 280px" class="form-control" ng-model="tel.inviters" placeholder="请输入邀请码">
+            </div>
+          </div>
+      </div>
+    </div>
+    </div>
+</div>
+
+<div class="out ruleadd2">
+    <div class="col-sm-2 text-right ">
+      <span class="title">活动详情</span>
+    </div>
+    <div class="col-sm-10 content2 mb0">
+      <div class="row">
+        <div ng-repeat="(key, detail) in posts.TICKET.TICKET.detail">
+          <div class="form-group mb15" ng-repeat="details in detail" ng-init="details.id=key">
+            <!-- <div class="col-sm-12 form-inline">
+                <select ng-model="details.id" class="form-control"
+                        ng-options="item.id as item.name for item in view.member1" name="member" required></select>
+
+                <div class="form-control-static">新人赠送</div>
+                <div class="form-group" style="margin-left: 15px">
+                <a class="add click" ng-if="$parent.$first&&$first" ng-click="view.rules.BIRTHBENEFIT.addFunc('BIRTHBENEFIT')">
+                    <i
+                            class="glyphicon glyphicon-plus"></i>
+                </a>
+                <a class="remove click" ng-if="!$first||!$parent.$first"
+                    ng-click="ruleFn.removeFn('BIRTHBENEFIT',key,$index)">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </a>
+                </div>
+            </div> -->
+  
+            <div class="col-sm-12">
+              <div class="col-sm-12 mt15" ng-repeat="dv in details.value">
+                <div class="col-sm-2">
+                  <select class="form-control coupon-select" ng-change="ruleFn.changeCoupon(details.value, dv)"
+                          ng-model="dv.category"
+                          required>
+                    <option value="COUPON">送券</option>
+                    <option value="REWARD">代用币</option>
+                    <option value="POINT">积分</option>
+                  </select>
+                </div>
+                <div class="col-sm-8" ng-if="dv.category =='COUPON'">
+                  <div class="col-sm-2">
+                    <div class="row">
+                      <select class="form-control coupon-select" ng-change="ruleFn.changeCoupon(details.value, dv)"
+                              ng-model="dv.id"
+                              ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) group by view.counponType[item.type] for item in view.coupons"
+                              required>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <input type="number" min="1" class="form-control" ng-model="dv.count" required/>
+                    <input type="text" ng-modle="dv.name" style="display:none;">
+                  </div>
+                  <div class="pull-left form-control-static">张</div>
+                </div>
+                <div class="col-sm-8" ng-if="dv.category =='POINT'">
+                  <div class="col-sm-2">
+                    <div class="row">
+                      <input type="number" class="form-control" min="0" ng-model="dv.amount" placeholder="赠送积分"/>
+                    </div>
+                  </div>
+                  <div class="form-control-static col-sm-2">积分</div>
+                </div>
+                <div class="col-sm-8" ng-if="dv.category =='REWARD'">
+                  <div class="col-sm-2">
+                    <div class="row">
+                      <select class="form-control coupon-select" ng-change="ruleFn.changeReward(details.value, dv)"
+                              ng-model="dv.id"
+                              ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) group by view.counponType[item.type] for item in view.rewards"
+                              required>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <input type="number" min="1" class="form-control" ng-model="dv.count" required/>
+                    <input type="text" ng-modle="dv.name" style="display:none;">
+                  </div>
+                  <div class="pull-left form-control-static">张</div>
+                </div>
+  
+                <div class="col-sm-2 text-right">
+                  <a class="add click" ng-if="$first" ng-click="ruleFn.put(details, dv)"> <i
+                          class="glyphicon glyphicon-plus"></i>
+                  </a>
+                  <a class="remove click" ng-if="!$first" ng-click="ruleFn.resetCouponCntFn(details, dv)"> <i
+                          class="glyphicon glyphicon-remove"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<div class="col-sm-3 btn btn-primary" ng-click="ruleFn.openOrClose()">新增券</div>-->
+    </div>
+  </div>
+  
+<div class="out ruleadd2">
+  <div class="col-sm-2 text-right ">
+    <span class="title">限制</span>
+  </div>
+  <div class="col-sm-10 content2">
+    <div class="form-inline mb22" ng-init="posts.TICKET.TICKET.timesLimit = 1">
+      <span class="form-control-static">每人可领取</span>
+      <input ng-model="posts.TICKET.TICKET.timesLimit" type="number" class="form-control" min="1" placeholder="请输入领取次数" required/>
+      <span class="form-control-static">次。</span>
+    <!-- </div> -->
+    <span  ng-if="posts.TICKET.TICKET.timesLimit>1" >
+      <span class="form-control-static">再次领取的条件</span>
+      <select  class="form-control coupon-select" ng-model="posts.TICKET.TICKET.obtainCategory" ng-options="item.id as item.name for item in obtainRepeatCategory" required>
+        <option value="">--请选择--</option>
+      </select>
+    </span>
+    <div class="form-inline mb0" style="margin-top : 10px;">
+      <span class=" form-control-static">前</span>
+      <input type="number" min="0" ng-model="posts.TICKET.TICKET.countLimit" class="form-control" placeholder="请输入人数限制" />
+      <span class="form-control-static">
+        人有效
+        <span style="color:#999;padding-left:20px">(0表示不限制)</span>
+      </span>
+    </div>
+    <div ng-if="rule.state=='edit'">* 修改活动后，参与人数方案就重新统计</div>
+  </div>
+</div>
+

@@ -1,0 +1,235 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS 路由实例 - 菜鸟教程</title>
+</head>
+<body>
+简洁、直观、强悍的前端开发框架，让web开发更迅速、简单。
+Bootstrap3中文文档(v3.3.5)
+Bootstrap2中文文档(v2.3.2)
+Bootstrap技术交流群：318630708    Bootstrap问答社区    新浪微博：@Bootstrap中文网
+Bootstrap相关优质项目推荐
+这些项目或者是对Bootstrap进行了有益的补充，或者是基于Bootstrap开发的
+
+Headroom.js
+Bootstrap 编码规范
+by @mdo
+Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。
+
+jQuery API 中文文档/手册
+jQuery API
+中文手册
+根据最新的 jQuery 1.11.x 和 2.1.x 版本翻译的 jQuery API 中文文档/手册。
+
+BootCDN
+BootCDN
+开放CDN服务
+Bootstrap中文网联合又拍云存储共同推出了开放CDN服务 - BootCDN，我们对广泛的前端开源库提供了稳定的存储和带宽的支持，例如Bootstrap、jQuery等。
+
+w3schools 原版国内镜像
+w3schools
+原版国内镜像
+w3schools.com 是最受欢迎的前端技术教程网站，但是国内用户一直不能访问，并且国内的中文翻译版本十分陈旧。因此做了个镜像，希望英文好的同学直接去看原版教程吧！
+
+gulpjs
+gulp.js
+基于流的自动化构建工具。
+gulp.js - 基于流(stream)的自动化构建工具。Grunt 采用配置文件的方式执行任务，而 Gulp 一切都通过代码实现。
+
+LESSCSS
+LESS
+一种动态样式语言
+LESS为CSS赋予了动态语言的特性，如变量、继承、运算、函数。LESS既可以在客户端上运行 (支持IE 6+、Webkit、Firefox)，也可以借助Node.js或者Rhino在服务端运行。
+
+Lodash
+Lodash
+JavaScript 工具库
+Lodash 是一个具有一致接口、模块化、高性能等特性的 JavaScript 工具库。比相同功能的 Underscore.js 使用更广泛。
+
+Bootstrap优站精选
+优站精选
+Bootstrap网站实例
+Bootstrap优站精选频道收集了众多基于 Bootstrap 构建、设计精美的、有创意的网站。
+
+Underscore.js
+Underscore.js
+JavaScript 工具库
+Underscore.js是一个 JavaScript 工具库，它提供了一整套函数式编程的实用功能，弥补了 jQuery 没有实现的功能，同时又是 Backbone 必不可少的部分。
+
+Buttons
+Buttons
+CSS按钮样式库
+Buttons 是一个基于 Sass 和 Compass 构建的CSS按钮（button）样式库，图标采用的是Font Awesome，可以和Bootstrap融合使用。
+
+stickUp
+stickUp
+让页面元素“固定”位置
+stickUp能让页面目标元素“固定”在浏览器窗口的顶部，即便页面在滚动，目标元素仍然能出现在设定的位置。
+
+Responsive Nav
+Responsive Nav
+响应式导航
+响应式导航（Responsive Nav）是一个很小的JS插件，压缩之后仅有1.7KB，能帮你创建针对小屏幕的可切换式导航
+
+Unslider
+Unslider
+jQuery轮播插件
+Unslider — 一个超小的 jQuery 轮播（slider） 插件。支持主流浏览器、键盘导航、自动调整高度和响应式布局。
+
+Flat UI
+Flat UI
+Metro风格的Bootstrap
+Flat UI是基于Bootstrap做的Metro化改造，由Designmodo提供。Flat UI包含了很多Bootstrap提供的组件，但是外观更加漂亮。在此强烈推荐！
+
+Layoutit
+LayoutIt!
+Bootstrap可视化布局
+LayoutIt! 可拖放排序在线编辑的Bootstrap可视化布局系统。由4wer同学汉化整理。
+
+Bootstrap Switch
+Bootstrap Switch
+Bootstrap开关组件
+Bootstrap Switch是对Bootstrap控件的扩充。基于选HTML中基本的选择框控件实现只有开和关两种状态的单选按钮。
+
+Sco.js
+Sco.js
+Bootstrap组件增强版
+由于大部分的Bootstrap js插件是无法扩展的，因此才有了sco.js，它是对Bootsrap中js插件的增强实现。
+
+iCheck
+iCheck
+增强复选框和单选按钮
+iCheck让不同浏览器下的复选框（checkboxes）和单选按钮（radio button）更美观、功能更强。
+
+Bootstrap WYSIWYG
+bootstrap-wysiwyg
+为Bootstrap定制的可视编辑器
+bootstrap-wysiwyg是一个jQuery Bootstrap插件（5KB, < 200 行代码）可以将任何一个DIV转变成一个WYSIWYG富文本编辑器。
+
+Chart.js
+Chart.js
+精巧的JS图表绘制工具库
+Chart.js是一个简单、面向对象、为设计者和开发者准备的图表绘制工具库。
+
+Preboot
+Preboot
+Bootstrap之前世
+Preboot是一组用LESS语法书写的混合（mixin）和变量（variable）的集合，目的是辅助用户书写更优美的CSS。Bootstrap的前身就是Preboot。
+
+jQuery.Pin
+jQuery.Pin
+固定页面元素的jQuery插件
+jQuery.Pin 能将任意页面元素“钉”在某个容器顶部，而且在尺寸小的屏幕上能够自动禁用这种效果。
+
+BSIE
+Bsie
+Bootstrap IE6兼容方案
+Bsie弥补了Bootstrap对IE6的不兼容。目前，bsie能在IE6上支持大部分bootstrap的特性，可惜，还有一些实在无法支持...
+
+Messenger
+Messenger
+非常酷的弹框(Alert)组件
+Messenger是一个非常酷的弹框(Alert)组件，能够非常好的与Bootstrap融合，当然，单独使用效果也是非常棒。Messenger自带4套皮肤。
+
+Bootstrap Datetimepicker
+DateTime Picker
+日期时间选择器
+Bootstrap日期时间选择器（Bootstrap DateTime Picker）是一个Bootstrap组件，能够简化页面上日期、时间的输入。
+
+jQuery UI Bootstrap
+jQuery UI Bootstrap
+用Bootstrap美化jQuery UI
+这套工具让你在使用jQuery UI 控件时也能充分利用Bootstrap的样式，而且不会出现样式不统一的现象，Bootstrap和jQuery UI可以完美融合在一起了！
+
+Google-Style Bootstrap
+Google Bootstrap
+Google风格的Bootstrap
+Google的UI素来以简洁著称，现在Bootstrap也来Google Style一把，喜欢Google的就来试试这套Google Bootstrap吧！
+
+Bootstrap Metro UI CSS
+Metro UI CSS
+Bootstrap与Metro融合
+Metro UI CSS 是一套用来创建类似于Windows 8 Metro UI风格网站的样式。现在，Metro UI CSS项目在Bootstrap的基础上被开发成一个独立的解决方案。
+
+Font Awesome
+Font Awesome
+Bootstrap专用图标字体
+Font Awesome 中包含的所有图标都是矢量的，也就可以任意缩放，避免了一个图标做多种尺寸的麻烦。CSS对字体可以设置的样式也同样能够运用到这些图标上了。
+
+Simple Icons
+Simple Icons
+Icon汇
+Simple Icons -- Icon汇。收集众多网站的Logo，并提供高质量、不同尺寸的png格式图片给广大网友，所有Icon版权归其所属公司。
+
+Bootstrap Form Builder
+Bootstrap Form Builder
+在线表单构造器
+Bootstrap 在线表单构造器能够以鼠标拖拽的方式迅速生成一个基于Bootstrap的完整表单，减轻了各位码农手写HTML代码的劳动，而且不会出错。
+
+HTML5 Boilerplate
+HTML5 Boilerplate
+专业的前端模版
+HTML5 Boilerplate 是一套专业的前端模版，用以开发快速、健壮、适应性强的app或网站。
+
+Web-Safe Colors
+Web Safe Colors
+Web安全色
+本表中列出的是WEB设计、开发中常用安全色。列于此是为了方便大家参考。
+
+Bootstrap Docs
+Bootstrap Docs
+Bootstrap文档全集
+这里收集了Bootstrap从V1.0.0版本到现在，整个文档的历史。Bootstrap本身就是一个传奇，而这些文档就是传奇的见证！
+
+Git Guide
+Git Guide
+Git简易指南
+Git简易指南 -- 帮助你开始使用 git 的简易指南，木有高深内容，;)。
+
+Grumble.js
+Grumble.js
+气泡形状的提示（Tooltip）控件
+一个气泡形状的提示（Tooltip）控件，可以在其围绕的元素周围做360度任意定位。
+
+Cikonss
+CIKONSS
+纯CSS实现的Icon
+Cikonss是纯CSS实现的响应式Icon，兼容IE8+。
+
+Headroom.js
+Headroom.js
+隐藏或展示页面元素
+Headroom.js 是一个轻量级、纯 JavaScript 组件，用来隐藏或展现页面上的元素，为你的页面留下更多展示内容的空间。
+
+Grunt
+Grunt
+项目构建工具
+Grunt是基于Node.js的项目构建工具。它可以自动运行你所设定的任务。Grunt拥有数量庞大的插件，几乎任何你所要做的事情都可以用Grunt实现。
+
+Zepto.js
+Zepto.js
+JavaScript 工具库
+Zepto.js 是一个轻量级、兼容 jQuery
+<script>
+  var query = function (s, c) {
+    console.log("222"+this);
+    return new query.prototype.init();
+  }
+  query.prototype = {
+    init: function () {
+      var old = 1;
+      console.log("111"+JSON.stringify(this));
+      return this.old;
+    },
+    name: function () {
+      return this.age;
+    },
+    age: 20
+  }
+  query.prototype.init.prototype = query.prototype;
+  console.log(query().name());
+  var red = /^(\s)*$/;
+</script>
+
+</body>
+</html>

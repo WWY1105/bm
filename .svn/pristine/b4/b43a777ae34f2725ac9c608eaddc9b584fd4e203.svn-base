@@ -1,0 +1,12 @@
+<div class="overflow">
+	<div class="col-sm-4">
+		<button class="btn btn-danger btn-block" ng-click="ruleFn.addCouponFn('OFFSETCASH')">代金券</button>
+	</div>
+	<div class="col-sm-4">
+		<button class="btn btn-danger btn-block" ng-click="ruleFn.addCouponFn('DISCOUNT')">折扣券</button>
+	</div>
+	<div class="col-sm-4">
+		<button class="btn btn-danger btn-block" ng-click="ruleFn.addCouponFn('GIFT')">实物券</button>
+	</div>
+
+</div>

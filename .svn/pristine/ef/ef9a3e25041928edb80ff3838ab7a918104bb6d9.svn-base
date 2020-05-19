@@ -1,0 +1,43 @@
+<div class="container contents bgw">
+  <div class="row">
+    <div class="col-sm-12 mb22 form-control-stack text-left">
+      <label class="checkbox-inline">
+        <input class="ng-pristine ng-untouched ng-valid" ng-model="dishesAll" ng-click="checkAllDishes()"
+               type="checkbox">全选</label>
+
+      <button class="btn btn-primary" ng-click="removeAll()">删除</button>
+    </div>
+    <div class="col-md-12 shopshow">
+      <ul>
+        <li ng-repeat="dish in dishes.list" class="rotate-in" style="margin:20px;">
+          <div class="user-list" style="position: relative;padding: 10px;margin: 0" ng-mouseover="show=1" ng-mouseleave="show=0">
+            <div class="">
+              <input type="checkbox" class="ng-pristine ng-untouched ng-valid" ng-model="posts.dishes[$index]"
+                     ng-true-value="{{dish.id}}" ng-false-value="{{null}}">
+              <label class="checkbox-inline">
+                <span ng-bind="dish.code"></span>
+              </label>
+            </div>
+            <div><img ng-src="{{dish.picUrl}}" src="public/img/dish.jpg" width="100%" height="130px"></div>
+            <div class="">{{dish.name}}</div>
+            <div class="">原价： ￥{{dish.price}}</div>
+            <div class="editdialog ng-animate ng-hide" ng-show="show==1" style="padding: 20px;margin-left: -10px">
+              <div class="delete">
+                <i ng-click="remove($index)" class="glyphicon glyphicon-remove"></i>
+              </div>
+              <span style="margin-top: 75px" ng-click="goto('dish/edit/'+dish.id)">编辑</span>
+            </div>
+          </div>
+
+        </li>
+        <li class="addShop" ng-click="goto('dish/add')">
+          <div class="addShopin">
+            <div class="iconout"><i class="glyphicon glyphicon-plus"></i>
+            </div>
+            <div class="text">添加菜品</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

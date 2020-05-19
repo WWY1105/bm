@@ -1,0 +1,181 @@
+<div class="bgw">
+  <div class="row">
+    <div ng-include="'/admin/customer/leftmenu.html'"></div>
+    <div class="v-shadow-content">
+      <div class="customer">
+        <div class="row">
+          <div class="col-sm-2" style="padding: 16px 0;text-align: right">
+            导入老会员的信息
+          </div>
+          <div class="col-sm-10">
+            <form enctype="multipart/form-data" id="fileForm" style="margin: 10px 0 5px">
+              <label for="file" class="btn btn-primary">{{tem}}</label>
+              <input id="file" name="file" type="file" style="display: none" onchange="angular.element(this).scope().temimgshow(this)"
+                     accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+              <a ng-if="tem=='已选择'" ng-click="importFn()" class="btn btn-primary ">提交</a>
+            </form>
+            <div class="text-grey mb22">仅支持符合<span class="text-red">“通用导入模板”</span>格式的EXCEL文件。请在下载模板附件，整理相关信息后上传</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2" style="padding: 4px 0;text-align: right">
+            下载通用导入模板
+          </div>
+          <div class="col-sm-10 mb22">
+            <a class="btn btn-default" href="http://download.ishangbin.cn/8AT54G3R/86S52EBJ/8AVM2EKR/%E8%80%81%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF%E8%A1%A8.xlsx"
+               target="_blank">下载通用导入模板</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2" style="padding: 16px 0;text-align: right">
+            公众号功能入口
+          </div>
+          <div class="col-sm-8">
+            <div style="padding: 14px;border:1px solid #ccc;border-radius: 5px">{{"https://m.ishangbin.com/reuion.html?id="+ config.staff.guestId}}</div>
+            <div class="text-grey mb22">复制后关联至公众号菜单中，即可使顾客自助同步老会员权益</div>
+          </div>
+        </div>
+
+        <!--<form enctype="multipart/form-data" id="fileForm" style="margin: 10px 0 5px">-->
+          <!--<input id="file" name="file" type="file" style="margin: 10px"-->
+                 <!--accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">-->
+          <!--<a ng-click="importFn()" class="btn btn-primary ">导入老会员</a>-->
+          <!--<a href="http://download.ishangbin.cn/8AT54G3R/86S52EBJ/8AVM2EKR/%E8%80%81%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF%E8%A1%A8.xlsx"-->
+             <!--target="_blank" class="btn btn-primary ">下载会员信息模板</a>-->
+        <!--</form>-->
+        <!--<div style="margin: 10px 0">会员同步地址:https://m.sharejoy.cn/reuion.html?id={{config.staff.guestId}}</div>-->
+
+        <div class="row">
+          <div class="col-sm-2" style="padding: 16px 0;text-align: right">
+            发送短信
+          </div>
+          <div class="col-sm-8">
+            <button class="btn btn-primary" style="margin-top: 10px;" ng-click="openOrClose()">短信</button>
+          </div>
+        </div>
+        
+        <div class="row" style="border: 1px solid #ccc;">
+            <div class="form-group col-sm-2" style="padding: 16px 0;text-align: right">
+                    状态：
+            </div>
+            <div class="select_showbox col-sm-8" ng-click="posts.check = 1"  style="margin-top: 10px; width: 105px ; background-color: #fff; color: #000;border: 1px solid #000;" ng-model="posts.status" >{{posts.status || "请选择状态"}} <span
+                    class="caret pull-right" style="margin-top: 7px"></span>
+                    <ul class="select_option " ng-show="posts.check" ng-mouseleave="posts.check = 0" style="margin-left: -13px; margin-top: 6px;width:105px;border: 1px solid #ccc ;background-color: #fff; color: #000;" >
+                      <li ng-click="posts.status = '所有' ; " style="border-bottom: 1px solid #ccc;background-color: #fff;"> 所有</li>
+                      <li ng-click="posts.status = '已同步';" style="border-bottom: 1px solid #ccc;background-color: #fff;"> 已同步</li>
+                      <li  ng-click="posts.status = '未同步';" style="border-bottom: none; background-color: #fff;">未同步</li>
+                      <!--<li ng-click="posts.shopId = 'brand';posts.shopName = '品牌虚拟店';posts.check=0">品牌虚拟店</li>-->
+                      <!-- <li  ng-repeat="o in view.shops"
+                          ng-click="selectShop(o)">
+                        {{o.name}}
+                      </li> -->
+                    </ul>
+            </div>
+            <div style="height: 5px"></div>
+            <button class=" btn btn-primary"style="margin-top: 5px" ng-click="filter()">筛选</button>
+        </div>
+
+        <div class="col-sm-12" ng-if="view.customer.pageSize>1">
+          <pagination items-per-page="view.customer.count" boundary-link="true" rotate="false" max-size="20"
+                      total-items="view.customer.total"
+                      ng-model="view.customer.page" class="pagination-sm" previous-text="&lsaquo;"
+                      next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                      ng-change="pageChange()"></pagination>
+
+        </div>
+
+        <div class="result">
+          <div class="content"> {{view.customer.total||0}}个筛选结果</div>
+
+          <div class="media" ng-repeat="item in view.customer.items" style="position: relative"
+                ng-mouseenter="view.index[$index]=1"
+                ng-mouseleave="view.index[$index]=0">
+            <div class="media-left">
+              <img class="media-object" src="/public/img/avatar.png" alt="...">
+            </div>
+            <div class="media-body">
+              <h4 class="media-heading">{{item.fullname}}</h4>
+
+              <p><span class="tag">{{item.grade}}</span> <span
+                      class="glyphicon glyphicon-phone"></span>{{item.phone}} <span
+                      class="glyphicon glyphicon-user"></span> {{item.gender=="F"?'女':item.gender=="M"?'男':"保密"}} </p>
+
+              <p class="text-gold"><span ng-if="item.cardNo">会员卡号：{{item.cardNo}}</span> <span class="text-red">{{view.state[item.state]}}</span>
+              </p>
+            </div>
+            <div class="media-body text-right">
+
+              <p class="text-black">积分 <span class="text-red">{{item.currentPoints||0}}</span> | 余额 <span
+                      class="text-red">{{item.currentCharge||0}}</span>
+              </p>
+
+
+            </div>
+            <div class="addon" ng-if="view.index[$index]&&item.state != 302" ng-click="$event.stopPropagation()">
+              <div style="margin-bottom: 50px"></div>
+              <a class="c-charge" style="margin: 0 7rem" ng-href="{{'#/customer/update/' + item.id}}">修改</a>
+              <!-- <a class="c-point" href="{{'#/customer/point/'+ item.id}}">积分</a> -->
+              <!-- <a class="c-coupon" href="{{'#/customer/coupon/'+ item.id}}">发券</a> -->
+              <!-- <a class="c-coupon" href="{{'#/customer/upgrade/'+ item.id}}">升级</a> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="text-left" ng-if="!view.customer.total">
+          无查询结果
+        </div>
+
+
+      </div>
+    </div>
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" style="width: 25%;margin-top: 18rem;" ng-if="isOpenOrClose">
+        <div class="modal-content" style="overflow: hidden;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          &times;
+          </button>
+          <h4 class="modal-title">发送短信</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+          <form class="couponadd" role="form" name="couponNew" novalidate>
+            <div class="row" >
+                <div class="form-group" style="padding: 16px 0;text-align: left; margin-left: 2.5rem;">
+                        状态：
+                        <div class="select_showbox" ng-click="posts.check1 = 1"  style="margin-top: 10px; width: 105px ; background-color: #fff; color: #000;border: 1px solid #000;" ng-model="posts.state" >{{posts.state || "请选择状态"}} <span
+                                class="caret pull-right" style="margin-top: 7px"></span>
+                            <ul class="select_option " ng-show="posts.check1" ng-mouseleave="posts.check1 = 0" style="margin-left: -13px; margin-top: 6px;width:105px;border: 1px solid #ccc ;background-color: #fff; color: #000;" >
+                              <!-- <li ng-click="posts.state = '所有' ; " style="border-bottom: 1px solid #ccc;background-color: #fff;"> 所有</li> -->
+                              <li ng-click="posts.state = '已同步';" style="border-bottom: 1px solid #ccc;background-color: #fff;"> 已同步</li>
+                              <li  ng-click="posts.state = '未同步';" style="border-bottom: none; background-color: #fff;">未同步</li>
+                            </ul>
+                        </div>
+                </div>
+                <!-- <div style="height: 5px"></div> -->
+            </div>
+            <div class="row">
+                <div style="margin-left: 2.5rem;">
+                  <label class="form-control-static">短信发送内容 <a target="_blank"
+                                                                href="http://www.shjianzhou.com/key/index.html">点此检测敏感词</a></label>
+                  <textarea ng-model="posts.smsText" placeholder="最多200个字符" ng-change="checkOut()"
+                            style="width: 92%;height: 100px;padding: 10px;"></textarea>
+                </div>
+            </div>    
+            <div class="form-inline">
+              <div class="col-sm-2 col-sm-offset-5 btn btn-primary" ng-click='sendMessage()'
+                 ng-disabled="couponNew.$invalid">提交
+              </div>
+            </div>
+          </form>
+          </div>
+          
+          <div style="height: 40px"></div>
+        </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal -->
+    </div>
+  </div>
+</div>

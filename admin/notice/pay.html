@@ -1,0 +1,28 @@
+<div class="row bgw">
+  <div ng-include="'/admin/notice/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <div class="nav-title">
+      <div class="active">
+        买单弹窗
+      </div>
+    </div>
+    <!---->
+    <div class="">
+      <div class="col-sm-10 col-sm-offset-1 validate">
+        <div class="title">在买单页面自动弹出绑定手机号</div>
+        <label> <input type="checkbox" ng-model="posts.enabled"/>开启</label>
+      </div>
+    </div>
+
+    <div class="">
+      <div class="col-sm-2">
+      </div>
+      <div class="col-sm-8 mt20 mb10">
+        <a class="btn btn-primary" ng-click="postSend()">保存设置</a>
+      </div>
+    </div>
+    <!--<div class="bottom-fix">-->
+    <!--<button type="button" ng-click="postSend()" class="btn btn-primary btn-block">保存设置</button>-->
+    <!--</div>-->
+  </div>
+</div>

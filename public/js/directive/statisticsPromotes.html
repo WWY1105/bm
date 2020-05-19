@@ -1,0 +1,51 @@
+<div class="doc">
+  <ul class="bg-muted">
+    <li>合计：{{title.amount||0}}元</li>
+    <li>支付宝途径：{{title.alipay||0}}元 （{{title.alipayCount||0}}笔）</li>
+    <li>微信支付途径：{{title.wechatpay||0}}元（{{title.wechatCount||0}}笔）</li>
+  </ul>
+  <table class="table" ng-if="view.result.items">
+    <thead>
+    <tr>
+      <td>序号</td>
+      <td>分店</td>
+      <td>
+        <div>合计</div>
+        <div>(笔)</div>
+      </td>
+      <td>
+        <div>合计</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>支付宝笔数</div>
+        <div>(笔)</div>
+      </td>
+      <td>
+        <div>支付宝</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>微信笔数</div>
+        <div>(笔)</div>
+      </td>
+      <td>
+        <div>微信</div>
+        <div>(元)</div>
+      </td>
+    </tr>
+    </thead>
+    <tbody class="slide-down">
+    <tr ng-repeat="row in view.result.items">
+      <td ng-bind="((page-1)*count)+$index+1"></td>
+      <td ng-bind="row.shopName||'品牌虚拟店'"></td>
+      <td class="center" ng-bind="row.count||0"></td>
+      <td ng-bind="row.amount"></td>
+      <td class="center" ng-bind="row.alipayCount||0"></td>
+      <td ng-bind="row.alipay||0"></td>
+      <td class="center" ng-bind="row.wechatCount||0"></td>
+      <td ng-bind="row.wechatpay||0"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>

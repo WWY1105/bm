@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+  <!--[if lte IE 8]>
+  <script>window.location.href = '/upload.html';</script>
+  <![endif]-->
+  <!--[if lte IE 7]>
+  <script>window.location.href = '/upload.html';</script>
+  <![endif]-->
+  <!--[if lte IE 6]>
+  <script>window.location.href = '/upload.html';</script>
+  <![endif]-->
+  <!--[if lt IE 9]>
+  <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+  <![endif]-->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>管理系统首页</title>
+  <link rel="Shortcut Icon" href="favicon.ico"/>
+
+  <link rel="stylesheet" href="public/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="public/css/style.css"/>
+  <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css"/>
+  <link rel="stylesheet" href="bower_components/angular-tooltips/dist/angular-tooltips.min.css"/>
+</head>
+<body>
+<header ng-include="'staff/header.html'">
+</header>
+<div style="height: 70px"></div>
+<div class="view-slide-out" ng-class="{'container':!config.class}">
+  <div ng-view class="view-slide-in"></div>
+</div>
+
+<footer ng-include="'footer.html'"></footer>
+
+<script type="text/javascript" src="public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="public/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="public/angular/angular.min.js"></script>
+<script type="text/javascript" src="public/js/jquery/jqcookie.min.js"></script>
+
+<!--require-->
+<!--<script type="text/javascript" src="public/js/highcharts/highcharts.js"></script>-->
+<!--<script type="text/javascript" src="public/js/highcharts/highcharts-ng.js"></script>-->
+<script type="text/javascript" src="public/js/highcharts/concat.min.js"></script>
+
+<script type="text/javascript" src="public/angular/angular-route.min.js"></script>
+<script type="text/javascript" src="public/angular/angular-messages.min.js"></script>
+<script type="text/javascript" src="public/angular/angular-animate.min.js"></script>
+<script type="text/javascript" src="public/angular/ui-bootstrap-min.js"></script>
+<script type="text/javascript" src="public/js/jquery/jquery.form.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-tooltips/dist/angular-tooltips.min.js"></script>
+<script type="text/javascript" src="public/js/mydatepick.min.js"></script>
+
+<script type="text/javascript" src="public/js/jquery/md5.min.js"></script>
+<script type="text/javascript" src="public/js/dest/config.js"></script>
+<script>
+  var app = angular.module('app', ['ngRoute', '720kb.tooltips', 'ngMessages', 'angular-loading-bar', 'ngAnimate', 'ui.bootstrap']);//创建APP
+
+  app.config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.when('/', {templateUrl: "staff/shop/index.html", controller: "HomeCtr"}) //首页
+            .otherwise({redirectTo: "/"});
+  }]);
+
+  app.controller('HomeCtr', function ($scope, $location, $filter) { //店铺
+    $scope.config = {};
+    $scope.config.breadset = [{name: "我的门店"}]; //面包屑;
+    $scope.config.staff = ajaxSendFn({}, constUrlDict["staff"], "GET", 1).result;
+
+    $scope.shopshow = {
+      shop: ajaxSendFn({}, "/shops/shop", "GET").result
+    };
+    $scope.tem = {};
+    $scope.tem.type = {
+      "1001": "早市",
+      "1002": "午市",
+      "1003": "下午茶",
+      "1004": "晚市",
+      "1005": "夜宵",
+    };
+    $scope.authed = {
+      "1001": "创建中",
+      "1002": "认证审核中",
+      "1003": "已通过审核",
+      "1004": "关闭审核中",
+      "1005": "停用",
+    };
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<div class="container contents bgw">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-5">
+      <div class="col-md-4">
+        <button class="btn btn-danger btn-block" ng-click="goto('rule/member')">会员等级管理</button>
+      </div>
+      <div class="col-md-4">
+        <button class="  btn btn-danger btn-block" ng-click="goto('rule/coupon')">券管理</button>
+      </div>
+      <div class=" col-md-4">
+        <button class=" btn btn-danger btn-block" ng-click="goto('rule/add')">上线新活动</button>
+      </div>
+    </div>
+    <div class="col-md-12 col-xs-12 text-center">
+      <div class="col-md-6"><h4>已上线的活动</h4></div>
+      <div class="col-md-6"><h4>已下线的活动</h4></div>
+    </div>
+    <div class="col-md-12 time-line1 ">
+      <div class="col-md-6">
+        <div class="mt10" ng-repeat="rules in view.rule" ng-show="rules.on">
+          <div class="line-in icons">
+            <div class="title click" ng-click="pannel($index)">
+              <div class="col-md-12">
+                <span ng-repeat="(key, value) in rules.icon" class="icon" ng-class="key"></span>
+                <span ng-bind="rules.name"></span>
+                <span ng-if="rules.show" class=" pull-right">点击收起 <i ng-class="{'glyphicon-chevron-down':rules.show}"
+                                                                     class="glyphicon "></i></span>
+                <span ng-if="!rules.show" class=" pull-right"><span
+                        ng-hide="view.rule[$index-1].createTime==rules.createTime"
+                        ng-bind="rules.createTime|date:'yyyy-MM-dd'"></span> <i
+                        ng-class="{'glyphicon-chevron-right':!rules.show}" class="glyphicon "></i></span>
+              </div>
+
+            </div>
+            <div class="content" ng-show="rules.show">
+              <div class="col-md-12" ng-repeat="(key, value) in rules.text" ng-bind="($index+1)+'.'+value">
+              </div>
+              <div class="col-md-12" ng-repeat="ruleget in rules.rulesget|orderBy:'grade'">
+                <div ng-repeat="(key, value) in ruleget">
+                  <span ng-bind="value.name&&value.name+':'"></span>
+                  <span ng-bind="value.content"></span>
+                </div>
+              </div>
+              <div class="col-sm-12 mt20">
+                <div class="col-sm-3 col-sm-offset-9">
+                  <button class="btn btn-danger btn-block" ng-click="activityOff(rules._id,$index)">
+                    下线
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!--right-->
+      <div class="col-md-6">
+        <div class="mt10" ng-repeat="rules in view.rule" ng-show="!rules.on">
+          <div class="line-in icons">
+            <div class="title click" ng-click="pannel($index)">
+              <div class="col-sm-12">
+                <span ng-repeat="(key, value) in rules.icon" class="icon offline" ng-class="key"></span>
+                <span ng-bind="rules.name"></span>
+                <span ng-if="rules.show" class=" pull-right">点击收起 <i ng-class="{'glyphicon-chevron-down':rules.show}"
+                                                                     class="glyphicon "></i></span>
+                <span ng-if="!rules.show" class=" pull-right"><span
+                        ng-hide="view.rule[$index-1].createTime==rules.createTime"
+                        ng-bind="rules.createTime|date:'yyyy-MM-dd'"></span> <i
+                        ng-class="{'glyphicon-chevron-right':!rules.show}" class="glyphicon "></i></span>
+              </div>
+
+            </div>
+            <div class="content" ng-show="rules.show">
+
+              <div class="col-sm-12" ng-repeat="(key, value) in rules.text" ng-bind="($index+1)+'.'+value">
+
+              </div>
+              <div class="col-sm-12" ng-repeat="ruleget in rules.rulesget|orderBy:'grade'">
+                <div ng-repeat="(key, value) in ruleget">
+                  <span ng-bind="value.name&&value.name+':'"></span>
+                  <span ng-bind="value.content"></span>
+                </div>
+              </div>
+              <div class="col-sm-12 mt20">
+                <div class="col-sm-4">
+                  <button class="btn btn-default btn-block" ng-click="goto('rule/edit/'+rules._id)">修改活动范围</button>
+                </div>
+                <div class="col-sm-4">
+                  <button class="btn btn-default btn-block" ng-click="goto('rule/edit2/'+rules._id)">修改活动详情</button>
+                </div>
+                <div class="col-sm-4">
+                  <button class="btn btn-danger btn-block" ng-click="activityOn(rules._id,$index)">
+                    上线
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <Div class="col-md-10 col-md-offset-1" ng-if="view.rule.length<1">暂未添加活动</Div>
+  </div>
+</div>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <title>默认配置</title>
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+
+  <!--<link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css"/>-->
+  <style>
+    .btn {
+      background: #6262c1;
+      padding: 20px;
+      display: inline-block;
+      margin: 10px 0;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <h3>管理员:</h3>
+  <div class="btn" v-on:click="submit()">消息提醒的默认配置</div>
+  <h3>店长:</h3>
+  <div class="">人数<input style="margin: 10px;" v-model="data.count" type="text"></div>
+  <div class="">开始序号<input style="margin: 10px;" v-model="data.sequence" type="text"></div>
+  <div class=""><span style="">桌号</span><textarea style="margin: 10px;width: 500px;height: 150px;vertical-align: middle"
+                                                  v-model="data.num" type="text"></textarea></div>
+  <div class="btn" style="margin-left: 40px" v-on:click="send()">桌台提交</div>
+
+</div>
+<script type="text/javascript" src="public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="public/js/jquery/jqcookie.min.js"></script>
+
+<script type="text/javascript" src="public/js/jquery/md5.min.js"></script>
+<!--<script type="text/javascript" src="public/js/dest/config.js?v=1"></script>-->
+<script src="https://cdn.bootcss.com/vue/2.4.1/vue.min.js"></script>
+<script>
+    var basicUrl = location.origin;
+    //+ "/bm";//ajax首页
+    var indexUrl = location.origin;
+
+    function ajaxSendFn(j, u, h, l) {
+//json,url,http,l
+//传入数据，提交地址，提交方法，是否加JSON CONTENT-TYPE
+        var redata;
+        var api_key = "5d85a0398cb74c66a46affbb98efaf41";
+        if (!$.cookie("apikey")) {
+            $.cookie("apikey", api_key, {expire: 30, path: "/"});
+        }
+        if (h == "GET" || h == "get") {
+            $.ajax({
+                url: basicUrl + u,
+                data: objSort(j),
+                type: h,
+                dataType: "json",
+                async: true,
+                beforeSend: function (xhr) {
+                    if (l == 1) {//
+                        xhr.setRequestHeader("Content-Type", "application/json");
+                    }
+                },//这里设置header
+                success: function (data) {
+                    if (data.code == 403000) {
+                        location.href = indexUrl;
+                        return;
+                    }
+                    if (data.code == 400000) {
+                        alert(data.message);
+                        return;
+                    }
+                    if (data.code != 200) {
+                        console.log(data.message);
+                    }
+                    redata = data;
+                }, loading: function () {
+                }
+            });
+        } else {
+            j = typeof(j) == "string" ? j : JSON.stringify(j);
+            $.ajax({
+                url: basicUrl + u + "?" + sortUrl(),
+                data: j,
+                type: h,
+                dataType: "json",
+                async: true,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                },//这里设置header
+                success: function (data) {
+                    if (data.code == 403000) {
+                        location.href = indexUrl;
+                        return;
+                    }
+                    if (data.code != 200) {
+                        console.log(data.message);
+                    }
+                    redata = data;
+                }
+            });
+        }
+        return redata;
+    }
+
+    app = new Vue({
+        el: '#app',
+        data: {
+            data: {},
+        },
+        beforeCreate: function () {
+            // postsend = ajaxSendFn(json, "/activity/ads", "POST", 1);
+
+        },
+        methods: {
+            submit: function () {
+                //NOTIFY
+                var data1 = ajaxSendFn([{"category": "102", "enabled": true, "path": "103"}, {
+                    "category": "103",
+                    "enabled": true,
+                    "path": "103"
+                }, {"category": "104", "enabled": true, "path": "103"}, {
+                    "category": "105",
+                    "enabled": true,
+                    "path": "103"
+                }, {"category": "106", "enabled": true, "path": "103"}, {
+                    "category": "107",
+                    "enabled": true,
+                    "path": "103"
+                }, {"category": "108", "enabled": true, "path": "103"}, {
+                    "category": "109",
+                    "enabled": true,
+                    "path": "103"
+                }, {"category": "113", "enabled": true, "path": "103"}], "/remind/message/NOTIFY", "POST", 1);
+                console.log(data1);
+                //券到期提醒
+                data1 = ajaxSendFn({
+                    "category": "120",
+                    "enabled": true,
+                    "path": "103",
+                    "times": 10
+                }, "/remind/expired", "POST", 1)
+                console.log(data1);
+                //
+                data1 = ajaxSendFn([{"category": "161", "enabled": true, "path": "103"}, {
+                    "category": "163",
+                    "enabled": true,
+                    "path": "103"
+                }, {
+                    "category": "165",
+                    "enabled": true,
+                    "path": "103",
+                    "times": 3
+                }], "/remind/message/PRAISE", "POST", 1)
+                console.log(data1);
+                //
+                data1 = ajaxSendFn([{"category": "151", "enabled": true, "path": "103", "times": 1}, {
+                    "category": "152",
+                    "enabled": true,
+                    "path": "103",
+                    "times": 3
+                }], "/remind/message/GROUPON", "POST", 1)
+                console.log(data1);
+                //
+                data1 = ajaxSendFn([{"category": "170", "enabled": true, "path": "103"}, {
+                    "category": "171",
+                    "enabled": true,
+                    "path": "103",
+                    "times": 3
+                }], "/remind/message/RAFFLE", "POST", 1)
+                console.log(data1);
+              //
+              data1 = ajaxSendFn({
+                category: "190", enabled: true
+              }, "/remind/remind", "POST", 1)
+                console.log(data1);
+              //
+
+
+            },
+            send: function () {
+                _self = this;
+                var a = this.data.num.split(",");
+                i = 0;
+                var r = setInterval(function () {
+                    if (i == (a.length - 1)) {
+                        clearInterval(r);
+                    }
+                    data = ajaxSendFn({seatNum: _self.data.count, type: "1001", no: a[i],sequence:(parseInt(_self.data.sequence) +i)}, "/tables/table", "POST", 1);
+                    i++;
+                    console.log(data);
+
+                }, 1000)
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<div class="doc">
+    <ul class="bg-muted">
+      <li>合计</li>
+      <li>购买数量：{{title.count||0}}</li>
+      <li>购买金额：{{title.amount||0}}</li>
+      <li>核销数量：{{title.usedCount||0}}</li>
+      <li>核销金额：{{title.usedAmount||0}}</li>
+    </ul>
+    <table class="table" ng-if="view.result.items">
+      <thead>
+      <tr>
+        <td>序号</td>
+        <td>分店</td>
+        <td>
+          <div>购买数量</div>
+          <div>(张)</div>
+        </td>
+        <td>
+          <div>购买金额</div>
+          <div>(元)</div>
+      </td>
+        <td>
+          <div>核销数量</div>
+          <div>(张)</div>
+        </td>
+        
+        <td>
+            <div>核销金额</div>
+            <div>(元)</div>
+        </td>
+      </tr>
+      </thead>
+      <tbody class="slide-down">
+      <tr ng-repeat="row in view.result.items">
+        <td  ng-bind="((page-1)*count)+$index+1"></td>
+        <td ng-bind="row.shopName||'品牌虚拟店'"></td>
+        <td ng-bind="row.count||0"></td>
+        <td ng-bind="row.amount||0"></td>
+        <td ng-bind="row.usedCount||0"></td>       
+        <td ng-bind="row.usedAmount||0"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  

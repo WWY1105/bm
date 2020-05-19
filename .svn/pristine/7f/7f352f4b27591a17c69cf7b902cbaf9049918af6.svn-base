@@ -1,0 +1,12 @@
+<ul class="col-sm-12 mt15 mb15 timecheck" >
+  <li style="padding : 5px 0"  ng-repeat="item in view.buttons" class="col-sm2 glyphicon btn btn-default" ng-class="{active:posts.selector===$index}" ng-click="select($index)">{{item}}</li>
+  <!--<li class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===0}" ng-click="select(0)">充值报表</li>-->
+  <!--<li class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===1}" ng-click="select(1)">积分报表</li>-->
+  <!--<li class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===2}" ng-click="select(2)">优惠券报表</li>-->
+  <!--<li class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===3}" ng-click="select(3)">顾客升级情况报表</li>-->
+  <!--<li class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===4}" ng-click="select(4)">短信使用情况报表</li>-->
+  <!--<li class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===5}" ng-click="select(5)">上宾消费报表-->
+  <!--<li class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===6}" ng-click="select(6)">其他收费报表-->
+  <!--</li>-->
+</ul>
+

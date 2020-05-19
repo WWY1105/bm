@@ -1,0 +1,30 @@
+	<div class="container contents bgw">
+		<div class="col-md-12 tables">
+					<div class="user-list mb10" >
+						<div ng-repeat="staffsshow in user.list.staffs" >
+							<div class="staffs showedit"  ng-mouseover="staffsshow.show=1" ng-mouseleave="staffsshow.show=0">
+								<div class="out" ng-class="{blur:staffsshow.show==1}">
+									<div class="menuicon  pull-left" ng-class="'staff'+staffsshow.gender+'Icon'"></div>
+									<div class="pull-left text text-left">
+										<div class="name suolue" ng-bind="staffsshow.nickname"></div>
+									</div>
+								</div>
+								<div class="editdialog " ng-show="staffsshow.show==1">
+									<div class="delete" >
+										<i ng-click="staffDelFn($index)" class="glyphicon glyphicon-remove"></i>
+									</div>
+									<span ng-click="goto('staff/staffedit/'+staffsshow.id)">编辑</span>
+								</div>
+							</div>
+						</div>
+
+						<div  class="add" ng-click="goto('staff/staffadd')">
+							<span class="iconadd">
+								<i class=" glyphicon glyphicon-plus"></i>
+							</span>
+
+						</div>
+					</div>
+		</div>
+
+	</div>

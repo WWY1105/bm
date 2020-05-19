@@ -1,0 +1,32 @@
+<div class="container contents bgw">
+	<div class="table col-sm-12" ng-if="view.devices.items">
+		<div class="col-sm-12 plan-title text-center">
+			<div class="col-sm-1">序号</div>
+			<div class="col-sm-3">激活码</div>
+			<div class="col-sm-4">设备号</div>
+			<div class="col-sm-2">申请日期</div>
+			<div class="col-sm-2">激活日期</div>
+		</div>
+
+		<div class="col-sm-12 plan-son text-center slide-down" ng-repeat="device in view.devices.items|orderBy:'createTime':true">
+			<div class="col-sm-1" ng-bind="((view.devices.page-1)*view.devices.count)+$index+1"></div>
+			<div class="col-sm-3" ng-bind="device.code|splitcode"></div>
+			<div class="col-sm-4" ng-bind="device.deviceId||'无'"></div>
+			<div class="col-sm-2" ng-bind="device.createTime|date:'yyyy-MM-dd hh:mm:ss'||'无'">
+			</div>
+			<div class="col-sm-2" ng-bind="device.activateTime|date:'yyyy-MM-dd hh:mm:ss'||'无'">
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-12" ng-if="view.divices.total/view.devices.count>1">
+            <pagination items-per-page="view.devices.count" boundary-links="true" total-items="view.devices.total" ng-model="view.devices.page" class="pagination-sm" previous-text="&lsaquo;" ng-change="pageChange()" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+
+    </div>
+
+	<div class="col-sm-2 col-sm-offset-9">
+		<button ng-if="config.staff.roleType=='M'" class="btn btn-danger btn-block" ng-click="jihuo()">新增激活码</button>
+	</div>
+	<div class="col-sm-12">
+		<h4 ng-if="!view.devices&&loading">读取中请稍后...</h4>
+	</div>
+</div>

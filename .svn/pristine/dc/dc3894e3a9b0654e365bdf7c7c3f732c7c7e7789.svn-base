@@ -1,0 +1,23 @@
+<div class="container contents bgw">
+<div class="row">
+	<Div class="col-md-12 shopshow">
+		<ul >
+			<li ng-repeat="shop in shops.list" class="rotate-in">
+			<DIV class="menuicon"   ng-class="{'shopsIcon':shop.state==1002,'shopsIcon2':(shop.state ==1003 || shop.state==1001),'shopsIcon3':shop.state == 1005}" ng-click="goto('shops/show/'+shop.id)"  data-toggle="tooltip" data-placement="bottom" title="{{shop.name}}">
+				<Div ng-if="shop.state==1002" class="pull-left menuicon smIcon"></Div>
+				<Div ng-if="shop.state==1002"  class="pull-left smName suolue" ng-bind="shop.shopKeeper||'暂无店长'"></Div>
+			</DIV>
+			<div class="shopTile text-center" ng-bind="shop.name" ></div>
+
+			</li>
+			<li class="addShop" ng-click="goto('shops/add')">
+				<div class="addShopin">
+					<div class="iconout"> <i class="glyphicon glyphicon-plus"></i>
+					</div>
+					<div class="text">添加门店</div>
+				</div>
+			</li>
+		</ul>
+	</Div>
+</div>
+</div>

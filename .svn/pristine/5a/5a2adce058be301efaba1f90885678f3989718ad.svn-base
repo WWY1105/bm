@@ -1,0 +1,149 @@
+<div class="container contents bgw ">
+  <div class="col-md-10 col-sm-12">
+    <form class="form-horizontal " name="customerAdd" ng-submit="send()">
+      <div class="form-group ">
+        <label class="control-label col-sm-4"><span class="text-red">*</span>编号</label>
+
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="fullname" ng-model="posts.code" placeholder="请输入编号"
+                 ng-minlength='1' ng-maxlength='12' required/>
+        </div>
+        <div class="col-sm-4 form-control-static">
+             <span class="text-red" ng-messages="customerAdd.fullname.$error"
+                   ng-show="!customerAdd.fullname.$pristine||customerAdd.fullname.$touched">
+                 <span ng-message="required">
+                  不能为空
+                  </span>
+                  <span ng-message="minlength">
+                  不得小于1个字符
+                  </span>
+                  <span ng-message="maxlength">
+                  不得大于12个字符
+                  </span>
+                  <span ng-message="pattern">
+                  不能含有空格及特殊字符
+                  </span>
+             </span>
+             <span ng-show="customerAdd.fullname.$untouched&&customerAdd.fullname.$pristine">
+                1-12个字符以内
+             </span>
+              <span class="text-green" ng-show="customerAdd.fullname.$valid">
+                输入正确
+             </span>
+        </div>
+
+      </div>
+      <div class="form-group ">
+        <label class="control-label col-sm-4"><span class="text-red">*</span>菜品名称</label>
+
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="name" ng-model="posts.name" placeholder="请输入菜品名称"
+                 ng-minlength='2' ng-maxlength='20' ng-pattern="/^[\u4e00-\u9fa5A-Za-z0-9_-]+$/" required/>
+        </div>
+        <div class="col-sm-4 form-control-static">
+             <span class="text-red" ng-messages="customerAdd.name.$error"
+                   ng-show="!customerAdd.name.$pristine||customerAdd.name.$touched">
+                 <span ng-message="required">
+                  不能为空
+                  </span>
+                  <span ng-message="minlength">
+                  不得小于2个字符
+                  </span>
+                  <span ng-message="maxlength">
+                  不得大于20个字符
+                  </span>
+                  <span ng-message="pattern">
+                  不能含有空格及特殊字符
+                  </span>
+             </span>
+             <span ng-show="customerAdd.name.$untouched&&customerAdd.name.$pristine">
+                2-20个字符以内
+             </span>
+              <span class="text-green" ng-show="customerAdd.name.$valid">
+                输入正确
+             </span>
+        </div>
+
+      </div>
+      <div class="form-group ">
+        <label class="control-label col-sm-4"><span class="text-red">*</span>价格</label>
+
+        <div class="col-sm-4">
+          <input type="text" class="form-control" ng-model="posts.price" name="price" placeholder="请输入菜品价格"
+                 required>
+        </div>
+      </div>
+
+      <div class="form-group ">
+        <label class="control-label col-sm-4">图片</label>
+
+        <div class="col-sm-4">
+          <div class="btn btn-block btn-default ng-binding" ng-click="addpic()">选择图片</div>
+          <div  style="margin-top: 10px"><img ng-src="{{posts.picUrl}}"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 col-sm-offset-4">
+          <a class="btn btn-default btn-block" back-button>返回</a>
+        </div>
+        <div class="col-sm-2 ">
+          <button class="btn btn-primary btn-block" ng-disabled="customerAdd.$invalid">确定</button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="addpic" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form enctype="multipart/form-data" id="iimgform">
+        <div class="modal-header ">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">上传图片</h4>
+        </div>
+        <div class="modal-body" style="overflow:hidden">
+          <div class="col-md-12">
+            <div class="col-sm-6">
+              <div class="picin">
+                <img ng-src="{{tempic}}" ng-show="tempic"/>
+
+                <div class="emputy" ng-hide="tempic"></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="picerror"></div>
+              <div class="pictitle">
+                图片必须为以下格式:
+                <br>
+                bmp,jpeg,jpg,gif
+                <br>图片大小小于2M
+              </div>
+
+              <div class="upload">
+                <label class="btn btn-block btn-default" for="uploadfile">选择要上传的图片</label>
+                <input class="hide" type="file" id="uploadfile" ng-model="tempic"
+                       onchange="angular.element(this).scope().temimgshow(this)"
+                       name="file"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-3 col-md-offset-3">
+            <div class="btn btn-primary btn-block" ng-click="sendimg(this)">确定</div>
+          </div>
+          <div class="col-md-3 col-md-setoff-1">
+            <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+

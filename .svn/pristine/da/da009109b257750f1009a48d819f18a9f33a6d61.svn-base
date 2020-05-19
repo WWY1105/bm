@@ -1,0 +1,42 @@
+<div class="doc">
+  <ul class="bg-muted">
+    <li>合计（元）</li>
+    <li>实际收费：{{title.amount||0}}</li>
+    <li>支付宝途径：{{title.alipay||0}}</li>
+    <li>微信支付途径：{{title.wechatpay||0}}</li>
+  </ul>
+  <table class="table" ng-if="view.result.items">
+    <thead>
+    <tr>
+      <td>序号</td>
+      <td>分店</td>
+      <td>
+        <div>收费笔数</div>
+        <div>(笔)</div>
+      </td>
+      <td>
+        <div>实际收费</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>支付宝收费</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>微信收费途径</div>
+        <div>(元)</div>
+      </td>
+    </tr>
+    </thead>
+    <tbody class="slide-down">
+    <tr ng-repeat="row in view.result.items">
+      <td ng-bind="((page-1)*count)+$index+1"></td>
+      <td ng-bind="row.shopName"></td>
+      <td class="center" ng-bind="row.count||0"></td>
+      <td ng-bind="row.amount"></td>
+      <td ng-bind="row.alipay||0"></td>
+      <td ng-bind="row.wechatpay||0"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>

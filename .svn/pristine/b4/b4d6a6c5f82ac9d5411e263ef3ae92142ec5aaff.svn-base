@@ -1,0 +1,1531 @@
+function getObjectURL(file) { //返回图片的URL
+    varurl = null;
+    if (window.createObjectURL != undefined) { //basic
+        url = window.createObjectURL(file);
+    } else if (window.URL != undefined) { //mozilla(firefox)
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL != undefined) { //webkitorchrome
+        url = window.webkitURL.createObjectURL(file);
+    }
+    return url;
+}
+
+app.config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.when('/', {templateUrl: "keeper/index.html", controller: "HomeCtr"}) //首页
+        .when('/staff/', {templateUrl: "keeper/Staff/show.html", controller: "StaffShowCtr"}) //门店员工展示
+        .when('/shop/', {templateUrl: "keeper/Shop/index.html", controller: "ShopCtr"}) //门店员工展示
+        .when('/shop/add', {templateUrl: "keeper/Shop/add.html", controller: "ShopAddCtr"}) //门店添加第一步
+        .when('/shop/add2', {templateUrl: "keeper/Shop/add2.html", controller: "ShopAdd2Ctr"}) //门店添加第二步
+        .when('/shop/add3', {templateUrl: "keeper/Shop/add3.html", controller: "ShopAdd3Ctr"}) //门店添加第三步
+        .when('/shop/add4', {templateUrl: "keeper/Shop/add4.html", controller: "ShopAdd4Ctr"}) //门店添加第四步
+        .when('/shop/add5', {templateUrl: "keeper/Shop/add5.html", controller: "ShopAdd5Ctr"}) //门店添加第四步
+        .when('/shop/businesstime', {templateUrl: "keeper/Shop/businesstime.html", controller: "ShopBusinesstimeCtr"}) //门店营业时间修改
+        .when('/shop/add2re', {templateUrl: "keeper/Shop/add2re.html", controller: "ShoptablesCtr"}) //添加桌台返回
+        .when('/tables', {templateUrl: "keeper/Shop/tables.html", controller: "ShoptablesCtr"}) //桌台管理
+        .when('/shop/edit', {templateUrl: "keeper/Shop/edit.html", controller: "ShopAddCtr"}) //门店修改
+        .when('/staff/staffedit/:guestid', {templateUrl: "keeper/Staff/staffedit.html", controller: "StaffeditCtr"}) //员工编辑
+        .when('/staff/dutyedit/:guestid', {templateUrl: "keeper/Staff/dutyedit.html", controller: "StaffdutyeditCtr"}) //值班管理
+        .when('/staff/staffadd', {templateUrl: "keeper/Staff/staffadd.html", controller: "StaffaddCtr"}) //员工添加
+        .when('/comment', {templateUrl: "keeper/comment.html", controller: "CommentCtr"}) //评价
+        .when('/customer/charge/:userId', {templateUrl: "keeper/customer/charge.html", controller: "CustomerChargeCtr"}) //会员充值
+        .when('/customer/point/:userId', {
+            templateUrl: "keeper/customer/point.html",
+            controller: "CustomerPoicustomerntCtr"
+        }) //顾客积分
+        .when('/customer/coupon/:userId', {templateUrl: "keeper/customer/coupon.html", controller: "CustomerCouponCtr"}) //顾客发券
+        .when('/customer/add', {templateUrl: "keeper/customer/add.html", controller: "CustomerAddCtr"}) //添加顾客
+        .when('/customer', {templateUrl: "keeper/customer/index.html", controller: "CustomerCtr"}) //顾客
+        .when('/rule', {templateUrl: "keeper/rule/index.html", controller: "RuleCtr"}) //营销规则列表
+        .when('/rule/member', {templateUrl: "keeper/rule/member.html", controller: "RulememberCtr"}) //会员规则
+        .when('/staff/password/:guestid', {
+            templateUrl: "keeper/Staff/password.html",
+            controller: "passwordCtr"
+        }) //重置密码
+        .when('/password', {templateUrl: "my/password.html", controller: "edit_passwordCtr"}) //修改自己的密码
+        .when('/devices', {templateUrl: "keeper/devices/index.html", controller: "DevicesCtr"}) //设备管理
+        .when('/dish', {
+            templateUrl: "keeper/dish/index.html",
+            controller: "DishCtr"
+        }) //菜品列表
+        .when('/doc', {
+            templateUrl: "keeper/doc/index.html",
+            controller: "DocCtr"//报表列表
+        })
+        .otherwise({redirectTo: "/"});
+}]);
+/*------------------------------------------------------------------*/
+app.controller('HomeCtr', function ($scope) { //主页
+    $scope.ruleDic = {nonParticipations: "不参与活动商品", periods: "有效时段", time: "时间", shops: "分店"}; //将key转为中文
+    $scope.config.breadset = [{name: "首页"}]; //面包屑;
+    $scope.view = {customerCount: {}, shop: ajaxSendFn({}, "/shops/shop/desc", "GET").result || []};
+    customerCount = ajaxSendFn({}, "/customer/count", "GET").result || [];
+    for (var x in customerCount) $scope.view.customerCount[customerCount[x].type] = customerCount[x]
+    $scope.view.rule = ajaxSendFn({}, "/activity", "GET").result || [];
+    for (x in $scope.view.rule) { //定义icon
+        tem = $scope.view.rule[x];
+        $scope.view.rule[x].icon = {};
+        for (y in tem.rules) {
+            tem.rules[y].type = tem.rules[y].type.split("_");
+            $scope.view.rule[x].icon[tem.rules[y].type[0]] = 1;
+        }
+    }
+    $scope.view.satisfaction = {"1001": "很棒", "1002": "一般", "1003": "较差"};
+    var tmpResult = ajaxSendFn({}, "/shops/shop/comment", "GET").result;
+    if (tmpResult) {
+        $scope.view.comment = tmpResult.items || [];
+    }
+    //$scope.view.pic=ajaxSendFn({}, "/pic/shop?source=9002", "GET").result || [];
+});
+app.controller('ShopCtr', function ($scope, $location, $filter) { //店铺
+    $scope.config.breadset = [{name: "我的门店"}]; //面包屑;
+
+    $scope.shop = ajaxSendFn({}, "/shops/shop", "GET").result;
+
+    if (!$scope.shop.businessTimes) {
+        $location.path("/shop/add");
+        return;
+    }
+    $scope.view = {};
+    $scope.tem = {
+        uploadTitle: "选择要上传的图片"
+    };
+    $scope.tem.type = {
+        "1001": "早市",
+        "1002": "午市",
+        "1003": "下午茶",
+        "1004": "晚市",
+        "1005": "夜宵",
+    };
+
+    $scope.authed = {
+        "1001": "创建中",
+        "1002": "认证审核中",
+        "1003": "已通过审核",
+        "1004": "关闭审核中",
+        "1005": "停用",
+    };
+
+    $scope.view = {
+        businesstime: {
+            1001: {startTime: '', endTime: ''},
+            1002: {startTime: '', endTime: ''},
+            1003: {startTime: '', endTime: ''},
+            1004: {startTime: '', endTime: ''},
+            1005: {startTime: '', endTime: ''},
+        }
+    }
+
+    //$scope.shopshow.shop.shopType = shopTypeJson[$scope.shopshow.shop.shopType];
+    $scope.shop.openingDay = $filter("ltdate")($scope.shop.openingDay);
+    //mapFn = function (a) { //
+    //    if (!$scope.shop.latitude || !$scope.shop.longitude) return;
+    //    $scope.shop.map = "http://restapi.amap.com/v3/staticmap?zoom=16&size=180*120&markers=-1,http://api.amap.com/Public/imgbox/static/8.png,0:" + $scope.shop.longitude + "," + $scope.shop.latitude + "&key=ee95e52bf08006f63fd29bcfbcf21df0"
+    //}
+    //mapFn();
+    /*图片*/
+    $scope.addpic = function () {
+        $scope.tempic = "";
+        $("#addpic").modal("show");
+    }
+    $scope.temimgshow = function (t) {
+        var objUrl = getObjectURL(t.files[0]);
+        if (objUrl) {
+            $scope.tempic = objUrl;
+            $scope.tem = {
+                uploadTitle: "已选择"
+            };
+        }
+    }
+    $scope.sendimg = function (t) { //
+        POSTurl = basicUrl + "/pic/shop?";
+        options = {
+            url: POSTurl + sortUrl(),
+            type: "POST",
+            success: function (data) {
+                if (data.code === 200) {
+                    $scope.shop.picUrls.push(data.result);
+                    $("#addpic").modal("hide");
+                } else {
+                    alert("图片上传失败");
+                    $scope.tem.uploadTitle = "选择要上传的图片";
+                }
+
+            }
+        };
+        $("#iimgform").ajaxSubmit(options);
+    }
+    /*图片end*/
+    $scope.removeImg = function (a) { //
+        removere = ajaxSendFn({}, "/pic/" + $scope.shop.picUrls[a].id, "DELETE");
+        if (removere.code == 200) { //
+            $scope.shop.picUrls.splice(a, 1);
+        }
+    }
+    $scope.setCover = function (picUrl) {
+        var result = ajaxSendFn({url: picUrl}, "/pic/shop/cover", "POST");
+        if (result.code == 200) {
+            alert("设置成功");
+        } else {
+            errorMsg(result);
+        }
+    }
+    $scope.bigpicshow = function (a) {
+        $scope.view.bigpic = a.substring(0, a.lastIndexOf(".", a)) + "_1" + a.substring(a.lastIndexOf(".", a));
+        $("#bigpic").modal('show');
+    }
+    $scope.shopedit = function () {
+        $scope.posts = $scope.shop;
+        /*地区*/
+        $scope.view.style = ajaxSendFn({}, "/dict/CUISINE/item", "GET").result;
+        for (var i = 0; i < $scope.view.style.length; i++) {
+            if ($scope.posts.cuisineText == $scope.view.style[i].text) {
+                $scope.posts.cuisine = $scope.view.style[i].code;
+            }
+        }
+        $scope.area = {
+            area1: $scope.posts.area.substring(0, 2) + "0000",
+            area2: $scope.posts.area.substring(0, 4) + "00",
+            area3: $scope.posts.area,
+        };
+        $scope.areaJson1 = ajaxSendFn({}, "/dict/area", "GET").result;
+        $scope.areaJson2 = ajaxSendFn({code: $scope.area.area1}, "/dict/area", "GET").result;
+        $scope.areaJson3 = ajaxSendFn({code: $scope.area.area2}, "/dict/area", "GET").result;
+        if (!$scope.areaJson3) {
+            $scope.area.area2 = $scope.posts.area;
+            delete $scope.area.area3;
+        }
+        ;
+
+        //$scope.view.picurl = ajaxSendFn({source: "9002"}, "/pic/shop", "GET").result || [];
+        $scope.area1change = function (show) {
+            $scope.areaChanged = true;
+            $scope.areaJson2 = ajaxSendFn({code: $scope.area.area1}, "/dict/area", "GET").result;
+            $scope.area.area2 = $scope.areaJson2[0].code;
+            // alert($scope.area.area2)
+            $scope.areaJson3 = ajaxSendFn({code: $scope.area.area2}, "/dict/area",
+                "GET").result;
+            if ($scope.areaJson3 && $scope.areaJson3.length > 0) {
+                $scope.area.area3 = $scope.areaJson3[0].code;
+            } else {
+                delete $scope.area.area3;
+            }
+        };
+
+        $scope.area2change = function (show) {
+            $scope.areaChanged = true;
+            $scope.areaJson3 = ajaxSendFn({code: $scope.area.area2}, "/dict/area", "GET").result;
+            if ($scope.areaJson3 && $scope.areaJson3.length > 0) {
+                $scope.area.area3 = $scope.areaJson3[0].code;
+            } else {
+                delete $scope.area.area3;
+            }
+        };
+        /*地区end*/
+        $("#shopedit").modal('show');
+    }
+    $scope.senposts = function () { //
+        $scope.config.modalLink = ""; //判断是否返回
+        sends = { //
+            tel: $scope.posts.tel,
+            openingDay: $filter("date")($scope.posts.openingDay, "yyyy-MM-dd HH:mm:ss"),
+            cuisine: $scope.posts.cuisine,
+            avgprice: $scope.posts.avgprice,
+            area: $scope.areaChanged ? ($scope.area.area3 || $scope.area.area2) : $scope.posts.area,
+            address: $scope.posts.address,
+            latitude: $scope.posts.latitude || '',
+            longitude: $scope.posts.longitude || '',
+            parkingDescription: $scope.posts.parkingDescription || '',
+            description: $scope.posts.description || '',
+            id: $scope.posts.id,
+        };
+        sendJson = JSON.stringify(sends);
+        postsend = ajaxSendFn(sendJson, "/shops/shop/" + $scope.posts.id, "POST", 1);
+        if (postsend.code == 200) {
+            $("#shopedit").modal('hide');
+            alert("保存成功");
+            $scope.shop = ajaxSendFn({}, "/shops/shop", "GET").result;
+        } else { //
+            alert(postsend.message);
+        }
+    };
+
+})
+
+app.controller('ShopAddCtr', function ($scope, $filter, $location) { //主页
+    $scope.tem = {
+        uploadTitle: "选择要上传的图片"
+    };
+    $scope.areaChanged = false;
+    $scope.getShop = ajaxSendFn({}, "/shops/shop", "GET").result;
+    $scope.posts = $scope.getShop;
+    if (!$scope.posts.openingDay) { //
+        $scope.posts.openingDay = $filter("date")($scope.config.time, "yyyy-MM-dd HH:mm:ss");
+    }
+    $scope.posts.openingDay = new Date(Date.parse($scope.posts.openingDay.replace(/-/g, "/")));
+    var d = $scope.config.time;
+    d.setDate(d.getDate() + 180);
+    $scope.view = {
+        endtime: d,
+        picurl: {}
+    };
+    $scope.view.style = ajaxSendFn({}, "/dict/CUISINE/item", "GET").result;
+    $scope.area = {
+        area1: $scope.posts.area.substring(0, 2) + "0000",
+        area2: $scope.posts.area.substring(0, 4) + "00",
+        area3: $scope.posts.area,
+    };
+    $scope.areaJson1 = ajaxSendFn({}, "/dict/area", "GET").result;
+    $scope.areaJson2 = ajaxSendFn({code: $scope.area.area1}, "/dict/area", "GET").result;
+    $scope.areaJson3 = ajaxSendFn({code: $scope.area.area2}, "/dict/area", "GET").result;
+    if (!$scope.areaJson3) {
+        $scope.area.area2 = $scope.posts.area;
+        delete $scope.area.area3;
+    }
+    ;
+
+    $scope.view.picurl = ajaxSendFn({source: "9002"}, "/pic/shop", "GET").result || [];
+    $scope.area1change = function (show) {
+        $scope.areaChanged = true;
+        $scope.areaJson2 = ajaxSendFn({code: $scope.area.area1}, "/dict/area", "GET").result;
+        $scope.area.area2 = $scope.areaJson2[0].code;
+        // alert($scope.area.area2)
+        $scope.areaJson3 = ajaxSendFn({code: $scope.area.area2}, "/dict/area",
+            "GET").result;
+        if ($scope.areaJson3 && $scope.areaJson3.length > 0) {
+            $scope.area.area3 = $scope.areaJson3[0].code;
+        } else {
+            delete $scope.area.area3;
+        }
+    };
+
+    $scope.area2change = function (show) {
+        $scope.areaChanged = true;
+        $scope.areaJson3 = ajaxSendFn({code: $scope.area.area2}, "/dict/area", "GET").result;
+        if ($scope.areaJson3 && $scope.areaJson3.length > 0) {
+            $scope.area.area3 = $scope.areaJson3[0].code;
+        } else {
+            delete $scope.area.area3;
+        }
+    };
+    // $scope.area1change("show");
+
+    //经纬度map方法
+    mapFn = function (a) { //
+        if (!a.latitude || !a.longitude) return;
+        $scope.view.map = "http://restapi.amap.com/v3/staticmap?zoom=14&size=200*120&markers=-1,http://webapi.amap.com/images/1.png,0:" +
+            a.longitude + "," + a.latitude + "&key=ee95e52bf08006f63fd29bcfbcf21df0";
+        console.log($scope.view.map);
+    }
+    initialize = function (a, b) {
+        if (!a.address || a.address == '') a.address = a.qu;
+        var mapObj;
+        var
+            marker = new Array();
+        var windowsArr = new Array();
+        mapObj = new AMap.Map(a.id);
+
+        function geocoder() {
+            var MGeocoder; //加载地理编码插件
+            AMap.service(["AMap.Geocoder"], function () {
+                MGeocoder = new AMap.Geocoder({
+                    radius: 5000 //范围，默认：500
+                }); //返回地理编码结果
+                //地理编码
+                MGeocoder.getLocation(a.city + a.address, function (status, result) {
+                    if (status === 'complete' && result.info === 'OK') {
+                        var resultStr = ""; //地理编码结果数组
+                        var geocode = new Array();
+                        geocode = result.geocodes; //拼接输出html
+                        if (b == 1) { //
+                            latlng = addmarker(0, geocode[0], $scope.posts);
+                        } else {
+                            latlng = addmarker(0, geocode[0]);
+                        }
+                        mapObj.setFitView();
+                    }
+                });
+            });
+        }
+
+        function addmarker(i, d, p) {
+            if ($scope.posts.latitude && $scope.posts.longitude && !p) { //
+                var latY = $scope.posts.latitude;
+                var lngX = $scope.posts.longitude;
+            } else { //
+                var lngX = d.location.getLng();
+                var latY = d.location.getLat();
+            }
+            $scope.view.latitude = latY;
+            $scope.view.longitude = lngX;
+            var markerOption = {
+                map: mapObj,
+                icon: "http://webapi.amap.com/images/" + (i + 1) + ".png",
+                position: new AMap.LngLat(lngX, latY),
+                draggable: true, //点标记可拖拽
+                cursor: 'move', //鼠标悬停点标记时的鼠标样式
+                raiseOnDrag: true
+                //鼠标拖拽点标记时开启点标记离开地图的效果
+            };
+            var mar = new AMap.Marker(markerOption);
+            marker.push(new AMap.LngLat(lngX, latY));
+            var infoWindow = new AMap.InfoWindow({
+                content: d.formattedAddress,
+                autoMove: true,
+                size: new AMap.Size(150, 0),
+                offset: {
+                    x: 0,
+                    y: -30
+                }
+            });
+            windowsArr.push(infoWindow);
+            var aa = function (e) {
+                $scope.view.latitude = mar.getPosition().lat;
+                $scope.view.longitude = mar.getPosition().lng;
+            };
+            AMap.event.addListener(mar, "dragend", aa);
+        } //地理编码返回结果展示
+        geocoder();
+    }
+    mapFn($scope.posts);
+    $scope.mapModal = function () {
+        temcity = $scope.getShop.areaText.split("省");
+        if (temcity.length == 2) { //
+            temcity[0] = temcity[1];
+        }
+        temcity = temcity[0].split("市");
+        var map = {
+            id: "mapin",
+            latitude: $scope.posts.latitude,
+            longitude: $scope.posts.longitude,
+            city: temcity[0] + "市",
+            qu: temcity[1],
+            address: $scope.posts.address
+        };
+        initialize(map);
+        $("#map").modal("show");
+    }
+    $scope.addpic = function () {
+        $scope.tempic = "";
+        $("#addpic").modal("show");
+    }
+    $scope.temimgshow = function (t) {
+        var objUrl = getObjectURL(t.files[0]);
+        if (objUrl) {
+            $scope.tempic = objUrl;
+            $scope.tem = {
+                uploadTitle: "已选择"
+            };
+        }
+    }
+    $scope.sendimg = function (t) { //
+        POSTurl = basicUrl + "/pic/shop?";
+        options = {
+            url: POSTurl + sortUrl(),
+            type: "POST",
+            success: function (data) {
+                if (data.code === 200) {
+                    $scope.view.picurl.push(data.result);
+                    $("#addpic").modal("hide");
+                } else {
+                    alert("图片上传失败");
+                    $scope.tem.uploadTitle = "选择要上传的图片";
+                }
+
+            }
+        };
+        $("#iimgform").ajaxSubmit(options);
+    }
+
+    $scope.senposts = function (a) { //
+        $scope.config.modalLink = ""; //判断是否返回
+        sends = { //
+            tel: $scope.posts.tel,
+            openingDay: $filter("date")($scope.posts.openingDay, "yyyy-MM-dd HH:mm:ss"),
+            cuisine: $scope.posts.cuisine,
+            avgprice: $scope.posts.avgprice,
+            area: $scope.areaChanged ? ($scope.area.area3 || $scope.area.area2) : $scope.posts.area,
+            address: $scope.posts.address,
+            latitude: $scope.posts.latitude,
+            longitude: $scope.posts.longitude,
+            parkingDescription: $scope.posts.parkingDescription,
+            description: $scope.posts.description,
+            id: $scope.posts.id,
+        };
+        sendJson = JSON.stringify(sends);
+        postsend = ajaxSendFn(sendJson, "/shops/shop/" + $scope.posts.id, "POST", 1);
+        if (postsend.code == 200) {
+            if (a) {
+                alert("保存成功");
+                $location.path("/shop/");
+            } else {
+                if ($scope.getShop.shopType == "1002") {
+                    $location.path("/shop/add3/");
+                } else {
+                    $location.path("/shop/add2/");
+                }
+            }
+        } else { //
+            alert(postsend.message);
+        }
+    };
+    $scope.resetpostion = function (argument) {
+        temcity = ajaxSendFn({}, "/dict/AREA/" +
+            $scope.posts.area + "/text", "GET").result.text;
+        temcity = temcity.split("省");
+        if (temcity.length == 2) { //
+            temcity[0] = temcity[1];
+        }
+        temcity = temcity[0].split("市");
+        var map = {
+            id: "mapin",
+            latitude: $scope.posts.latitude,
+            longitude: $scope.posts.longitude,
+            city: temcity[0] + "市",
+            qu: temcity[1],
+            address: $scope.posts.address
+        };
+        initialize(map, 1);
+        $("#map").modal("show");
+    }
+    $scope.imgEditFn = function ($event) { //
+        console.log($event.target);
+    }
+    $scope.setpostion = function () {
+        $scope.posts.latitude = $scope.view.latitude;
+        $scope.posts.longitude = $scope.view.longitude;
+        mapFn($scope.posts);
+        $("#map").modal("hide");
+    }
+    $scope.removeImg = function (a) { //
+        removere = ajaxSendFn({}, "/pic/" + $scope.view.picurl[a].id, "DELETE");
+        if (removere.code == 200) { //
+            $scope.view.picurl.splice(a, 1);
+            console.log($scope.view.picurl);
+        }
+    }
+    $scope.setCover = function (picUrl) {
+        var result = ajaxSendFn({url: picUrl}, "/pic/shop/cover", "POST");
+        if (result.code == 200) {
+            alert("设置成功");
+        } else {
+            errorMsg(result);
+        }
+    }
+    $scope.bigpicshwo = function (a) {
+        $scope.view.bigpic = a.substring(0, a.lastIndexOf(".", a)) + "_1" + a.substring(a.lastIndexOf(".", a));
+        $("#bigpic").modal('show');
+    }
+})
+/*-----------------------------------------------------*/
+app.controller('ShopAdd2Ctr', function ($scope, $location) {
+    $scope.gettable = ajaxSendFn({}, "/tables", "GET");
+    if ($scope.gettable.code != 404000) { //
+        $location.path("/shop/add2re");
+    }
+    //$scope.posts=$scope.getShop;
+    //$("#add").modal("show");
+    $scope.view = {
+        table: [],
+        box: []
+    };
+    $scope.addtable = function () { //
+        $scope.tem = {
+            table: {}
+        };
+        $("#addtable").modal("show");
+    }
+    $scope.removeFn = function (n, a) {
+        $scope.view[n].splice(a, 1);
+    }
+    $scope.reset = function (a) {
+        if ($scope.view.table[a].count < 1) $scope.view.table[a].count = 1;
+    }
+
+    $scope.addTbaleFn = function () { //
+        if (!$scope.tem.table.seat || !$scope.tem.table.count) return;
+        $scope.view.table.push($scope.tem.table);
+        $("#addtable").modal("hide");
+    }
+    $scope.addBox = function () {
+        $scope.tem = {
+            box: {
+                seatNum: null,
+                name: null,
+                no: null,
+                type: '1001'
+            }
+        };
+        $("#addbox").modal("show");
+    }
+
+    $scope.addBoxFn = function () { //
+        if (!$scope.tem.box.seatNum || !$scope.tem.box.name || !$scope.tem.box.no) return;
+        if ($scope.tem.box.seatNum > 0) {
+        } else {
+            return
+        }
+        console.log(typeof($scope.tem.box.seatNum))
+        $scope.view.box.push($scope.tem.box);
+        $("#addbox").modal("hide");
+    }
+    $scope.sendposts = function () { //
+        var x = 0;
+        if ($scope.view.table.length > 0) {
+            sendJson = angular.toJson($scope.view.table);
+            send1 = ajaxSendFn(sendJson, "/tables", "POST", 1);
+            if (send1.code == 200) { //
+                x++;
+            }
+        }
+
+        if ($scope.view.box.length > 0) {
+            sendJson2 = angular.toJson($scope.view.box);
+            send2 = ajaxSendFn(sendJson2, "/tables/box", "POST", 1);
+            if (send2.code == 200) { //
+                x++;
+            }
+        }
+        if (x > 0) { //
+            $location.path("/shop/add3");
+        }
+    }
+})
+/*-----------------------------------------------------*/
+app.controller('ShopAdd3Ctr', function ($scope, $location, $filter) {
+    $scope.shopshow = {
+        businesstime: ajaxSendFn({}, "/businesstimes",
+            "GET").result
+    };
+    console.log($scope.shopshow);
+    $scope.posts = [
+        {type: '1001', startTime: '', endTime: ''},
+        {type: '1002', startTime: '', endTime: ''},
+        {type: '1003', startTime: '', endTime: ''},
+        {type: '1004', startTime: '', endTime: ''},
+        {type: '1005', startTime: '', endTime: ''},
+    ];
+    $scope.tem = {
+        time: [],
+        buname: ["早市", "午市", "下午茶", "晚市", "宵夜"]
+    };
+    for (i = 0; i < 24; i++) { //
+        $scope.tem.time.push(i + ":00");
+    }
+
+    $scope.sendposts = function () { //
+        var json = [];
+        for (i = 0; i < $scope.posts.length; i++) { //
+            if ($scope.posts[i].startTime && $scope.posts[i].endTime) { //
+                /*
+                 $scope.posts[i].startTime = "1970-01-01 " +
+                 $scope.posts[i].startTime + ":00";
+                 $scope.posts[i].endTime = "1970-01-01 " + $scope.posts[i].endTime +
+                 ":00";
+                 console.log($scope.posts[i]);
+                 */
+                if ($scope.posts[i].type == "1005") {
+                    var limitTime = $filter("date")($scope.posts[i].startTime, "HH");
+                    if (limitTime < 18) {
+                        alert("夜宵的开始时间不得早于0点");
+                        return;
+                    }
+                }
+                $scope.posts[i].startTime = $filter("date")($scope.posts[i].startTime, "yyyy-MM-dd HH:mm:ss");
+                $scope.posts[i].endTime = $filter("date")($scope.posts[i].endTime, "yyyy-MM-dd HH:mm:ss");
+                json.push($scope.posts[i]);
+            }
+        }
+        console.log(json);
+        sendJson = angular.toJson(json);
+        sendre = ajaxSendFn(sendJson, "/businesstimes", "POST", 1);
+        if (sendre.code == 200) $location.path("/shop/add4")
+    }
+})
+
+
+app.controller('ShopAdd4Ctr', function ($scope, $location, $filter) {
+    re = ajaxSendFn({}, "/staffs/shop", "GET").result || [];
+    $scope.posts = {staff: []};
+    $scope.sendok = re?re.items:[];
+    $scope.addStaffFn = function () {
+        $scope.posts.staff.push({
+            code: "",
+            name: "",
+            tel: "",
+            password: ""
+        });
+    }
+    console.log($scope.sendok);
+    if (!$scope.sendok) $scope.addStaffFn();
+
+    $scope.removeStaffFn = function (a) {
+        $scope.posts.staff.splice(a, 1);
+    }
+    $scope.sendposts = function () {
+        var term = [];
+        for (var x = 0; x < $scope.posts.staff.length; x++) {
+            json = {};
+            json.name = $scope.posts.staff[x].name;
+            json.password = hex_md5($scope.posts.staff[x].password);
+            json.roleType = "S";
+            json.nickname = $scope.posts.staff[x].nickname;
+            json.shopId = $scope.config.staff.shopId;
+            re = ajaxSendFn(angular.toJson(json), "/staffs/staff", "POST", 1);
+            if (re.code == 200) {
+                $scope.sendok.push($scope.posts.staff[x]);
+                term.push(x);
+            } else {
+                $scope.posts.staff[x].error = "错误";
+            }
+        }
+        term.sort();
+        for (var i = term.length - 1; i >= 0; i--) {
+            $scope.posts.staff.splice(term[i], 1);
+        }
+        if ($scope.posts.staff.length < 1 && $scope.sendok) $location.path("/shop/add5");
+
+    }
+})
+app.controller('ShopAdd5Ctr', function ($scope, $location, $filter) {
+
+})
+app.controller('StaffShowCtr', function ($scope, $location) {
+    $scope.user = {};
+    $scope.user.list = {
+        keeper: [],
+        staffs: []
+    };
+    $scope.config.breadset = [{ //
+        name: "员工管理",
+        href: indexUrl + "/keeper.html#/staff"
+    }, {
+        name: "员工列表"
+    }]; //面包屑
+    $scope.user.get = ajaxSendFn({}, constUrlDict["staffs-shop"], "GET").result.items;
+    $scope.user.get = $scope.user.get ? $scope.user.get : "";
+    for (var i = 0; i < $scope.user.get.length; i++) {
+        if ($scope.user.get[i].roleType == "K") { //
+            $scope.user.list.keeper = $scope.user.get[i];
+        } else { //
+            $scope.user.list.staffs.push($scope.user.get[i]);
+        }
+    }
+    ;
+    $scope.staffDelFn = function (index) { //
+        if (!confirm("一旦删除将不可恢复，是否确认删除？")) return false;
+        staffDelRe = ajaxSendFn({}, constUrlDict["staffs-base"] + "/" + $scope.user.list.staffs[index].id, "POST");
+        if (staffDelRe.code == 200) { //
+            $scope.user.list.staffs.splice(index, 1);
+        } else { //
+            errorMsg(staffDelRe);
+        }
+    }
+    $scope.keepperDelFn = function () { //
+        if (!confirm("一旦删除将不可恢复，是否确认删除？")) return false;
+        staffDelRe = ajaxSendFn({}, constUrlDict["staffs-base"] + "/" + $scope.user.list.keeper.id, "POST");
+        if (staffDelRe.code == 200) { //
+            $scope.user.list.keeper = null;
+        } else { //
+            errorMsg(staffDelRe);
+        }
+    }
+})
+
+app.controller('StaffeditCtr', function ($scope, $location, $routeParams) {
+    $scope.show = {};
+    $scope.posts = {};
+    $scope.staffadd_form = {};
+    $scope.breadset = [{ //
+        name: "员工管理",
+        href: indexUrl + "/keeper.html#/Staff"
+    }, {
+        name: "编辑员工"
+    }]; //面包屑
+    $scope.staffget = ajaxSendFn({}, constUrlDict["staff"] + "/" + $routeParams.guestid, "GET").result;
+    $scope.staffadd_form.submitted = false;
+    $scope.posts.gender = $scope.staffget.gender;
+    $scope.posts.nickname = $scope.staffget.nickname;
+    $scope.posts.shopId = $scope.staffget.shopId;
+    $scope.show.shopname = ajaxSendFn({}, "/shops/shop", "GET").result.name;
+    $scope.staffaddsend = function () { //
+        $scope.posts.shopId = $scope.staffget.shopId;
+        sendJson = JSON.stringify($scope.posts);
+        result = ajaxSendFn(sendJson, constUrlDict["staff"] + "/" + $scope.staffget.id, "POST", 1);
+        if (result.code == 200) { //
+            alert("修改成功");
+            $location.path("/staff");
+        } else {
+            errorMsg(result);
+        }
+    }
+})
+app.controller('StaffdutyeditCtr', function ($scope, $location, $routeParams) {
+    $scope.show = {};
+    $scope.view = {
+        tables: [],
+        boxs: []
+    };
+    $scope.posts = {
+        tables: []
+    };
+    $scope.staffadd_form = {};
+    $scope.breadset = [{ //
+        name: "员工管理",
+        href: indexUrl + "/keeper.html#/Staff/dutyedit"
+    }, {
+        name: "编辑员工"
+    }]; //面包屑
+    //获取员工信息
+    //$scope.staffget = ajaxSendFn({}, constUrlDict["staff"] + "/" + $routeParams.guestid, "GET").result;
+    //获取桌台和包厢
+    $scope.view.tables = ajaxSendFn({}, constUrlDict["tables"], "GET").result;
+    //
+    var userTables = ajaxSendFn({}, "/duty/staff/" + $routeParams.guestid, "GET");
+    $scope.view.userTables = userTables.result;
+    if (userTables.result.dutyTables) {
+        angular.forEach($scope.view.tables, function (value, key) {
+            for (var i = 0; i < userTables.result.dutyTables.length; i++) {
+                if (value.no == userTables.result.dutyTables[i].no) {
+                    this[key] = value.id;
+                }
+            }
+        }, $scope.posts.tables);
+    }
+    //全选桌台
+    $scope.checkAllTables = function () {
+        if ($scope.tablesAll) $scope.posts.tables = [];
+        else {
+            angular.forEach($scope.view.tables, function (value, key) {
+                this[key] = value.id;
+            }, $scope.posts.tables);
+        }
+    };
+    $scope.postSend = function () {
+        var json = {};
+        json[$scope.view.userTables.staffId] = remove_empty($scope.posts.tables);
+        var data = ajaxSendFn(JSON.stringify(json), "/duty", "POST");
+        if (data.code == 200) {
+            $location.path("/staff");
+        } else {
+            alert(data.message);
+        }
+        //console.log($scope.posts);
+    };
+})
+
+app.controller('StaffaddCtr', function ($scope, $location) {
+    $scope.config.breadset = [{ //
+        name: "员工管理",
+        href: indexUrl + "/keeper.html#/staff"
+    }, {
+        name: "添加员工"
+    }]; //面包屑
+    $scope.posts = {};
+    $scope.staffadd_form = {
+        submitted: false
+    };
+    $scope.textCheckJson = textCheckJson;
+    $scope.textCheckErrorJson = textCheckErrorJson;
+    $scope.posts.gender = 0;
+    $scope.staffaddsend = function (keeper) {
+        //
+        var sendJson ={};
+        angular.extend(sendJson, $scope.posts);
+        sendJson.shopId = $scope.config.staff.shopId;
+        sendJson.roleType = keeper == "keeper" ? "K" : "S";
+        sendJson.password = hex_md5($scope.posts.password);
+        sendJson = JSON.stringify(sendJson);
+        result = ajaxSendFn(sendJson, constUrlDict["staff"], "POST", 1);
+        if (result.code == 200) { //
+            alert("添加成功");
+            $location.path("/staff");
+        } else {
+            errorMsg(result);
+        }
+    }
+})
+
+app.controller("ShopBusinesstimeCtr", function ($scope, $filter, $location) {
+    $scope.view = {
+        table: {
+            "1001": {type: '1001', startTime: '', endTime: '', show: 0, buname: "早市"},
+            "1002": {type: '1002', startTime: '', endTime: '', show: 0, buname: "午市"},
+            "1003": {type: '1003', startTime: '', endTime: '', show: 0, buname: "下午茶"},
+            "1004": {type: '1004', startTime: '', endTime: '', show: 0, buname: "晚市"},
+            "1005": {type: '1005', startTime: '', endTime: '', show: 0, buname: "宵夜"}
+        }
+    };
+    $scope.getTimeFn = function () {
+        $scope.view.businesstime = ajaxSendFn({}, constUrlDict["businesstimes"], "GET").result;
+        for (i = 0; $scope.view.businesstime && i < $scope.view.businesstime.length; i++) { //
+            key = $scope.view.businesstime[i].type;
+            name = $scope.view.table[$scope.view.businesstime[i].type].buname;
+            $scope.view.table[key] = $scope.view.businesstime[i];
+            $scope.view.table[key].show = 1;
+            $scope.view.table[key].buname = name;
+            $scope.view.table[key].startTime = new Date(Date.parse("2000-01-01 " + $scope.view.table[key].startTime.replace(/-/g, "/")));
+            $scope.view.table[key].endTime = new Date(Date.parse("2000-01-01 " + $scope.view.table[key].endTime.replace(/-/g, "/")));
+        }
+    }
+    $scope.getTimeFn();
+    $scope.addFn = function (a) {
+        $scope.view.table[a].show = 1;
+    }
+    $scope.saveFn = function () {
+        var jsons = [];
+        for (var a in $scope.view.table) {
+            if (!$scope.view.table[a].startTime || !$scope.view.table[a].endTime) {
+                continue;
+            }
+            var json = {};
+            json.startTime = $scope.view.table[a].startTime;
+            json.type = $scope.view.table[a].type;
+            json.endTime = $scope.view.table[a].endTime;
+            json.endTime = $filter("date")(json.endTime, "yyyy-MM-dd HH:mm:ss");
+            json.startTime = $filter("date")(json.startTime, "yyyy-MM-dd HH:mm:ss");
+            $scope.view.table[a].id && (json.id = $scope.view.table[a].id);
+            if (json.type == "1005") {
+                var limitTime = $filter("date")($scope.view.table[a].startTime, "HH");
+                if (limitTime < 18) {
+                    alert("夜宵的开始时间不得早于0点");
+                    return;
+                }
+            }
+            jsons.push(json);
+
+        }
+        sendJson = JSON.stringify(jsons);
+        result = ajaxSendFn(sendJson, constUrlDict["businesstimes"], "POST", 1);
+        if (result.code != 200) { //
+            errorMsg(result);
+        } else { //
+            $scope.getTimeFn();
+            $location.path("/shop");
+        }
+
+    }
+    $scope.delFn = function (a) {
+        if ($scope.view.table[a].id) { //
+            result = ajaxSendFn({}, constUrlDict["businesstimes"] + "/" + $scope.view.table[a].id, "POST");
+            if (result.code != 200) { //
+                console.error(result);
+                return;
+            }
+        }
+        $scope.view.table[a] = {type: a, startTime: '', endTime: '', show: 0, buname: $scope.view.table[a].buname};
+    }
+})
+
+app.controller("ShoptablesCtr", function ($scope, $filter) {
+    $scope.config.breadset = [{
+        name: "桌台管理",
+        href: indexUrl + "/keeper.html#/tables"
+    }, {
+        name: "查看桌台"
+    }]; //面包屑;
+    var oldPost = {};
+    $scope.view = {
+        tables: [],
+        boxs: []
+    };
+
+    //回滚，撤回操作
+    undoAction = function () {
+        var arr = oldPost.type === "1001" ? $scope.view.tables : $scope.view.boxs;
+        for (i = 0, l = arr.length; i < l; i++) {
+            if (oldPost.id === arr[i].id) {
+                arr[i].seatNum = oldPost.seatNum;
+                arr[i].no = oldPost.no;
+                arr[i].name = oldPost.name;
+            }
+        }
+    }
+    /*
+     makeAction 根据参数创建一个函数
+     urlfn 函数，用于返回一个网址
+     postfn 函数，用于对提交数据作某些操作
+     type 字符串， 请求类型，可以为“GET”或“POST”
+     callback 函数 成功后的回调函数
+     needUndo bool 是否需要回滚操作
+     返回值 函数
+     */
+    makeAction = function (urlfn, postfn, type, callback, needUndo) {
+        return function () {
+            delete $scope.post.show;
+            delete $scope.post.isOwner;
+            //delete $scope.post.shopId;
+            //delete $scope.post.type;
+            if ($scope.post.type === "1001") {
+                delete $scope.post.name;
+            }
+            $scope.post.seatNum = parseInt($scope.post.seatNum);
+            //if (postfn) {
+            //    json = postfn($scope.post);
+            //} else {
+                json = $scope.post;
+            //}
+            sendJson = angular.toJson(json);
+            result = ajaxSendFn(sendJson, urlfn($scope.post), type, 1);
+            if (result.code != 200) { //
+                errorMsg(result);
+                if (needUndo) {
+                    undoAction();
+                }
+            } else { //
+                callback(result, $scope.post);
+            }
+            $("#addtable").modal("hide");
+        }
+    }
+
+    $scope.actionhandle = {
+        "add": makeAction(function (post) {
+            return constUrlDict["tables-table"];
+        }, function (post) {
+            return [post];
+        }, "POST", function (result, post) {
+            if (post.type == "1001") $scope.view.tables.push(post);
+            else $scope.view.boxs.push(post);
+            //刷新桌台数据
+            // $scope.getTables();
+        }, false),
+        "edit": makeAction(function (post) {
+            if (!post.id) {
+                alert("暂时无法编辑，请刷新后重试");
+                return;
+            }
+            ;
+            return constUrlDict["tables-table"] + "/" + post.id;
+        }, null, "POST", function () {
+            alert("修改成功");
+        }, true)
+    }
+    $scope.view.shopId = ajaxSendFn({}, "/shops/shop", "GET").result.id;
+
+    $scope.getTables = function () {
+        gettables = ajaxSendFn({}, constUrlDict["tables"], "GET").result;
+        if (gettables) { //
+            for (var i = 0; i < gettables.length || 0; i++) {
+                //gettables[i].id = "https://m.sharejoy.cn/?id=" + shopId + "&d=" + gettables[i].id;
+                if (gettables[i].type == 1001) {
+                    $scope.view.tables.push(gettables[i]);
+                } else {
+                    $scope.view.boxs.push(gettables[i]);
+                }
+            }
+            ;
+        }
+    }
+
+    $scope.tem = {};
+    $scope.modaladd = function (a) {
+        $scope.post = {};
+        $scope.view.action = "add";
+        if (a == 'table') { //
+            $scope.post.type = "1001";
+            $scope.view.modalname = "添加散台";
+            $scope.tem.nameshow = 0;
+        } else { //
+            $scope.post.type = "1002";
+            $scope.view.modalname = "添加包厢";
+            $scope.tem.nameshow = 1;
+        }
+        $("#addtable").modal("show");
+    }
+    $scope.dispatchAction = function () {
+        $scope.actionhandle[$scope.view.action]();
+    }
+    $scope.cancelAction = function () {
+        undoAction();
+    }
+    $scope.tableDelFn = function (a, i) {
+        del = ajaxSendFn({}, constUrlDict["tables"] + "/" + a.id, "POST");
+        if (del.code != 200) { //
+            errorMsg(del);
+        } else { //
+            if (a.type === "1001") $scope.view.tables.splice(i, 1);
+            else $scope.view.boxs.splice(i, 1);
+        }
+    }
+    $scope.editTableFn = function (t, i) {
+        $scope.post = $scope.view[t][i];
+        angular.extend(oldPost, $scope.post);
+        $scope.view.action = "edit";
+        if (t == 'tables') { //
+            $scope.view.modalname = "修改散台";
+            $scope.tem.nameshow = 0;
+        } else { //
+            $scope.view.modalname = "修改包厢";
+            $scope.tem.nameshow = 1;
+        }
+        $("#addtable").modal("show");
+    }
+
+    //加载所有桌台
+    $scope.getTables();
+    $scope.sendposts = function () { //
+        var x = 0;
+        if ($scope.view.table.length > 0) {
+            sendJson = angular.toJson($scope.view.table);
+            send1 = ajaxSendFn(sendJson, "/tables", "POST", 1);
+            if (send1.code == 200) { //
+                x++;
+            }
+        }
+
+        if ($scope.view.box.length > 0) {
+            sendJson2 = angular.toJson($scope.view.box);
+            send2 = ajaxSendFn(sendJson2, "/tables/box", "POST", 1);
+            if (send2.code == 200) { //
+                x++;
+            }
+        }
+        if (x > 0) { //
+            $location.path("/shop/add3");
+        }
+    }
+})
+app.controller("CommentCtr", function ($scope) {
+    $scope.config.breadset = [{
+        name: "活动",
+        href: indexUrl + "/keeper.html#/rule"
+    }, {
+        name: "顾客评论"
+    }]; //面包屑;
+    var tmpResult = ajaxSendFn({}, "/shops/shop/comment", "GET").result;
+    if (tmpResult) {
+        $scope.view = {comment: tmpResult.items || []};
+        $scope.view.satisfaction = {"1001": "很棒", "1002": "一般", "1003": "较差"};
+    }
+})
+
+app.controller('CustomerCtr', function ($scope, tyFnFactory, $http) { //
+    $scope.config.breadset = [{ //
+        name: "顾客管理",
+        href: indexUrl + "/keeper.html#/customer"
+    }, {
+        name: "顾客列表"
+    }]; //面包屑
+    $scope.dict = {
+        source: {
+            9001: "上宾",
+            9002: "手动"
+        },
+        cardType: {
+            "v_card": "电子卡",
+            "p_card": "实物卡",
+            "b_card": "绑定卡"
+        },
+        memberType: [{
+            name: "所有顾客",
+            key: ""
+        }, {
+            name: "会员",
+            key: "MEMBER"
+        }]
+    };
+    $scope.view = {
+        interest: {}
+    };
+
+    $http.get(basicUrl + "/customer?" + sortUrl()).then(function (data) {
+        $scope.view.customer = data.data.result || [];
+    }, function (data) {
+        console.log(data);
+    })
+
+    $scope.view.member = [];
+    $scope.search = {
+        //type: $scope.dict.memberType[0].key
+    };
+   /* $http.get(basicUrl + constUrlDict["memberGrade"] + "?" + sortUrl()).then(function (data) {
+        if (!data.data.result) return;
+        for (var i = 0, j = data.data.result.length; i < j; i++) { //
+            $scope.view.member[data.data.result[i].grade] = data.data.result[i];
+        }
+    })*/
+    $scope.postSend = function () {
+        if($scope.search.param) {
+            $scope.view.customer.total = 0;
+            $scope.view.customer.items = ajaxSendFn($scope.search, "/customer/search", "GET").result || [];
+        }else{
+            $scope.view.customer = ajaxSendFn({}, "/customer", "GET").result || [];
+        }
+        //$scope.view.customer.items = ajaxSendFn($scope.search, constUrlDict["customer"], "GET").result || [];
+    }
+    $scope.interestGetFn = function (a) {
+        if (!$scope.view.interest[a]) $scope.view.interest[a] = ajaxSendFn({userId: a}, "/benefit", "GET").result || [];
+    };
+    $scope.pageChange = function () {
+        var json = {page: $scope.view.customer.page, count: $scope.view.customer.count};
+        $scope.view.customer = ajaxSendFn(json, "/customer", "GET").result || [];
+    };
+});
+app.controller('CustomerChargeCtr', function ($scope, $routeParams, $filter, $http) { //
+    $scope.config.breadset = [{ //
+        name: "顾客管理",
+        href: indexUrl + "/keeper.html#/customer"
+    }, {
+        name: "顾客充值"
+    }]; //面包屑
+    $scope.view = {};
+
+    $scope.reason = {
+        "use": "use",
+        "add": ""
+    };
+    $http.get(basicUrl + constUrlDict["customer"] + "/" + $routeParams.userId + "?" + sortUrl()).success(function (data) {
+        console.log(data)
+        $scope.view.user = data.result || []
+    })
+    // $http.get(basicUrl + constUrlDict["benefit"] + "?userId=" + $routeParams.userId).success(function (data) {
+    //     $scope.view.interest = data.result || [];
+    // })
+    $scope.view.interest = ajaxSendFn({userId: $routeParams.userId}, constUrlDict["benefit"], "GET").result || [];
+
+    $scope.send = function () {
+        json = {};
+        json.users = $routeParams.userId;
+        json.charge = $scope.posts.charge;
+        json.reason = "SHOP_GRANT";
+        reason = $scope.reason[$scope.posts.type];
+        re = ajaxSendFn(json, concatUrl(constUrlDict["benefit"], reason), "POST", 1);
+        if (re.code == 200) {
+            $scope.view.interest = ajaxSendFn({userId: $routeParams.userId}, constUrlDict["benefit"], "GET").result || [];
+            $scope.posts.charge = 0;
+            alert(reason + "成功");
+        } else {
+            errorMsg(re);
+        }
+        ;
+
+
+    }
+});
+app.controller('CustomerPoicustomerntCtr', function ($scope, $routeParams) { //
+    $scope.config.breadset = [{ //
+        name: "顾客管理",
+        href: indexUrl + "/keeper.html#/customer"
+    }, {
+        name: "顾客积分"
+    }]; //面包屑
+    $scope.view = {
+        user: ajaxSendFn({}, constUrlDict["customer"] + "/" + $routeParams.userId, "GET").result || []
+    };
+
+    $scope.reason = {
+        "use": "use",
+        "add": ""
+    };
+
+    $scope.view.interest = ajaxSendFn({userId: $routeParams.userId}, constUrlDict["benefit"], "GET").result || [];
+    $scope.send = function () {
+        console.log($scope.posts)
+        json = {};
+        json.users = $routeParams.userId;
+        json.point = $scope.posts.point;
+        json.reason = "SHOP_GRANT";
+        reason = $scope.reason[$scope.posts.type];
+        re = ajaxSendFn(JSON.stringify(json), concatUrl(constUrlDict["benefit"], reason), "POST", 1);
+        if (re.code == 200) {
+            $scope.view.interest = ajaxSendFn({userId: $routeParams.userId}, constUrlDict["benefit"], "GET").result || [];
+            $scope.posts.point = 0;
+            alert(reason + "成功");
+
+        } else {
+            errorMsg(re);
+        }
+        ;
+    }
+});
+app.controller('CustomerCouponCtr', function ($scope, $routeParams) {
+    $scope.config.breadset = [{ //
+        name: "顾客管理",
+        href: indexUrl + "/keeper.html#/customer"
+    }, {
+        name: "顾客发券"
+    }]; //面包屑
+    $scope.view = {
+        user: ajaxSendFn({}, constUrlDict["customer"] + "/" + $routeParams.userId, "GET").result || []
+    };
+    $scope.posts = {};
+    $scope.view.coupons = ajaxSendFn({}, constUrlDict["coupon"], "GET").result || [];
+    console.log($scope.view.coupons);
+    if ($scope.view.coupons.length > 0) {
+        $scope.posts.coupons = [{id: $scope.view.coupons[0].id, count: 1}];
+    }
+    $scope.add = function () {
+        if ($scope.view.coupons.length > 0) {
+            $scope.posts.coupons.push({id: $scope.view.coupons[0].id, count: 1});
+            console.log($scope.posts.coupons);
+        }
+    }
+    $scope.remove = function (a) {
+        $scope.posts.coupons.splice(a, 1);
+    }
+    $scope.canSend = function () {
+        return $scope.view.coupons && $scope.view.coupons.length > 0;
+    }
+    $scope.send = function () {
+        json = {};
+        json.users = $routeParams.userId;
+        if ($scope.posts.coupons && $scope.posts.coupons.length > 0) {
+            console.log($scope.posts.coupons);
+            json.coupons = $scope.posts.coupons;
+            json.reason = "SHOP_GRANT";
+            // json.couponCount = $scope.posts.coupons.length;
+            console.log($scope.posts);
+            re = ajaxSendFn(JSON.stringify(json), constUrlDict["benefit"], "POST", 1);
+            if (re.code == 200) {
+                //$scope.view.interest = ajaxSendFn({userId: $routeParams.userId}, constUrlDict["benefit"], "GET", 1).result || [];
+                alert("赠券成功");
+            } else {
+                errorMsg(re);
+            }
+            ;
+        }
+    }
+});
+app.controller('CustomerAddCtr', function ($interval, $scope, $location, $filter) { //
+    $scope.config.breadset = [{ //
+        name: "顾客管理",
+        href: indexUrl + "/keeper.html#/customer"
+    }, {
+        name: "添加会员"
+    }]; //面包屑
+    $scope.view = {
+        member: ajaxSendFn({}, "/memberGrade", "GET").result || [],
+        repeats: 90,
+    };
+    $scope.posts = {
+        birthday: "",
+    };
+    $scope.getValidateCode = function (e) {
+        if ($scope.posts.phone) {
+            //验证手机号
+            re = ajaxSendFn({"phone": $scope.posts.phone}, "/customer/validate", "POST");
+            if (re.code == 200) {
+                console.log("验证码发送成功");
+            } else {
+                alert(re.message);
+                //goto('customer');
+                //$state.go("/customer/add");
+                $location.path("/customer");
+                //e.stopPropagation();
+                //window.clearInterval(1)
+            }
+        }
+    }
+    $scope.send = function () {
+        $scope.posts.birthday = $filter("date")($scope.posts.birthday, "yyyy-MM-dd");
+        re = ajaxSendFn($scope.posts, "/customer", "POST");
+        if (re.code == 200) {
+            alert("添加成功");
+            $location.path("/customer");
+        } else {
+            errorMsg(re);
+        }
+    }
+});
+
+app.controller('RuleCtr', function ($scope, $location, $filter) { //shoplist over
+    $scope.config.breadset = [{ //
+        name: "活动管理",
+        href: indexUrl + "/keeper.html#/rule"
+    }, {
+        name: "活动列表"
+    }]; //面包屑
+    rule = ajaxSendFn({}, "/activity", "GET").result || [];
+    $scope.ruleDic = {nonParticipations: "不参与活动商品", periods: "有效时段", time: "时间", shops: "分店"}; //将key转为中文
+    $scope.view = {};
+    $scope.view.rule = $filter("orderBy")(rule, "createTime", true);
+    for (x in $scope.view.rule) { //定义icon
+        tem = $scope.view.rule[x];
+        $scope.view.rule[x].icon = {};
+        for (y in tem.rules) {
+            tem.rules[y].type = tem.rules[y].type.split("_");
+            $scope.view.rule[x].icon[tem.rules[y].type[0]] = 1;
+        }
+    }
+    $scope.pannel = function (nowindex) { //切换显示列表
+        id = $scope.view.rule[nowindex]._id;
+        if (!$scope.view.rule[nowindex].rulesget) {
+            tem = ajaxSendFn({}, "/activity/" + id + "/rules", "GET");
+            if (tem.code == 200) {
+                $scope.view.rule[nowindex].rulesget = tem.result;
+            } else {
+                $scope.view.rule[nowindex].rulesget = {
+                    result: {结果: "没有找到"}
+                }
+            }
+            if (!$scope.view.rule[nowindex].rulesget) return;
+        }
+        $.each($scope.view.rule, function (index) {
+            $scope.view.rule[index].show = 0;
+        });
+        $scope.view.rule[nowindex].show = 1;
+    }
+});
+
+app.controller('RulememberCtr', function ($scope, $filter, $http) {
+    $scope.config.breadset = [{ //
+        name: "活动管理",
+        href: indexUrl + "/keeper.html#/rule"
+    }, {
+        name: "会员规则管理"
+    }]; //面包屑
+    $scope.view = {
+        member: []
+    };
+    $scope.costType = {
+        BUY: {start: "花费", end: "元购买,"},
+        POINT_EXCHANGE: {start: "花费", end: "积分兑换,"},
+        POINT: {start: "累计", end: "积分,"},
+        CHARGE: {start: "充值", end: "元,"},
+        SINGLE_COST: {start: "单次消费", end: "元"},
+        FREE: {start: "", end: "免费领卡"},
+    }
+    $http.get(basicUrl + "/memberGrade").success(function (date) {
+        $scope.view.member = $filter('orderBy')(date.result, "grade", false);
+    });
+    $scope.type = {BUY: "购买"}
+    $scope.memberUpgradeSHow = function (a) {
+        if (!$scope.view.member[a].memberGrade) $scope.view.member[a].memberGrade = ajaxSendFn({}, "/memberUpgrade/toId/" + $scope.view.member[a].id, "GET").result || [];
+        $scope.view.plan = $scope.view.member[a];
+        $scope.planShow = true;
+    }
+    $scope.closeFn = function () {
+        $scope.planShow = false;
+    }
+});
+
+app.controller('passwordCtr', function ($scope, $location, $routeParams) {
+    $scope.posts = {};
+    $scope.staffadd_form = {};
+    $scope.config.breadset = [{ //
+        name: "员工管理",
+        href: indexUrl + "/keeper.html#/Staff"
+    }, {
+        name: "重设密码"
+    }]; //面包屑
+    $scope.staffget = ajaxSendFn({}, constUrlDict["staff"] + "/" + $routeParams.guestid, "GET").result;
+    $scope.textCheckJson = textCheckJson;
+    $scope.textCheckErrorJson = textCheckErrorJson;
+    $scope.staffadd_form.submitted = false;
+    $scope.staffget.shopname = ajaxSendFn({}, "/shops/shop", "GET").result.name;
+    $scope.staffaddsend = function () { //
+        if (!$scope.staffadd_form.$valid) {
+            $scope.staffadd_form.submitted = true;
+            return;
+        } else { ///
+            var json = {};
+            angular.extend(json, $scope.posts);
+            json.password = hex_md5($scope.posts.password);
+            result = ajaxSendFn(json, constUrlDict["staffs-password"] + "/" + $scope.staffget.id, "POST");
+            if (result.code == 200) { //
+                alert("修改成功");
+                $location.path("/staff");
+            } else {
+                errorMsg(result);
+            }
+        }
+    }
+});
+
+app.controller("edit_passwordCtr", function ($scope, $location) {
+    $scope.show = {};
+    $scope.posts = {};
+    $scope.staffadd_form = {};
+    $scope.config.breadset = [{
+        name: "修改密码"
+    }]; //面包屑
+    $scope.staffaddsend = function () { //
+        if (!$scope.staffadd_form.$valid) {
+            $scope.staffadd_form.submitted = true;
+            return;
+        } else { ///
+            if ($scope.posts.oldPassword === $scope.posts.password) {
+                alert("原密码和新密码不能相同");
+                return;
+            }
+            var json = {};
+            //angular.extend(json, $scope.posts);
+            json.old = hex_md5($scope.posts.oldPassword);
+            json.password = hex_md5($scope.posts.password);
+            result = ajaxSendFn(json, constUrlDict["staffs-password"], "POST");
+            if (result.code == 200) { //
+                alert("修改成功");
+                $location.path("/");
+            } else if (result.code == 4102) {
+                alert("原密码不匹配，请重试");
+            } else {
+                errorMsg(result);
+            }
+        }
+        ;
+    }
+})
+
+app.controller("DevicesCtr", ['$scope', '$http', 'deviceFactory', function ($scope, $http, deviceFac) {
+    $scope.config.breadset = [{ //
+        name: "设备管理",
+        href: indexUrl + "/admin.html#/devices"
+    }, {
+        name: "设备列表"
+    }]; //面包屑;
+    $scope.search = {count: 10};
+    $scope.getDevices = function () {
+        $scope.view = {
+            devices: deviceFac.getAllDevices($scope.search),
+        };
+    };
+    $scope.jihuo = function () {
+        deviceFac.jihuo(function (data) {
+            $scope.getDevices();
+        });
+    }
+    $scope.pageChange = function () {
+        $scope.search.page = $scope.view.devices.page;
+        $scope.getDevices();
+    }
+    $scope.unbind = function (index) {
+        var data = ajaxSendFn({}, "/activate/" + $scope.view.devices.items[index].id, "POST");
+        if (data.code == 200) {
+            alert("解绑成功！");
+            $scope.getDevices();
+        } else {
+            alert(data.message);
+        }
+    }
+
+    $scope.getDevices();
+}]);
+
+/*菜品管理*/
+app.controller('DishCtr', function ($scope, $location, $http) { //shoplist over
+    $scope.config.breadset = [{ //
+        name: "菜品管理",
+        href: indexUrl + "/keeper.html#/dish"
+    }, {
+        name: "菜品列表"
+    }]; //面包屑
+    var data = ajaxSendFn({}, "/dishes", "GET");
+    $scope.dishes = {
+        list: data.result
+    };
+});
+app.controller('DocCtr', ['$rootScope', '$scope', '$location', 'shopFactory', function ($rootScope, $scope, $location, shopFac) { //shoplist over
+    $scope.config.breadset = []; //面包屑;
+    $scope.config.class = "doc";
+    $scope.posts = {
+        shopId: "brand"
+    };
+    $scope.view = {
+        STATISTICS_TEXT: ["当前总余额（元）", "当前总余量（分）", "当前总余量（张）", "当前会员总人数（人）", "历史总计（条）", "当前总消费数（笔）", "当前总消费数（笔）"],
+        buttons: ["充值报表", "积分报表", "优惠券报表", "顾客升级情况报表", "短信使用情况报表", "上宾消费报表", "其他收费报表"],
+        coupons: ajaxSendFn({}, "/statistics/coupons", "GET").result || []
+    };
+    $scope.sendOrder = function () {
+        $location.path("/doc/detail/" + $scope.posts.order);
+    };
+}]);

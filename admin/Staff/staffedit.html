@@ -1,0 +1,75 @@
+
+	<div class="container contents bgw">
+		<form  name="staffadd_form"  ng-submit="staffaddsend()" >
+			<div class="col-md-12">
+				<div class="col-sm-10 col-sm-offset-2 form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label" ></label>
+						<div class="col-sm-6 text-red">*为必填项</div>
+
+					</div>
+					<div class="form-group">
+						<label for="shopCode" class="col-sm-2 control-label text-right">门店</label>
+						<div class="col-sm-6" >
+							<div class="form-control-static" ng-bind="show.shopname"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="shopCode" class="col-sm-2 control-label text-right">账号</label>
+						<div class="col-sm-5" >
+							<div class="form-control-static" ng-bind="staffget.name"></div>
+						</div>
+						<div class="col-sm-4 form-control-static" >
+							<a class="click" ng-click="goto('staff/password/'+staffget.id)">修改密码</a>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="shopType" class="col-sm-2 control-label text-right">
+							<span class="text-red">*</span>
+							姓名
+						</label>
+						<div class="col-sm-6" >
+							<input type="text" class="form-control" ng-model="posts.nickname" name="nickname" placeholder="请输入员工的真实姓名" ng-minlength='2' ng-maxlength='20' ng-pattern="textCheckJson.nickname" ng-value="staffget.nickname" required></div>
+						<span class="help-block " ng-messages="staffadd_form.nickname.$error" >
+							<div  ng-message="required">2-20个字符以内</div>
+							<div class="text-red" ng-message="minlength">需大于2个字符</div>
+							<div  class="text-red" ng-message="maxlength">需小于20字符</div>
+							<div class="text-red" ng-message="pattern">
+								<span  ng-bind="textCheckErrorJson.nickname"></span>
+							</div>
+						</span>
+						<span class="help-block" ng-show="staffadd_form.nickname.$valid">输入正确</span>
+					</div>
+
+					<div class="form-group">
+						<label for="shopType" class="col-sm-2 control-label text-right">
+							<span class="text-red">*</span>
+							性别
+						</label>
+						<div class="col-sm-6 btn-checked" >
+							<div class="btn-group" data-toggle="buttons">
+								<label class="btn btn-default" ng-class="{'active':posts.gender==0}" ng-click="posts.gender=0">
+									<input type="radio" name="gender"  value="0" id="option1"  checked>保密</label>
+								<label class="btn btn-default" ng-class="{'active':posts.gender==1}" ng-click="posts.gender=1">
+									<input type="radio" name="gender"  value="1"  id="option2" >男</label>
+								<label class="btn btn-default" ng-class="{'active':posts.gender==2}" ng-click="posts.gender=2">
+									<input type="radio" name="gender"  value="2"  id="option3" >女</label>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col-sm-10 col-sm-offset-2">
+						<div class="row">
+							<div class="col-sm-3">
+								<a class="btn btn-default btn-block" ng-click="goto('staff/show/'+posts.shopId)">返回</a>
+							</div>
+							<div class="col-sm-3 col-sm-offset-1">
+								<button type="submit" ng-disabled="!staffadd_form.$valid" class="btn btn-primary btn-block">提交</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>

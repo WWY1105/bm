@@ -1,0 +1,225 @@
+<div class="container contents bgw">
+	<div class="col-sm-12 ruleadd">
+		<form class="form-horizontal" name="ruleForm" ng-submit="sendJsons()" >
+			<div class="out">
+				<div class="col-sm-2 text-right ">
+					<span class="title">活动名称</span>
+				</div>
+				<div class="col-sm-8 content">
+					<div class="form-group ">
+						<label for="Formname" class="col-sm-1 control-label">名称</label>
+						<div class="col-sm-5">
+							<input type="text" ng-model="posts.name" name="name" class="form-control" id="Formname" placeholder="输入名称"  ng-minlength='2' ng-maxlength='20' ng-pattern="config.textCheckJson.nickname" required></div>
+						<span class="help-block " ng-messages="ruleForm.name.$error" >
+							<div  ng-message="required">2-20字符的汉字英文数字</div>
+							<div class="text-red" ng-message="minlength">需大于2个字符</div>
+							<div  class="text-red" ng-message="maxlength">需小于20字符</div>
+							<div class="text-red" ng-message="pattern">
+								<span  ng-bind="config.textCheckErrorJson.nickname"></span>
+							</div>
+
+						</span>
+						<span class="help-block" ng-show="ruleForm.name.$valid">输入正确</span>
+					</div>
+				</div>
+			</div>
+			<div class="out">
+				<div class="col-sm-2 text-right">
+					<span class="title">活动时间</span>
+				</div>
+				<div class="col-sm-8 content">
+					<div class="form-group ml2 mb22">
+
+						<label class="radio-inline">
+							<input type="radio" ng-checked="data.show1" ng-click="data.show1=1;data.show2=0">周期有效</label>
+						<label class="radio-inline">
+							<input type="radio" ng-checked="data.show2" ng-click="data.show1=0;data.show2=1">指定日期有效</label>
+					</div>
+					<div class="row ml25">
+						<div class="col-sm-6 " ng-show="data.show1">
+							<div class="row">
+								<label  class="col-sm-3 control-label text-left" >开始</label>
+								<div class="col-sm-9">
+									<div datepicker   datepicker-title="view.starttime"></div>
+								</div>
+
+							</div>
+						</div>
+						<div class="col-sm-6 " ng-show="data.show1">
+							<div class="row">
+								<label  class="col-sm-3 control-label text-left">结束</label>
+								<div class="col-sm-9">
+									<div datepicker   datepicker-title="view.endtime"></div>
+								</div>
+							</div>
+						</div>
+						<div  class="col-sm-12 form-control-stack text-left" ng-show="data.show1">
+						<label class="checkbox-inline">
+							<input type="checkbox" ng-model="posts.excludeHoliday" ng-click="posts.excludeHoliday=!posts.excludeHoliday" >排除法定假日</label>
+						<label class="checkbox-inline">
+							<input type="checkbox" ng-model="posts.excludeWeekend"  ng-click="posts.excludeWeekend=!posts.excludeWeekend">排除周末</label>
+					</div>
+						<div class="col-sm-12 " ng-show="data.show2">
+							<div class="row">
+								<label  class="col-sm-12 text-left">指定时间									<div class="btn btn-default" ng-click="tem.dateun=0" ng-show="tem.dateun">展开日历</div>
+</label>
+								<div class="col-sm-5">
+									<div class="datelist" ng-hide="tem.dateun">
+										<div class="controle">
+											<div class="col-sm-3 text-center">
+												<div class="row">
+													<div ng-click="datego(-1)"  class="btn btn-default btn-sm" ng-class="{'disabled':dare.i==0}"> <i class="glyphicon glyphicon-chevron-left"></i>
+													</div>
+												</div>
+
+											</div>
+
+											<div class="col-sm-6 text-center">
+												<div  class="row">
+													<span class="datecontrol" ng-bind="date.year+'年'+date.month+'月'"></span>
+												</div>
+
+											</div>
+											<div class="col-sm-3 text-center">
+												<div class="row">
+													<div ng-class="{'disabled':dare.i==0}"  ng-click="datego(1)"  class="btn btn-default btn-sm"> <i class="glyphicon glyphicon-chevron-right"></i>
+													</div>
+												</div>
+
+											</div>
+
+										</div>
+										<div class="weektitle">
+											<div class="weekson" ng-repeat="week in date.week" ng-bind="week"></div>
+										</div>
+										<div class="datecontent">
+											<div class="dateout">
+												<div  ng-repeat="dates in date.dates" >
+													<div class="dateson" ng-class="{'bordert':$index<7,'borderr':($index+1)%7==0}" ng-if="dates.day">
+														<a ng-class="{'active':date.join[dates.ture],'bordert':$index<8,'borderr':($index+1)%7==0}" ng-click="join(dates.ture)" ng-bind="dates.day" ng-if="!dates.color||date.join[dates.ture]"></a>
+														<span ng-class="{'active':date.join[dates.ture],'bordert':$index<8,'borderr':($index+1)%7==0}" style="color:#ddd" ng-bind="dates.day" ng-if="dates.color&&!date.join[dates.ture]"></span>
+													</div>
+
+													<div class="dateson"  ng-class="{'bordert':$index<7,'borderr':($index+1)%7==0}"  ng-if="!dates.day"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6 col-sm-offset-6">
+											<div class="btn btn-default" ng-click="tem.dateun=1">收起</div>
+										</div>
+									</div>
+
+								</div>
+								<div class="col-sm-7">
+
+									<div class="col-sm-4 mt20" ng-repeat="(key, value) in date.join" ng-if="$index<11">
+										<span ng-bind="key" class="label label-danger " ng-if="$index<10"></span>
+										<span ng-if="$index==10">更多日期请查看列表</span>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
+			<div class="out">
+				<div class="col-sm-2 text-right">
+					<span class="title">参与门店</span>
+				</div>
+				<div class="col-sm-8 content">
+					<div  class="col-sm-12 ml25 form-control-stack text-left">
+						<label class="checkbox-inline">
+							<input type="checkbox" id="inlineCheckbox1" ng-click="check_all()"  value="option1">所有门店</label>
+					</div>
+					<div  class="col-sm-12  form-control-stack text-left" id="check-son">
+						<label class="checkbox-inline" ng-repeat="shops in set.list" ng-class="{ml15:$index==0}">
+							<input type="checkbox" ng-checked="set.shopslist[$index]" ng-model="set.shopslist[$index]" id="inlineCheckbox1"  ng-true-value="{{shops.id}}"   ng-false-value="{{null}}"  value="{{shops.id}}" ng-init="set.list2[$index]=shops.id">
+							<span ng-bind="shops.name"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="out ">
+				<div class="col-sm-2 text-right">
+					<span class="title">有效时段</span>
+				</div>
+				<div class="col-sm-8 content">
+					<div class="form-group timecheck">
+						<div class="col-sm-12 ">
+							<label class="btn glyphicon  btn-default" ng-repeat="(key, value) in set.time" ng-class="{active:view.periods[$index]}"  ng-click="settime($index,key)" ng-bind="value"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="out ">
+				<div class="col-sm-2 text-right">
+					<span class="title">不参与商品</span>
+				</div>
+				<div class="col-sm-8 content2">
+					<div  class="col-sm-12 ml25 form-control-stack text-left">不参与打折商品</div>
+					<div  class="col-sm-12  form-control-stack text-left" id="check-son">
+						<label class="checkbox-inline ml30 " style="display:inline-block" ng-repeat="unlist in set.nonParticipation" >
+							<input type="checkbox" ng-model="checknonParticipation[$index]" ng-true-value="{{unlist.id}}"
+       ng-false-value="null"   >
+							<span ng-bind="unlist.name"></span>
+						</label>
+						<div class="add-rad" ng-click="addNonParticipation()" style="display:inline-block"><i class="glyphicon glyphicon-plus"></i></div>
+					</div>
+				</div>
+			</div>
+			<div class="out ">
+				<div class="col-sm-2 text-right"></div>
+				<div class="col-sm-8 mt20">
+					<div class="form-group ">
+						<div class="col-sm-3 col-sm-offset-1 ">
+							<a class="btn btn-default btn-block" back-button>返回</a>
+						</div>
+						<div class="col-sm-3 col-sm-offset-1 ">
+							<button class="btn btn-primary btn-block" >保存</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="modal fade " id="NonParticipation" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form  class="form-horizontal" name="addno" ng-submit="NonParticipationSend()">
+				<div class="modal-header " >
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">添加不打折商品</h4>
+				</div>
+				<div class="modal-body" style="overflow:hidden">
+					<div class="form-group">
+						<label class="control-label col-sm-3">
+							商品名称
+						</label>
+						<div class="col-sm-4">
+							<input   class="form-control" ng-model="goods.name"  placeholder="输入商品名称" required/>
+						</div>
+						<div class="hepl-block form-control-static">
+							输入不参加打折的商品名称
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="col-sm-3 col-sm-setoff-6">
+						<div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+						
+					</div>
+					<div class="col-sm-3">
+						<button class="btn btn-primary btn-block" ng-disabled="!addno.$valid">添加</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

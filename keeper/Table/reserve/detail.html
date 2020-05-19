@@ -1,0 +1,139 @@
+<div class="row bg-white">
+  <div ng-include="'/keeper/Table/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <div class="container contents bgw">
+
+      <div class="col-sm-12 form-control-stack text-left mb22">
+        <button class="btn btn-primary" ng-click="openFn()">添加</button>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+        <tr class="plan-title">
+          <td>桌号</td>
+          <td>编号</td>
+          <td>顾客等级</td>
+          <td>定金(元)</td>
+          <td>标签</td>
+          <td>操作</td>
+        </tr>
+        </thead>
+        <tbody class="slide-down">
+        <tr ng-repeat="row in view.list">
+          <td ng-bind="row.tableNo"></td>
+          <td ng-bind="row.sequence"></td>
+          <td ng-bind="row.customerName"></td>
+          <td ng-bind="row.amount"></td>
+          <td>{{row.tag}}</td>
+          <td>
+            <a ng-click="openFn(row.id)">修改</a>
+            <a ng-click="removeFn(row.id)">删除</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="col-sm-12 plan-son text-left" ng-if="!view.list">
+        无查询结果
+      </div>
+      <div class="col-sm-12" ng-if="view.list.pageSize>1">
+        <pagination items-per-page="view.list.count" boundary-links="true" total-items="view.list.total"
+                    ng-model="view.list.page" class="pagination-sm" previous-text="&lsaquo;" ng-change="pageChange()"
+                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+      </div>
+    </div>
+
+
+    <div class="modal fade bs-example-modal-sm" id="addlist" aria-hidden="true">
+      <div class="modal-dialog" style="display:block;">
+        <div class="modal-content ">
+          <form enctype="multipart/form-data" name="reserveform">
+            <div class="modal-header ">
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+              </button>
+              <h4 class="modal-title">选择桌台</h4>
+
+              <div class="text-red">*桌号不能重复</div>
+            </div>
+            <div class="modal-body form-horizontal" style="overflow:hidden">
+              <div class="form-group">
+                <label class="col-sm-3 control-label text-right">桌台</label>
+
+                <div class="col-sm-9">
+                  <select ng-model="post.tableId" class="form-control"
+                          ng-options="item.id as (item.no+(item.name?'('+item.name+')':'')) for item in view.tables"
+                          name="member"
+                          required>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label text-right">顾客等级</label>
+
+                <div class="col-sm-9">
+                  <select ng-model="post.customer" class="form-control"
+                          ng-options="item.id as item.name for item in view.members" name="member" required>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group ">
+                <label for="sequence" class="col-sm-3 control-label text-right">序号</label>
+
+                <div class="col-sm-9 " id="sequence">
+                  <input ng-model="post.sequence" min="0" type="number" class="form-control" name="sequence" required>
+
+                  <div class="help-block" ng-messages="reserveform.sequence.$error">
+                    <div ng-message="required">序号不能为空</div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="form-group ">
+                <label for="tags" class="col-sm-3 control-label text-right">标签</label>
+
+                <div class="col-sm-9">
+                  <input ng-model="post.tag" type="text" class="form-control" id="tags" name="tags"
+                         placeholder="">
+                </div>
+              </div>
+
+              <div class="form-group ">
+                <label for="sequence" class="col-sm-3 control-label text-right">定金</label>
+
+                <div class="col-sm-9">
+                  <input ng-model="post.amount" min="0" type="number" class="form-control" name="amount" required>
+
+                  <div class="help-block" ng-messages="reserveform.amount.$error">
+                    <div ng-message="required">定金不能为空</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pic" class="col-sm-3 control-label text-right">图片</label>
+
+                <div class="col-sm-9 " id="pic">
+                  <pic-send pic-url="post.picUrl"></pic-send>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <div class="col-md-6">
+                <div class="btn btn-primary btn-block" ng-disabled="reserveform.$invalid"
+                     ng-click="submitFn()">确定
+                </div>
+              </div>
+              <div class="col-md-6 ">
+                <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
+  </div>
+</div>

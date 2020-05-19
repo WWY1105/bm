@@ -1,0 +1,122 @@
+<div class="bgw">
+  <div class="row">
+    <div ng-include="'/keeper/Staff/leftmenu.html'"></div>
+    <div class="v-shadow-content">
+      <div class="col-sm-12 text-right">
+        <a onclick="$('#addTemplate').modal('show')" class="btn btn-primary ng-scope">新建值班模板</a>
+        <!-- end ngIf: view.on -->
+      </div>
+      <div class="mt15" ng-repeat="(index,table) in view.tables">
+        <h3>{{table.name}}
+          <button class="btn btn-danger" ng-click="deleteAllFn(table.id)">删除模板</button>
+        </h3>
+
+
+        <table class="table table-bordered">
+          <thead>
+          <tr class="plan-title">
+            <th>分区/时段</th>
+            <th ng-repeat="item in table.duties[0].periodDuties">{{view.type[item.period]}}</th>
+          </tr>
+          </thead>
+          <tbody class="slide-down">
+          <tr ng-repeat="(key,item) in table.duties">
+            <th>{{item.regionName}}
+              <div><a ng-click="deleteRegionFn(table.id,item.regionId)">清空</a></div>
+            </th>
+            <td ng-repeat="(key1,duty) in item.periodDuties">
+              <span ng-repeat="staff in duty.staffs"> {{staff.nickname}}</span>
+              <div ng-if="duty.staffs">
+                <a ng-click="openFn(index,key,key1)">修改</a>
+                <a ng-click="deleteStaffFn(table.id,item.regionId,duty.period)">清空</a>
+              </div>
+
+              <div ng-if="!duty.staffs"><a ng-click="openFn(index,key,key1)">添加员工</a></div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="addTemplate" aria-hidden="true">
+  <div class="modal-dialog" style="display:block;">
+    <div class="modal-content ">
+      <form enctype="multipart/form-data" name="templateform">
+        <div class="modal-header ">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">添加值班模板</h4>
+        </div>
+        <div class="modal-body form-horizontal" style="overflow:hidden">
+          <div class="form-group">
+            <label for="name" class="col-sm-2 control-label text-right">名称</label>
+
+            <div class="col-sm-4">
+              <input ng-model="post.name" id="name" name="name" ng-minlength='2' ng-maxlength='10' class="form-control"
+                     placeholder="2-10个字符" required>
+            </div>
+            <div class="help-block col-sm-4" ng-messages="templateform.name.$error">
+              <div ng-message="required">名称不能为空</div>
+              <div ng-message="maxlength">名称需小于10个字符</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-6">
+            <div class="btn btn-primary btn-block" ng-disabled="templateform.$invalid"
+                 ng-click="addTemplateFn()">确定
+            </div>
+          </div>
+          <div class="col-md-6 ">
+            <div class="btn btn-default btn-block" ng-click="cancelAction()" data-dismiss="modal">关闭</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="staffSelect" aria-hidden="true">
+  <div class="modal-dialog" style="display:block;">
+    <div class="modal-content ">
+      <form name="chooseform">
+        <div class="modal-header ">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">在分区下添加员工</h4>
+        </div>
+        <div class="modal-body form-horizontal" style="overflow:hidden">
+
+          <div class="col-sm-12 tablelist">
+            <div class="tablesout" ng-repeat="staff in posts.staff" ng-click="staff.check = !staff.check">
+              <div ng-class="{'clicked':staff.check}" class="tables out pull-left click">
+                <Div class="remove text"></Div>
+                <Div class="seat">{{staff.nickname}}</Div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-6">
+            <div class="btn btn-primary btn-block" ng-disabled="chooseform.$invalid"
+                 ng-click="submitFn()">确定
+            </div>
+          </div>
+          <div class="col-md-6 ">
+            <div class="btn btn-default btn-block" ng-click="cancelAction()" data-dismiss="modal">关闭</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

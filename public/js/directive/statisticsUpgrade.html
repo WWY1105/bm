@@ -1,0 +1,48 @@
+<div class="doc">
+    <ul class="bg-muted">
+      <li>合计（人次）</li>
+      <li>充值升级：{{title.charge||0}}</li>
+      <li>购买升级：{{title.buy||0}}</li>
+      <li>积分升级：{{title.point||0}}</li>
+      <li>领卡：{{title.free||0}}</li>
+    </ul>
+  <table class="table" ng-if="view.result.items">
+    <thead>
+    <tr>
+      <td>序号</td>
+      <td>分店</td>
+      <td>
+        <div>总升级</div>
+        <div>(人次)</div>
+      </td>
+      <td>
+        <div>充值升级</div>
+        <div>(人次)</div>
+      </td>
+      <td>
+        <div>购买升级</div>
+        <div>(人次)</div>
+      </td>
+      <td>
+        <div>积分升级</div>
+        <div>(人次)</div>
+      </td>
+      <td>
+        <div>领卡</div>
+        <div>(人次)</div>
+      </td>
+    </tr>
+    </thead>
+    <tbody class="slide-down">
+    <tr ng-repeat="row in view.result.items">
+      <td ng-bind="((page-1)*count)+$index+1"></td>
+      <td ng-bind="row.shopName"></td>
+      <td ng-bind="row.total||0"></td>
+      <td ng-bind="row.charge||0"></td>
+      <td ng-bind="row.buy||0"></td>
+      <td ng-bind="row.point||0"></td>
+      <td ng-bind="row.free||0"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>

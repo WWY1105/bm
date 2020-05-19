@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>Rectangle 22</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="16.9039445%" y1="-23.4623545%" x2="100%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#D5C081" offset="0%"></stop>
+            <stop stop-color="#8B6224" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="H5优化-&gt;-关注有礼流程图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-22" fill="url(#linearGradient-1)" x="0" y="0" width="40" height="40"></rect>
+        <polygon id="关注有礼" fill="#FFFFFF" points="11.5779837 22.3582767 7.31832377 22.3582767 7.31832377 19.6122695 12.6495963 19.6122695 14.9803536 13.6246343 7.58622691 13.6246343 7.58622691 10.8786271 10.5867421 10.8786271 14.0006294 6 17.2039497 10.8786271 23.8479477 10.8786271 27.1913444 6.75258053 30.4651553 10.8786271 33.1173964 10.8786271 33.1173964 13.6246343 21.8386741 13.6246343 19.5748925 19.6122695 33.3183238 19.6122695 33.3183238 22.3582767 29.2863815 22.3582767 32.7289369 32.5787816 26.2188905 32.5787816 22.937077 22.3582767 18.5434654 22.3582767 14.6856602 32.5787816 7.58622691 32.5787816"></polygon>
+    </g>
+</svg>

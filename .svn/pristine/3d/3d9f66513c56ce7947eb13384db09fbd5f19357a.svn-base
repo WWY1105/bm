@@ -1,0 +1,83 @@
+<div class="container contents bgw">
+  <div class="col-sm-8 col-sm-offset-2 stepshow">
+    <div class="step">
+      <div class="stepover" style="width:50%"></div>
+      <div class="stepson step1 active">
+        <span>1</span>
+        <h5>选择范围</h5>
+      </div>
+      <div class="stepson step2 active">
+        <span>2</span>
+        <h5>活动详情</h5>
+      </div>
+      <div class="stepson step3">
+        <span>3</span>
+        <h5>完成</h5>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 ">
+    <form class="form-horizontal">
+      <div class="out">
+        <div class="col-sm-11 col-md-offset-1" ng-repeat="(name,rule) in view.rules" ng-if="rule.show">
+          <form name="{{name}}">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <div class="panel-title" ng-bind="rule.name"></div>
+              </div>
+              <div class="panel-body">
+                <div ng-if="rule.state=='show'" ng-include="'admin/rule/show.html'"></div>
+                <div ng-if="rule.state=='edit'" ng-include="'admin/rule/module/'+name+'.html'"></div>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item" style="overflow:hidden">
+                  <a class="btn btn-primary col-sm-2 col-sm-offset-5" ng-click="goto('rule')"
+                     ng-if="rule.state=='edit'">取消</a>
+                  <a class="btn btn-primary col-sm-2"
+                     ng-class="{'col-sm-offset-8':rule.state=='show','col-sm-offset-1':rule.state=='edit'}"
+                     ng-click="ruleFn.buttonFn(name)" ng-bind="rule.state=='show'?'修改':'保存'"></a>
+                </li>
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
+    </form>
+
+    <div class="out">
+      <div class="col-sm-8 mt20 col-md-offset-3">
+        <div class="form-group ">
+          <div class="col-sm-3 col-sm-offset-1 ">
+            <a class="btn btn-default btn-block" back-button>返回</a>
+          </div>
+          <div class="col-sm-3 col-sm-offset-1 ">
+            <a class="btn btn-primary btn-block" ng-click="goto('rule')">下一步</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div id="showadd" class="modal fade addpanel" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="overflow:hidden">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" ng-bind="view.modal.title"></h4>
+        </div>
+        <div class="modal-body" ng-if="view.modal.html" ng-include="'admin/rule/module/'+view.modal.html+'.html'"></div>
+        <div class="modal-footer" ng-if="view.modal.couponFn">
+          <div class="col-sm-3 col-sm-offset-3" ng-if="view.modal.type!='couponSelect'">
+            <a class="btn btn-primary btn-block" ng-click="ruleFn.saveCouponFn()">确定</a>
+          </div>
+          <div class="col-sm-3">
+            <a data-dismiss="modal" class="btn btn-default btn-block">关闭</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

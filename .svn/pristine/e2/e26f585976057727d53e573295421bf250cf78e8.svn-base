@@ -1,0 +1,136 @@
+<div>
+  <form class="couponadd" role="form" name="couponNew" novalidate>
+    <div class="form-group">
+      <label class="col-sm-4 text-left control-label text-red">*为必填项</label>
+    </div>
+
+    <div class="form-inline">
+      <label class="control-label col-sm-2"><span class="text-red">*</span> 类型</label>
+
+      <div class="form-group">
+        <label class="radio-inline" ng-repeat="(key,value) in couponCategoryRev">
+          <input type="radio" name="category" ng-model="coupon.category" ng-value="key" required/>
+          <span ng-bind="value"></span>
+        </label>
+				<span class="radio-inline" ng-messages="couponNew.category.$error">
+					<div class="text-red" ng-message="required">必须选择类型</div>
+				</span>
+      </div>
+    </div>
+
+    <div class="form-group"></div>
+
+    <div ng-include="'admin/rule/module/couponTimeSel.html'"></div>
+
+    <div class="form-inline">
+      <label class="control-label col-sm-2"><span class="text-red">*</span>活动内容</label>
+
+      <div class="animate-switch-container" ng-switch on="coupon.category">
+        <div class="animate-switch" ng-switch-default>
+          <div class="form-group">
+            <span class="control-label">价值</span>
+            <input class="form-control" type="text" ng-model="coupon.amount" required/>
+          </div>
+        </div>
+        <div class="animate-switch" ng-switch-when="902">
+          <div class="form-group">
+            <span class="control-label">商品</span>
+            <input class="form-control" type="text" ng-model="coupon.value" required/>
+            <span class="form-control-static">,&nbsp;&nbsp;</span>
+          </div>
+          <div class="form-group ">
+            <span class="form-control-static">原价</span>
+            <input class="form-control" type="number" ng-model="coupon.amount" min="0" required/>
+            <span class="form-control-static">元,&nbsp;&nbsp;</span>
+          </div>
+          <div class="form-group">
+            <span class="form-control-static">现价</span>
+            <input class="form-control" type="number" ng-model="coupon.currentAmount" min="0" required/>
+            <span class="form-control-static">元</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-inline" >
+      <label class="control-label col-sm-2"><span class="text-red">*</span>兑换门店</label>
+
+      <div class="form-group" style="margin-top: -24px;padding-left: 17%">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="checkAllShop" ng-change="checkAllShops()" value="option1"/>全选
+        </label>
+
+        <div class="form-control-stack text-left" id="">
+          <label class="checkbox-inline mr15" ng-repeat="shoplist in shops">
+            <input type="checkbox" ng-model="coupon.shops[$index]" ng-true-value="{{shoplist.id}}" ng-false-value="null"
+                   ng-checked="checkallstr==1"/>
+            <span ng-bind="shoplist.name"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-inline" ng-if="businessTime">
+      <label class="control-label col-sm-2"><span class="text-red">*</span>兑换时段</label>
+      <div class="form-group timecheck">
+        <div class="col-sm-12 ">
+          <label class="btn glyphicon  btn-default" ng-repeat="(key, value) in businessTime"
+                 ng-class="{active:coupon.periods[$index]}" ng-click="settime($index,key)" ng-bind="value"></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-inline">
+      <label class="control-label col-sm-2"><span class="text-red">*</span>兑换详情</label>
+
+      <div class="form-group">
+        <span class="form-control-static">单次消费满</span>
+        <input class="form-control" type="number" ng-model="coupon.amountLimit " min="0" required/>
+        <span class="form-control-static">元,可使用。</span>
+      </div>
+    </div>
+
+    <div ng-include="'admin/rule/module/couponLimit.html'"></div>
+
+    <div class="form-inline">
+      <label class="control-label col-sm-2">可同享的活动</label>
+
+      <div class="form-group">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="posts.catagoryAll" ng-change="checkAllCatagory()" value="option1"/>全选
+        </label>
+
+        <div class="form-control-stack" id="check-son">
+          <label class="checkbox-inline" ng-repeat="item in ruleCategory">
+            <input type="checkbox" ng-model="coupon.shared[$index]" ng-true-value="{{item.id}}"
+                   ng-checked="coupon.shared[$index]===item.id"/>
+            <span ng-bind="item.name"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="form-inline" ng-if="coupon.category=='901'&&nonParticipation._id">
+      <label class="control-label col-sm-2">不参与商品</label>
+
+      <div class="form-group">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="coupon.nonParticipationId"  ng-true-value="{{nonParticipation._id}}"/>{{nonParticipation.items}}
+        </label>
+      </div>
+    </div>
+
+    <div class="form-inline">
+      <label class="control-label col-sm-2">说明</label>
+
+      <div class="form-group timecheck">
+        <div class="form-control-static">1.本券不兑换现金、不找零。</div>
+        <div class="form-control-static">2.最终解释权归本店所有。</div>
+      </div>
+
+      <div class="form-inline">
+        <div class="col-sm-2 col-sm-offset-4 btn btn-primary" ng-click='addCouponInner()'
+             ng-disabled="couponNew.$invalid">确定
+        </div>
+      </div>
+  </form>
+</div>

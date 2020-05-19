@@ -1,0 +1,73 @@
+<!--show-->
+<div class="bgw">
+  <div class="row">
+    <div ng-include="'/admin/rule/leftmenu.html'"></div>
+    <div class="v-shadow-content">
+      <div class="btn btn-primary" ng-click="add()">新增</div>
+      <div class="ruleadd" ng-repeat="item in view.items">
+
+        <div class="out">
+          <div class="col-sm-2">
+            <span class="title">标题</span>
+          </div>
+          <div class="col-sm-8">
+            <div ng-bind="item.title"></div>
+          </div>
+          <div class="col-sm-2">
+            <div class="btn btn-primary" ng-click="edit($index)">修改</div>
+            <div class="btn btn-danger" ng-click="remove($index)">删除</div>
+          </div>
+        </div>
+        <div class="out">
+          <div class="col-sm-2">
+            <span class="title">链接</span>
+          </div>
+          <div class="col-sm-8">
+            <div>{{item.url}}<a target="_blank" ng-href="{{item.url}}"> 查看</a></div>
+          </div>
+        </div>
+        <!--<div class="out">-->
+          <!--<div class="col-sm-2">-->
+            <!--<span class="title">内容</span>-->
+          <!--</div>-->
+          <!--<div class="col-sm-8">-->
+            <!--<div style="border:1px solid blue" ng-bind-html="item.content|trust2Html"></div>-->
+          <!--</div>-->
+        <!--</div>-->
+      </div>
+    </div>
+  </div>
+</div>
+<!--show-->
+
+<link rel="stylesheet" type="text/css" href="/dist/css/wangEditor.min.css">
+<!--引入jquery和wangEditor.js-->   <!--注意：javascript必须放在body最后，否则可能会出现问题-->
+<!--<script type="text/javascript" src="/dist/js/lib/jquery-1.10.2.min.js"></script>-->
+<div class="modal fade" id="modal" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title">内容</h4>
+      </div>
+      <div class="modal-body" style="overflow:hidden">
+        <input type="text" class="mb10 form-control" placeholder="标题" ng-model="post.title">
+
+        <div id="div1" style="min-height:500px;">
+          <p>请输入内容...</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-sm-3 col-sm-setoff-6">
+          <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+        </div>
+        <div class="col-sm-3">
+          <button class="btn btn-primary btn-block" ng-click="send()">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

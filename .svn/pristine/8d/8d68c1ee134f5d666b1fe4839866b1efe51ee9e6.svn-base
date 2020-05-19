@@ -1,0 +1,41 @@
+<div class="out ruleadd2" >
+  <div class="col-sm-2 text-right ">
+    <span class="title">活动详情</span>
+  </div>
+
+  <div class="out ruleadd2" >
+    <div class="col-sm-2 text-right ">
+    </div>
+    <div class="col-sm-10 content mb0">
+      <div class="form-inline mb22 ml25 clear">
+        <span class=" form-control-static">单次消费</span>
+        <input type="number" class="form-control" min="0" ng-style="{width:'135px'}" ng-model="posts.POINTCONSUME.POINTCONSUME.amountLimit" placeholder="输入0代表无限制" requried/>
+        <span class="form-control-static">元，其中积分支付最多占</span>
+        <input type="number" class="form-control" step="0.01" ng-style="{width:'160px'}" min="0.1" max="1" ng-model="posts.POINTCONSUME.POINTCONSUME.celling" requried  placeholder="比率在0.1至1之间"/>
+      </div>
+        <div ng-repeat="(key, detail) in posts.POINTCONSUME.POINTCONSUME.detail">
+        <div class="form-group mb22"  ng-repeat="details in detail" ng-init="details.id=key">
+        <div class="col-sm-3">
+          <select ng-model="details.id" class="form-control "
+            ng-options="item.id as item.name for item in view.member" name="member" required></select>
+        </div>
+        <div class=" form-control-static pull-left">每</div>
+        <div class="col-sm-2">
+          <input type="number" placeholder="积分数" class="form-control" ng-model="details.amount" min="0" required/>
+        </div>
+        <div class=" form-control-static pull-left">积分，抵现</div>
+        <div class="col-sm-2 ">
+          <input type="number" placeholder="等额价值" class="form-control" min="0" ng-model="details.value" required/>
+        </div>
+        <div class=" form-control-static pull-left">元</div>
+        <a class="add click" ng-if="$parent.$first&&$first" ng-click="ruleFn.addFn('POINTCONSUME')">
+          <i class="glyphicon glyphicon-plus"></i>
+        </a>
+        <a class="remove click" ng-if="!$first||!$parent.$first" ng-click="ruleFn.removeFn('POINTCONSUME',key,$index)">
+          <i class="glyphicon glyphicon-remove"></i>
+        </a>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

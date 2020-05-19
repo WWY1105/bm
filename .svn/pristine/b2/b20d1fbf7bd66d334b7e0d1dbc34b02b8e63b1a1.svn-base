@@ -1,0 +1,39 @@
+<div class="container contents bgw">
+	<div class="row">
+		<div class="col-md-3 col-md-offset-7">
+			<button class=" col-md-5 col-md-offset-6 btn btn-danger " ng-click="goto('rule/member')">会员规则管理</button>
+		</div>
+
+		<div class="col-md-10 col-md-offset-1 time-line" ng-repeat="rules in view.rule">
+			<div class="col-md-2 text-right" >
+				<span  ng-hide="view.rule[$index-1].createTime==rules.createTime" ng-bind="rules.createTime|date:'yyyy年MM月dd日'"></span>
+			</div>
+			<div class="col-md-9 relative">
+				<div class="radius"></div>
+				<div  class="mt10" ng-class="{'line':!$last}">
+					<div class="line-in icons" ng-class="{'line-in-last':$last}">
+						<div class="title" ng-click="pannel($index)">
+							<div class="col-sm-12">
+								<span ng-repeat="(key, value) in rules.icon" class="icon" ng-class="key"></span>
+								<span ng-bind="rules.name"></span>
+								<span ng-if="rules.on">已上线</span>
+								<span ng-if="!rules.on">未上线</span>
+							</div>
+							<div class="col-sm-12" ng-repeat="(key, value) in rules.text" ng-bind="($index+1)+'.'+key+':'+value">
+								
+							</div>
+						</div>
+						<div  class="content" ng-show="rules.show" >
+							<div class="col-sm-12" ng-repeat="ruleget in rules.rulesget" >
+								<span ng-repeat="(key, value) in ruleget" ng-bind="key+':'+value"></span>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<Div class="col-md-10 col-md-offset-1" ng-if="view.rule.length<1">暂未添加活动</Div>
+	</div>
+</div>

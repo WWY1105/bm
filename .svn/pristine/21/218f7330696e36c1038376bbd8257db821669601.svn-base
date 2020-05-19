@@ -1,0 +1,156 @@
+<div>
+  <div class="out">
+    <div class="col-sm-2 text-right ">
+      <span class="title">选择游戏</span>
+    </div>
+    <div class="col-sm-8 content" style="margin-left: 20px">
+      <div class="btn-checked">
+        <div class="btn-group" data-toggle="buttons" ng-init="">
+          <label class="btn btn-default" ng-class="{'active':posts.GAME.GAME_BUY_COUPON.guestGameId == game.id}"
+                 ng-repeat="game in view.rules.GAME.list"
+                 ng-click="posts.GAME.GAME_BUY_COUPON.guestGameId = game.id;posts.gameDetail=view.rules.GAME.list[$index]">
+            <input type="radio" name="name">{{game.name}}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="out">
+    <div class="col-sm-2 text-right ">
+      <span class="title">游戏时长</span>
+    </div>
+    <div class="col-sm-8 content">
+      <div class="form-group ">
+        <div class="col-sm-5">
+          <input type="text" ng-model="posts.gameDetail.time" name="name" class="form-control" id="time"
+                 placeholder="请输入活动名称" ng-minlength='2' ng-maxlength='20' ng-pattern="config.textCheckJson.nickname"
+                 required>
+        </div>
+        <div class="help-block">10-60秒</div>
+      </div>
+    </div>
+  </div>
+  <div class="out">
+    <div class="col-sm-2 text-right ">
+      <span class="title">中奖率</span>
+    </div>
+    <div class="col-sm-8 content">
+      <div class="form-group ">
+        <div class="col-sm-5">
+          <input type="text" ng-model="posts.gameDetail.probability" name="name" class="form-control" id="probability"
+                 placeholder="请填入概率，默认为0.5" min="0.1" step="0.1" max="1" value="0.5"
+                 required>
+        </div>
+        <div class="help-block">0~1</div>
+      </div>
+    </div>
+  </div>
+  <div class="out">
+    <div class="col-sm-2 text-right ">
+      <span class="title">参与次数</span>
+    </div>
+    <div class="col-sm-8 content">
+      <div class="form-group ">
+        <div class="col-sm-5">
+          <div><input type="number" ng-model="posts.gameDetail.chance" name="name" class="form-control" id="chance"
+                      placeholder="每人可参与游戏的总次数" step="1"
+                      required>
+          </div>
+          <input style="margin-top: 18px" type="checkbox">微信分享游戏链接可再次参加
+        </div>
+        <div class="help-block">0为不限次数</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="out ruleadd2">
+    <div class="col-sm-2 text-right">
+      <span class="title">奖励规则</span>
+    </div>
+
+    <div class="col-sm-10 content mb0">
+      <div ng-repeat="(key, detail) in posts.GAME.GAME_BUY_COUPON.detail">
+        <div class="form-group mb22" ng-repeat="details in detail" ng-init="details.id=key">
+          <!--<div class="col-sm-2">-->
+          <!--<select ng-model="details.id" class="form-control "-->
+          <!--ng-options="item.id as item.name for item in view.member" name="member" required></select>-->
+          <!--</div>-->
+          <div class="row">
+            <div class="form-control-static pull-left">游戏结束获得</div>
+            <div class="col-sm-2 ">
+              <input type="number" min="1" class="form-control" placeholder="得分" ng-model="details.score" required/>
+            </div>
+            <div class="form-control-static pull-left">分，再付款</div>
+            <div class="col-sm-2 ">
+              <input type="number" min="1" class="form-control" placeholder="元人民币" ng-model="details.amount" required/>
+            </div>
+            <div class="form-control-static pull-left">可兑换</div>
+            <!--<div class=" form-control-static col-sm-3">元，赠送</div>-->
+            <div class="col-sm-2">
+              <a class="add click" ng-if="$parent.$first&&$first" ng-click="ruleFn.addCouponFn('GAME_BUY_COUPON')">
+                <i class="glyphicon glyphicon-plus"></i>
+              </a>
+              <a class="remove click" ng-if="!$first||!$parent.$first"
+                 ng-click="ruleFn.removeFn('GAME_BUY_COUPON',key,$index)">
+                <i class="glyphicon glyphicon-remove"></i>
+              </a>
+            </div>
+          </div>
+          <div class="row mt15" ng-repeat="dv in details.value">
+            <div class="col-sm-3">
+              <select class="form-control coupon-select" ng-change="ruleFn.changeCoupon(details.value, dv)"
+                      ng-model="dv.id"
+                      ng-options="item.id as item.name group by view.counponType[item.type] for item in view.coupons"
+                      required>
+                <option value="">--请选择券--</option>
+              </select>
+            </div>
+            <div class="col-sm-3 pull-left">
+              <input type="number" min="1" class="form-control" placeholder="请输入数量" ng-model="dv.count" required/>
+              <input type="text" ng-model="dv.name" style="display:none;">
+            </div>
+            <div class="col-sm-6">
+              <div class="form-control-static pull-left">张</div>
+              <a class="add click" ng-if="$first" ng-click="ruleFn.put(details, dv)">
+                <i class="glyphicon glyphicon-plus"></i>
+              </a>
+              <a class="remove click" ng-if="!$first" ng-click="ruleFn.resetCouponCntFn(details, dv)"> <i
+                      class="glyphicon glyphicon-remove"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2 ml25">
+          <div class="btn btn-primary" ng-click="ruleFn.openOrClose()">新增券</div>
+        </div>
+        <div class="form-group" ng-if="isOpenOrClose">
+          <div class="col-sm-12">
+            <coupon-new add-ok="ruleFn.testAddOk(result)" add-fail="ruleFn.testAddFail(result)"></coupon-new>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="out ruleadd2">
+    <div class="col-sm-2 text-right ">
+      <span class="title">限制</span>
+    </div>
+    <div class="col-sm-10 content2 mb0">
+      <div class="form-inline mb22">
+        <span class="form-control-static">每人可参与</span>
+        <input ng-model="posts.GAME.GAME_BUY_COUPON.timesLimit" type="number" class="form-control" min="1"
+               placeholder="请输入领取次数" required/>
+        <span class="form-control-static">次。</span>
+      </div>
+      <div class="form-inline mb0">
+        <span class=" form-control-static">前</span>
+        <input type="number" min="0" ng-model="posts.GAME.GAME_BUY_COUPON.countLimit" class="form-control"
+               placeholder="请输入人数限制"/>
+      <span class="form-control-static">
+        人有效
+        <span style="color:#999;padding-left:20px">(0表示不限制)</span>
+      </span>
+      </div>
+    </div>
+  </div>
+
+</div>

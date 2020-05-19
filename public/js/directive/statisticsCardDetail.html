@@ -1,0 +1,66 @@
+<div class="doc">
+    <ul class="bg-muted">
+      <li>合计</li>
+      <li>购买数量：{{title.count||0}}</li>
+      <li>购买金额：{{title.amount||0}}</li>
+      <li>核销数量：{{title.usedCount||0}}</li>
+      <li>核销金额：{{title.usedAmount||0}}</li>
+    </ul>
+    <div>
+      <div ng-if="post.shopId && !post.cardId">
+        <div ng-if="view.result.items">
+          <table class="table">
+            <thead>
+            <tr>
+              <td>序号</td>
+              <td>卡名称</td>
+              <td>购买金额</td>
+              <td>核销数量</td>
+              <td>核销金额</td>
+            </tr>
+            </thead>
+            <tbody class="slide-down">
+            <tr ng-repeat="row in view.result.items">
+              <td ng-bind="((page-1)*count)+$index+1"></td>
+              <td ng-bind="row.name"></td>
+              <td ng-bind="row.amount||0"></td>
+              <td ng-bind="row.usedCount||0"></td>
+              <td ng-bind="row.usedAmount||0"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div ng-if="post.shopId && post.cardId">
+        <div ng-if="view.result.items">
+          <table class="table">
+            <thead>
+            <tr>
+              <td>序号</td>
+              <td>用户名</td>
+              <td>会员号</td>
+              <td>卡号</td>
+              <td>业务</td>
+              <td>购买数量</td>
+              <td>购买金额</td>
+              <td>时间</td>
+            </tr>
+            </thead>
+            <tbody class="slide-down">
+            <tr ng-repeat="row in view.result.items">
+              <td ng-bind="((page-1)*count)+$index+1"></td>
+              <td ng-bind="row.name"></td>
+              <td ng-bind="row.memberNo"></td>
+              <td ng-bind="row.code"></td>
+              <td ng-bind="row.reason"></td>
+              <td ng-bind="row.count||0"></td>
+              <td ng-bind="row.amount||0"></td>
+              <td ng-bind="row.time"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,8 @@
+<div class="form-inline">
+	<label class="control-label col-sm-2"><span class="text-red">*</span>消费限制</label>
+	<div class="form-group">
+		<span class="form-control-static">单次消费最多使用</span>
+		<input class="form-control" type="number" ng-init="coupon.timesLimit=1" ng-model="coupon.timesLimit" min="0" required/>
+		<span class="form-control-static">张。</span>
+	</div>
+</div>

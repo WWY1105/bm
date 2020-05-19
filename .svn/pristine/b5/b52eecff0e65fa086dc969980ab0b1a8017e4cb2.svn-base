@@ -1,0 +1,255 @@
+<div class="row bg-white">
+  <div ng-include="'/admin/rule/leftmenu.html'"></div>
+  <div class="v-shadow-content ruleadd">
+    <form class="form-horizontal" name="ruleForm" ng-submit="sendJsons()">
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title"><span class="text-red">*</span>名称</span>
+        </div>
+        <div class="col-sm-8">
+          <div class="form-group">
+            <div class="form-inline">
+              <input type="text" class="form-control" ng-model="post.name" required/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">类型</span>
+        </div>
+        <div class="col-sm-8">
+          <div class="col-sm-12 mt15 mb15 timecheck">
+            <div ng-repeat="item  in view.type">
+              <div class="col-sm2 glyphicon btn btn-default"
+                   ng-class="{active:post.lotteryCategory===item.id}" ng-click="post.lotteryCategory= item.id">
+                {{item.name}}
+              </div>
+              <div style="display: inline-block;color: grey">{{item.text}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">标签</span>
+        </div>
+        <div class="col-sm-8">
+          <div class="col-sm-12 mt15 mb15 timecheck">
+            <span ng-repeat="item in post.tags track by $index">
+              <span class="label label-info click" ng-click="removeCouponFn(post.tags,$index)">{{item}} <span
+                      class="text-red">x</span></span>
+            </span>
+            <div class="form-inline mt15">
+              <input type="text" class="form-control" ng-model="view.text"> <span class="label label-primary click"
+                                                                                  ng-click="tagSend()">添加</span>{{view.error}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">有效期</span>
+        </div>
+        <div class="col-sm-8" my-date-picker data="view.date" date-range="view.dateRange" is-edit="post.isEdit"></div>
+      </div>
+      <!--  <div class="out">
+          <div class="col-sm-2">
+            <span class="title">资格</span>
+          </div>
+          <div class="col-sm-8">
+            <div><input type="checkbox" id="wx" ng-model="post.followLimit" class=""/><label for="wx">仅微信粉丝</label>
+            </div>
+          </div>
+        </div>-->
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">购买规则</span>
+        </div>
+        <div class="col-sm-8" style="border-bottom: 1px solid #d5d5d5;">
+          <div class="form-group">
+            <div class="form-inline">
+              <span class="form-control-static">花费</span>
+              <input type="number" min="0.01" step="0.01" class="form-control"
+                     ng-model="post.rule.detail['ALL'][0].amount" required/>
+              <span class="form-control-static">元，可购买</span>
+              <select ng-model="post.rule.detail['ALL'][0].value[0].category" class="form-control"
+                      ng-options="item.id as item.name for item in view.category" required></select>
+              <select ng-model="post.rule.detail['ALL'][0].value[0].id" class="form-control"
+                      ng-change="changeCoupon(post.rule.detail['ALL'][0].value[0])"
+                      ng-if="post.rule.detail['ALL'][0].value[0].category=='COUPON'"
+                      ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.coupons"
+                      name="" required></select>
+              <select ng-model="post.rule.detail['ALL'][0].value[0].id" class="form-control"
+                      ng-change="changeReward(post.rule.detail['ALL'][0].value[0])"
+                      ng-if="post.rule.detail['ALL'][0].value[0].category=='REWARD'"
+                      ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.rewards"
+                      name="" required></select>
+              <span class="form-control-static">1张</span>
+
+            </div>
+            <div class="form-inline mt15">
+              <span class="form-control-static">每邀请一位朋友，可获得</span>
+              <select ng-model="post.rule.detail['ALL'][0].participants[0].category" class="form-control"
+                      ng-options="item.id as item.name for item in view.category" required></select>
+              <select ng-model="post.rule.detail['ALL'][0].participants[0].id" class="form-control"
+                      ng-change="changeCoupon(post.rule.detail['ALL'][0].participants[0])"
+                      ng-if="post.rule.detail['ALL'][0].participants[0].category=='COUPON'"
+                      ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.coupons"
+                      name="" required></select>
+              <select ng-model="post.rule.detail['ALL'][0].participants[0].id" class="form-control"
+                      ng-change="changeReward(post.rule.detail['ALL'][0].participants[0])"
+                      ng-if="post.rule.detail['ALL'][0].participants[0].category=='REWARD'"
+                      ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.rewards"
+                      name="" required></select>
+              <span class="form-control-static">1张,最多可获得</span>
+              <input type="number" min="1" max="30" class="form-control"
+                     ng-model="post.rule.detail['ALL'][0].participants[0].limit" required/>
+              <span class="form-control-static">张</span>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">奖品</span>
+        </div>
+        <div class="col-sm-10">
+          <div class="form-inline ">
+            <span class="form-control-static">购买人数达到</span>
+            <input type="number" min="1" class="form-control" ng-model="post.rule.countLimit" required/>
+            <span class="form-control-static">即刻开奖</span>
+          </div>
+          <div style="overflow: hidden" ng-repeat="item in post.prize.prizes">
+            <div class="form-inline"
+                 style="border: 1px dotted #d5d5d5;padding: 16px;width: 82%;float: left;margin-top: 10px">
+              <div style="padding: 5px 0">
+                <span class="form-control-static"><span class="text-red">{{$index+1}}等奖</span>: </span>
+                <!--<input type="text" class="form-control" ng-model="item.name"/>-->
+
+                <span class="form-control-static">中奖人数</span>
+                <input type="text" class="form-control" ng-model="item.count" required/>
+              </div>
+              <span class="form-control-static">奖品</span>
+              <div ng-repeat="coupon in item.value" style="display: inline-block">
+
+                <select ng-model="coupon.category" class="form-control"
+                        ng-options="item.id as item.name for item in view.category" required></select>
+                <select ng-model="coupon.id" class="form-control" ng-change="changeCoupon(coupon)"
+                        ng-if="coupon.category=='COUPON'"
+                        ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.coupons"
+                        name="" required></select>
+                <select ng-model="coupon.id" class="form-control" ng-change="changeReward(coupon)"
+                        ng-if="coupon.category=='REWARD'"
+                        ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.rewards"
+                        name="" required></select>
+                <input type="text" ng-if="coupon.category" class="form-control" ng-model="coupon.count" required/>
+                <span ng-if="coupon.category" class="form-control-static"> 张</span>
+
+                <div class="ruleadd2" style="display: inline-block;vertical-align: middle;padding: 10px">
+                  <a class="add click" ng-if="$first" ng-click="addCouponFn(item.value)"> <i
+                          class="glyphicon glyphicon-plus"></i>
+                  </a>
+                  <a class="remove click" ng-if="!$first" ng-click="removeCouponFn(item.value,$index)"> <i
+                          class="glyphicon glyphicon-remove"></i></a>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="ruleadd2" style="display: inline-block;vertical-align: middle;padding: 10px">
+              <a class="add click" ng-if="$first" ng-click="addFn()"> <i
+                      class="glyphicon glyphicon-plus"></i>
+              </a>
+              <a class="remove click" ng-if="!$first" ng-click="removeFn($index)"> <i
+                      class="glyphicon glyphicon-remove"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title"><span class="text-red">*</span>活动封面图</span>
+        </div>
+        <div class="col-sm-8">
+          <div>*最佳比例：375 X 220(2倍以上不会失真)</div>
+          <pic-send style="padding: 15px 0" pic-url="post.picUrl" min-width="" min-height=""></pic-send>
+        </div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">广告活动</span>
+        </div>
+        <div class="col-sm-8">
+
+          <ads id="post.advertisement.id"></ads>
+          <!-- <div class="row form-group">
+             <div class="form-inline">
+               <span class="form-control-static">标题 </span><input type="text" class="form-control" ng-model="post.advertisement.title"/>
+             </div>
+           </div>
+           <div class="form-group">
+             <div class="form-inline">
+               <span class="form-control-static">介绍信息 </span><input type="text" class="form-control" ng-model="post.advertisement.descriptor"/>
+             </div>
+           </div>
+           <div class="form-group">
+             <div class="form-inline">
+               <span class="form-control-static">领券活动 </span>
+               <select ng-model="post.advertisement.activityId" class="form-control"
+                       ng-options="item.id as item.name for item in view.rules"></select>
+             </div>
+           </div>-->
+        </div>
+      </div>
+
+      <!--  <div class="out">
+          <div class="col-sm-2">
+            <span class="title">兑奖门店</span>
+          </div>
+          <div class="col-sm-8">
+            <div class="form-control-stack">
+              <label class="checkbox-inline">
+                <input type="checkbox" ng-model="view.shopAll" ng-change="checkAllShops()">全选</label>
+            </div>
+            <div class="form-control-stack">
+              <label class="checkbox-inline" ng-repeat="(key,shops) in view.shops" ng-class="{ml30:$index==0}">
+                <input type="checkbox" ng-model="post.shops[key]" ng-true-value="{{shops.id}}">
+                <span ng-bind="shops.name"></span>
+              </label>
+            </div>
+          </div>
+        </div>-->
+
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">描述信息</span>
+        </div>
+        <div class="col-sm-8">
+          <textarea ng-model="post.descriptor" class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">附加说明</span>
+        </div>
+        <div class="col-sm-8">
+          <textarea ng-model="post.additional" class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 mt20">
+          <!--<div class="col-sm-3 col-sm-offset-1 ">-->
+          <!--<a class="btn btn-default btn-block" back-button>返回</a>-->
+          <!--</div>-->
+          <div class="col-sm-4">
+            <button class="btn btn-primary btn-block">保存</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="bgw">
+  <div class="row">
+    <div ng-include="'/keeper/mall/leftmenu.html'"></div>
+    <div class="v-shadow-content">
+      <div class="material">
+        <ul class="col-sm-12 nav nav-pills" role="tablist" style="padding: 0 27px;">
+          <li style="width: 5em;font-size: 14px;">分类</li>
+          <li role="presentation" ng-click="groupList(-2)" ng-class="{'active':view.leftIndex==-2}">全部菜品</li>
+          <li role="presentation" ng-click="groupList($index)" ng-class="{'active':view.leftIndex==$index}"
+              ng-repeat="item in view.groups">{{item.name}}
+          </li>
+          <li class="pull-right">
+            <button class="btn btn-primary pull-right" ng-click="goto('mall/dish/add')">添加菜品</button>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-12 shopshow">
+        <ul>
+          <li ng-repeat="dish in dishes.list.items" class="rotate-in" style="margin:5px 20px;">
+            <div class="user-list">
+              <div class="">
+                <!--<input type="checkbox" class="ng-pristine ng-untouched ng-valid" ng-model="posts.dishes[$index]"-->
+                       <!--ng-true-value="{{dish.id}}" ng-false-value="{{null}}">-->
+                <span>
+                  <a class="btn btn-xs btn-primary" ng-click="goto('mall/dish/edit/'+dish.id)">编辑</a>
+                  <a class="btn btn-xs btn-danger" ng-click="remove($index)">删除</a>
+                </span>
+              </div>
+              <div ng-bind="dish.code"></div>
+              <div><img ng-src="{{dish.picUrl}}" src="public/img/dish.jpg" width="100%" height="130px"></div>
+              <div class="title">{{dish.name}}</div>
+              <div class="price">原价： ￥{{dish.price}}</div>
+            </div>
+
+          </li>
+          <!--   <li class="addShop" style="margin-top: 73px" ng-click="goto('dish/add')">
+               <div class="addShopin">
+                 <div class="iconout"><i class="glyphicon glyphicon-plus"></i>
+                 </div>
+                 <div class="text">添加菜品</div>
+               </div>
+             </li>-->
+        </ul>
+      </div>
+      <div class="col-sm-12" ng-if="dishes.list.pageSize>1">
+        <pagination items-per-page="dishes.list.count" boundary-links="true" rotate="false" max-size="20"
+                    total-items="dishes.list.total" ng-model="dishes.list.page"
+                    class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                    first-text="&laquo;" last-text="&raquo;" ng-change="pageChange()"></pagination>
+      </div>
+    </div>
+  </div>
+</div>

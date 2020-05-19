@@ -1,0 +1,184 @@
+<div  class="keepershopadd" >
+	<div class="container  contents bgw">
+
+		<div class="col-sm-8 col-sm-offset-2 stepshow">
+			<div class="step">
+				<div class="stepover" style="width:25%"></div>
+				<div class="stepson step1 active">
+					<span>1</span>
+					<h5>基本资料设置</h5>
+				</div>
+				<div class="stepson step52 active">
+					<span>2</span>
+					<h5>餐桌资料设置</h5>
+				</div>
+				<div class="stepson step2">
+					<span>3</span>
+					<h5>营业时间设置</h5>
+				</div>
+				<div class="stepson step54">
+					<span>4</span>
+					<h5>添加员工</h5>
+				</div>
+				<div class="stepson step3">
+					<span>5</span>
+					<h5>完成</h5>
+				</div>
+			</div>
+		</div>
+		<form class="row" ng-submit="postSend()" name="add_form">
+			<div class="col-sm-9 col-sm-offset-2">
+				<label >散台</label>
+				<div class="row">
+					<div class="col-sm-12 tablelist">
+						<div class="tablesout" ng-repeat="tables in view.table">
+							<div class="tables pull-left">
+								<Div class="remove text" ng-click="removeFn('table',$index)"> <i class=" glyphicon glyphicon-remove"></i>
+								</Div>
+								<Div class="seat">{{tables.seat}}座桌台</Div>
+								<Div class="count">
+									<button class="sub" ng-click="tables.count=tables.count-1;reset($index)">
+										<i class=" glyphicon glyphicon-minus"></i>
+									</button>
+									<div class="plus">
+										<input ng-model="tables.count" ng-change="reset($index)"  class="form-control"/>
+									</div>
+									<button class="add" ng-click="tables.count=tables.count+1;reset($index)" > <i class=" glyphicon glyphicon-plus"></i>
+									</button>
+									
+								</Div>
+							</div>
+						</div>
+						<div class="user-list tablesout">
+							<div class="add" style="width:100px" ng-click="addtable('table')">
+								<span class="iconadd">
+									<i class=" glyphicon glyphicon-plus"></i>
+								</span>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+			<div class="col-sm-9 col-sm-offset-2">
+				<label >包厢</label>
+				<div class="row">
+					<div class="col-sm-12 tablelist">
+						<div ng-repeat="boxs in view.box" class="tablesout">
+							<div class="tables pull-left">
+								<Div class="remove text" ng-click="removeFn('box',$index)"> <i class=" glyphicon glyphicon-remove"></i>
+								</Div>
+								<Div class="seat">{{boxs.name}}</Div>
+								<Div class="seat">{{boxs.seatNum}}座&nbsp;{{boxs.no}}号</Div>
+							</div>
+						</div>
+						<div class="user-list tablesout">
+							<div class="add" style="width:100px" ng-click="addBox('table')">
+								<span class="iconadd">
+									<i class=" glyphicon glyphicon-plus"></i>
+								</span>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+			<div class="col-sm-10 col-sm-offset-2">
+				<div class="row">
+					<div class="col-sm-3">
+						<a class="btn btn-default btn-block" ng-click="goto('shop/add')" >返回</a>
+					</div>
+					<div class="col-sm-3 col-sm-offset-1">
+						<button class="btn btn-danger btn-block" ng-disabled="!add_form.$valid" ng-click="sendposts()">下一步</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="addtable" aria-hidden="true" >
+	<div class="modal-dialog modal-sm"  style="display:block;">
+		<div class="modal-content ">
+			<form  nctype="multipart/form-data" id="iimgform">
+				<div class="modal-header " >
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">添加{{temAddTable.name}}</h4>
+				</div>
+				<div class="modal-body form-horizontal" style="overflow:hidden">
+					<div class="form-group ">
+						<label for="shoptel" class="col-sm-3 control-label text-right">座位数</label>
+						<div class="col-sm-8 " id="">
+							<input ng-model="tem.table.seat" class="form-control"></div>
+					</div>
+					<div class="form-group">
+						<label for="shoptel" class="col-sm-3 control-label text-right">桌台数</label>
+						<div class="col-sm-8 " id="">
+							<input ng-model="tem.table.count" class="form-control"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="col-md-6">
+						<div class="btn btn-danger btn-block" ng-click="addTbaleFn()">确定</div>
+					</div>
+					<div class="col-md-6 ">
+						<div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="addbox" aria-hidden="true" >
+	<div class="modal-dialog"  style="display:block;">
+		<div class="modal-content ">
+			<form  nctype="multipart/form-data" id="iimgform">
+				<div class="modal-header " >
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">添加{{temAddTable.name}}</h4>
+				</div>
+				<div class="modal-body form-horizontal" style="overflow:hidden">
+					
+					<div class="form-group">
+						<label for="shoptel" class="col-sm-3 control-label text-right">包厢号码</label>
+						<div class="col-sm-8 " id="">
+							<input ng-model="tem.box.no" class="form-control"></div>
+					</div>
+					<div class="form-group ">
+						<label for="shoptel" class="col-sm-3 control-label text-right">座位数</label>
+						<div class="col-sm-8 " id="">
+							<input ng-model="tem.box.seatNum" class="form-control"></div>
+					</div>
+					<div class="form-group ">
+						<label for="shoptel" class="col-sm-3 control-label text-right">包厢名称</label>
+						<div class="col-sm-8 " id="">
+							<input ng-model="tem.box.name" class="form-control"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="col-md-6">
+						<div class="btn btn-danger btn-block" ng-click="addBoxFn()">确定</div>
+					</div>
+					<div class="col-md-6 ">
+						<div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>

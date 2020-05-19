@@ -1,0 +1,26 @@
+<div class="table col-sm-12">
+    <div class="col-sm-12 plan-title text-center">
+      <div class="col-sm-1">序号</div>
+      <div class="col-sm-1">顾客</div>
+      <div class="col-sm-2">消费总额</div>
+      <div class="col-sm-1">打折</div>
+      <div class="col-sm-1">充值卡</div>
+      <div class="col-sm-1">权益抵扣</div>
+      <div class="col-sm-2">实收金额</div>
+      <div class="col-sm-1">操作员</div>
+      <div class="col-sm-2">时间</div>
+    </div>
+
+    <div class="col-sm-12 plan-son text-center slide-down" ng-repeat="row in result.items">
+      <div class="col-sm-1" ng-bind="((page-1)*count)+$index+1"></div>
+      <div class="col-sm-1" ng-bind="row.userNickname|substr:3" tooltips title="{{row.userNickname}}" tooltip-side="top" tooltip-size="small"></div>
+      <div class="col-sm-2" ng-bind="row.amount|number"></div>
+      <div class="col-sm-1" ng-bind="row.deductDiscount|number"></div>
+      <div class="col-sm-1" ng-bind="row.deductCharge|number"></div>
+      <!--<div class="col-sm-1" ng-bind="row.deductPoint+row.deductSpecial+row.deductCoupon|number" tooltips title="积分:{{row.deductPoint||0}},特价:{{row.deductSpecial||0}},券:{{row.deductCoupon||0}}" tooltip-side="top"></div>-->
+      <div class="col-sm-1" ng-bind="row.deductPoint+row.deductSpecial+row.deductCoupon|number" tooltips title="积分:{{row.deductPoint||0}},特价:{{row.deductSpecial||0}},券:{{row.deductCoupon||0}}" tooltip-side="top"></div>
+      <div class="col-sm-2" ng-bind="row.revenue|number"></div>
+      <div class="col-sm-1" ng-bind="row.staffNickname|substr:3"></div>
+      <div class="col-sm-2" ng-bind="row.consumptionTime|date:'MM-dd HH:mm:ss'"></div>
+    </div>
+</div>

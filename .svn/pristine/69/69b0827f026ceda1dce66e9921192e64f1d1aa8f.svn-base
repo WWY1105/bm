@@ -1,0 +1,806 @@
+angular.module('app').directive('buttons', function () {
+    return {
+        restrict: 'AE',
+        replace: true,
+        scope: {
+            selector: '=',
+            direct: "=",
+            count: "=",
+            button: "="
+        },
+        templateUrl: 'public/js/directive/buttons.html',
+        controller: function ($scope) {
+            $scope.select = function (index) {
+                $scope.selector = index;
+                $scope.direct = 0;
+                if ($scope.$root.config.staff.roleType == "M"&&$scope.$root.active == "doc") {
+                    var TYPE = ["charge", "point", "coupon", "upgrade", "sms", "consumption", "receivables"];
+                    $scope.count = ajaxSendFn({}, "/statistics/" + TYPE[index] + "/num", "GET").result.count;
+                }
+            }
+        }
+    };
+});
+
+angular.module('app').directive('couponNew', ['CouponFactory', 'memberGradeFactory', 'shopFactory', '$filter', function (couponFac, memberGradeFac, shopFac, $filter) {
+    return {
+        restrict: 'EA',
+        replace: true,
+        scope: {
+            addOk: '&',
+            addFail: '&',
+        },
+        templateUrl: 'public/js/directive/couponNew.html',
+        link: function (scope, element, attrs) {
+            scope.couponCategoryRev = {
+                "901": "代金券",
+                "902": "实物券",
+                // "903":"打折券",
+            };
+            scope.ruleCategory = getShareCategory("COUPON_CONSUME");
+
+            scope.couponTimeSel = couponRangeCategory;
+            scope.today = $filter('date')(new Date(), "yyyy-MM-dd");
+            scope.coupon = {
+                dateRange: {}
+            };
+            scope.shops = shopFac.getAllShops();
+            scope.coupon.shops = [];
+            scope.coupon.shared = [];
+            scope.coupon.periods = [];
+            scope.posts = {};
+            scope.checkAllShop = false;
+            var non = ajaxSendFn({}, "/nonParticipation", "GET");
+            scope.nonParticipationId = non.result ? non.result._id : {}; //非参与项
+
+            scope.checkAllCatagory = function () {
+                if (!scope.posts.catagoryAll) scope.coupon.shared = [];
+                else {
+                    angular.forEach(
+                        scope.ruleCategory, function (value, key) {
+                            this[key] = value.id;
+                        }, scope.coupon.shared)
+                }
+                ;
+            };
+
+            scope.checkAllShops = function () {
+                if (!scope.checkAllShop) scope.coupon.shops = [];
+                else {
+                    angular.forEach(scope.shops, function (value, key) {
+                        this[key] = value.id;
+                    }, scope.coupon.shops);
+                }
+            }
+
+            scope.$watch('coupon.dateRangeCategory', function (newVal, oldVal) {
+                if (newVal && newVal != oldVal) {
+                    scope.coupon.dateRange = {};
+                }
+            });
+
+            scope.addCouponInner = function () {
+                var time = [1001, 1002, 1003, 1004, 1005];
+                for (i = 1; i < 6; i++) {
+                    if (scope.coupon["time" + i]) scope.coupon.periods.push(time[i - 1]);
+                    delete scope.coupon["time" + i];
+                }
+                scope.coupon.periods = unique(scope.coupon.periods);
+
+                if (scope.coupon.dateRange.endDate < scope.coupon.dateRange.startDate) {
+                    alert("结束时间不能小于开始时间");
+                    return;
+                }
+                if (scope.coupon.dateRange.startDate) {
+                    scope.coupon.dateRange.startDate = $filter('date')(scope.coupon.dateRange.startDate, "yyyy-MM-dd 00:00:00");
+                }
+                ;
+                if (scope.coupon.dateRange.endDate) {
+                    scope.coupon.dateRange.endDate = $filter('date')(scope.coupon.dateRange.endDate, "yyyy-MM-dd 23:59:59");
+                }
+                ;
+                if (scope.coupon.category === "901") {
+                    scope.coupon.value = scope.coupon.currentAmount = 0;
+                }
+                scope.coupon.dateRange.selectCategory = scope.coupon.dateRange.selectCategory || 'NONE';
+
+                scope.coupon.shops = arrRemoveNullFN(scope.coupon.shops);
+                scope.coupon.shared = arrRemoveNullFN(scope.coupon.shared);
+                //specialDate赋值
+                if (scope.coupon.dateRange.selectCategory !== "NONE") {
+                    if (scope.coupon.data.subType === "MANUAL_SELECT") {
+                        var arr = arrayMap(objectKeys(scope.coupon.data.selectDates), function (data) {
+                            return data + " 00:00:00";
+                        });
+                        if (!isEmptyObject(arr)) {
+                            scope.coupon.dateRange.selectDates = arr;
+                        }
+                    } else if (scope.coupon.data.subType === "MONTH_DAYS") {
+                        var arr = arrayMap(objectKeys(mapFilter(scope.coupon.data.selectDays, notNull)), parseInt);
+                        if (!isEmptyObject(arr)) {
+                            scope.coupon.dateRange.selectDays = arr;
+                        }
+                    } else if (scope.coupon.data.subType === "WEEKLY_DAY") {
+                        var arr = arrayMap(objectKeys(mapFilter(scope.coupon.data.selectWeekDays, notNull)), parseInt);
+                        if (!isEmptyObject(arr)) {
+                            scope.coupon.dateRange.selectWeekDays = arr;
+                        }
+                    }
+                }
+                delete scope.coupon.data;
+                var result = couponFac.addCoupon(scope.coupon);
+                if (result.code == 200) {
+                    scope.addOk();
+                } else {
+                    scope.addFail({result: result});
+                }
+            }
+        },
+
+    };
+}]);
+
+angular.module('app').directive('myDatePicker', function () {
+    return {
+        restrict: 'EA',
+        replace: true,
+        scope: {
+            data: '=',
+            dateRange: '=',
+            isEdit: '=',
+        },
+        templateUrl: 'public/js/directive/datepicker.html',
+        controller: function ($scope) {
+
+            $scope.topDateRangeCategory = [
+                {type: 'PERMANENT', name: '永久有效'},
+                {type: 'CONTINUOUS', name: '周期有效'},
+                {type: 'BIRTHDAY', name: '生日相关'},
+                {type: 'SELECTED_DATES', name: '指定日期'},
+            ];
+            var dftDate = new Date();
+            dftDate.setFullYear(2000);
+            dftDate.setMonth(1);
+            dftDate.setDate(1);
+
+            var today = new Date();
+            today.setDate(today.getDate() - 1);
+            today.setHours(23);
+            today.setMinutes(59);
+            today.setSeconds(59);
+            var now = new Date();
+
+            $scope.set = {
+                periods: []
+            };
+            $scope.view = {
+                periods: []
+            };
+            $scope.dateOptions = {
+                formatYear: 'yy',
+                startingDay: 1,
+                minDate: dftDate,
+                maxDate: new Date(now.getTime() + 10 * 365 * 3600 * 24 * 1000),
+            };
+
+            $scope.opened = {
+                startDate: false,
+                endDate: false
+            };
+            $scope.clickBtn = function (type) {
+                $scope.data.dateType = type;
+            }
+            $scope.open = function ($event, a) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                $scope.opened[a] = true;
+            };
+            $scope.disabled = function (date, mode) {
+                return false;
+            }
+
+            $scope.$watch('data.dateType', function (newVal, oldVal) {
+                if (newVal && newVal !== oldVal) {
+                    if (!$scope.data[newVal]) {
+                        $scope.data[newVal] = {};
+                    }
+                    if (!$scope.data[newVal].dateRange) {
+                        $scope.data[newVal].dateRange = {};
+                    }
+                    $scope.dateRange = $scope.data[newVal].dateRange;
+                    if (newVal === 'CONTINUOUS') {
+                        $scope.dateRange.startDate = parseDate($scope.dateRange.startDate || now);
+                        $scope.dateRange.endDate = parseDate($scope.dateRange.endDate || now);
+                    }
+                }
+            })
+
+            if (!$scope.dateRange) {
+                $scope.dateRange = {};
+            }
+            if (!$scope.data) {
+                $scope.data = {};
+            }
+
+            if ($scope.data.dateType === 'CONTINUOUS') {
+                $scope.dateRange.startDate = parseDate($scope.dateRange.startDate || now);
+                $scope.dateRange.endDate = parseDate($scope.dateRange.endDate || now);
+            }
+            $scope.dateRangeCategory = dateRangeCategory;
+        },
+    };
+});
+
+angular.module('app').directive('searchByDate', ['shopFactory', '$location', function (shopFac, $location) {
+    return {
+        restrict: 'AE',
+        replace: true,
+        //scope: {
+        //    //startTime: '=',
+        //    //endTime: '=',
+        //    //text: '=',
+        //    needSearch: '=',
+        //    //shopId: '=',
+        //    direct:"=",
+        //    //shops:"=",
+        //    "posts":"=",
+        //    "shops":"="
+        //},
+        templateUrl: 'public/js/directive/search.html',
+        controller: function ($scope, $location) {
+            $scope.init = function () {
+                if (!$scope.posts.startTime) {
+                    var date = new Date();
+                    date.setDate(date.getDate() - 30);
+                    date.setHours(0);
+                    date.setMinutes(0);
+                    date.setSeconds(0);
+                    $scope.posts.startTime = date;
+                } else {
+                    var start = new Date();
+                    var ms = Date.parse($scope.posts.startTime);
+                    start.setTime(ms);
+                    $scope.posts.startTime = start;
+                }
+                if (!$scope.posts.endTime) {
+                    var end = new Date();
+                    $scope.posts.endTime = end;
+                } else {
+                    var end = new Date();
+                    var ms = Date.parse($scope.posts.endTime);
+                    end.setTime(end);
+                    $scope.posts.endTime = end;
+                }
+                //$scope.posts.no = $scope.no;
+            }
+            $scope.init();
+            $scope.doSearch = function () {
+                if ($location.$$path.split("/")[1] == "finance" && $scope.posts.reason === undefined) {
+                    alert("请先选择对应的项目");
+                    return;
+                }
+                if (($scope.posts.endTime - $scope.posts.startTime) / (1000 * 60 * 60 * 24) > 31) {
+                    alert("起止时间不能超过30天");
+                    return;
+                }
+                if ($scope.posts.shopId === undefined) {
+                    alert("请先选择对应的门店");
+                    return;
+                } else if ($scope.posts.shopId == "") {
+                    $scope.view.direct = 1;
+                } else {
+                    $scope.view.direct = 2;
+                }
+                $scope.view.needSearch = true;
+            }
+        }
+    };
+}]);
+
+angular.module('app').directive('mySpecialDate', function () {
+    return {
+        restrict: 'EA',
+        replace: true,
+        scope: {
+            specialDate: '=',
+        },
+        templateUrl: 'public/js/directive/specialDate.html',
+        controller: function ($scope) {
+            //特定日期类型
+            $scope.specialDateRangeCategory = [
+                {type: 'MANUAL_SELECT', name: '手动选择'},
+                {type: 'MONTH_DAYS', name: '按月选择'},
+                {type: 'WEEKLY_DAY', name: '按周选择'},
+            ];
+
+            $scope.week = [
+                {idx: 1, value: "周日"},
+                {idx: 2, value: "周一"},
+                {idx: 3, value: "周二"},
+                {idx: 4, value: "周三"},
+                {idx: 5, value: "周四"},
+                {idx: 6, value: "周五"},
+                {idx: 7, value: "周六"}
+            ];
+
+            $scope.clickBtn = function (type) {
+                $scope.specialDate.subType = type;
+            }
+
+            $scope.range = function (start, end) {
+                var arr = [];
+                if (!end) {
+                    end = start;
+                    start = 0;
+                }
+                for (var i = start; i <= end; i++) {
+                    arr.push(i)
+                }
+                return arr;
+            }
+
+            $scope.clickDay = function (idx, object) {
+                var obj = object.hasOwnProperty(idx);
+                if (obj) {
+                    delete object[idx];
+                } else {
+                    object[idx] = true;
+                }
+            }
+
+            if (!$scope.specialDate) {
+                $scope.specialDate = {
+                    selectDates: {},
+                    selectWeekDays: {},
+                    selectDays: {},
+                };
+            }
+
+            // var dftDate = new Date();
+            // dftDate.setFullYear(2000);
+            // dftDate.setMonth(1);
+            // dftDate.setDate(1);
+            //
+            // var today = new Date();
+            // today.setDate(today.getDate()-1);
+            // today.setHours(23);
+            // today.setMinutes(59);
+            // today.setSeconds(59);
+            // var now = new Date();
+
+            $scope.set = {
+                periods: []
+            };
+            $scope.view = {
+                periods: []
+            };
+            $scope.date = {
+                now: new Date(),
+                nows: {
+                    year: new Date().getFullYear(),
+                    day: new Date().getDate(),
+                    month: new Date().getMonth() + 1
+                },
+                week: ["日", "一", "二", "三", "四", "五", "六"],
+                dates: [],
+                i: 0,
+                year: new Date().getFullYear(),
+                day: new Date().getDate(),
+                month: new Date().getMonth() + 1,
+            };
+
+            $scope.dateFn = function (y, m) { //日历选择器
+                $scope.date.dates = [];
+                firstdate = y + "-" + m + "-" + "1" + " 00:00:00"
+                firstdate = new Date(firstdate);
+                firstday = firstdate.getDay();
+                ny = y;
+                nm = m;
+                if (m >= 12) { //
+                    nm = 1;
+                    ny++;
+                } else {
+                    nm++
+                }
+                nextMonth = ny + "-" + nm + "-" + "1" + " 00:00:00";
+                nextMonth = new Date(new Date(nextMonth).getTime() - 1000 * 60 * 60 * 24);
+                lastdate = nextMonth.getDate();
+                lastday = nextMonth.getDay();
+                et = new Date(new Date().getTime() + 2 * 365 * 1000 * 60 * 60 * 24);
+                var ty = $scope.date.nows.year,
+                    tm = $scope.date.nows.month,
+                    td = $scope.date.nows.day,
+                    ey = et.getFullYear(),
+                    em = et.getMonth() + 1,
+                    ed = et.getDate();
+                for (i = 0, j = lastdate - lastday + 5 + firstday; i <= j; i++) { //
+                    if (i < (firstday - 1)) {
+                        $scope.date.dates.push({
+                            day: ""
+                        });
+                    } else if (i >= lastdate + firstday) {
+                        $scope.date.dates.push({
+                            day: ""
+                        });
+                    } else {
+                        var color = 0;
+                        if ((y < ty && m < tm) || (y == ty && m == tm && (i - firstday + 1) < td) || (y >= ey && m > em) || (y == ey && m == em && (i - firstday + 1) > ed)) color = 1;
+                        trues = [];
+                        trues[0] = y;
+                        trues[1] = m > 9 ? m : "0" + m;
+                        trues[2] = (i - firstday + 1) > 9 ? (i - firstday + 1) : "0" + (i - firstday + 1);
+                        trues = trues.join('-');
+                        $scope.date.dates.push({
+                            day: i - firstday + 1,
+                            ture: trues,
+                            color: color
+                        });
+                    }
+                }
+            }
+
+            $scope.datego = function (a) {
+                tem = $scope.date.i + a;
+                if (tem >= 0 && tem < 240) { //
+                    $scope.date.i += a;
+                    $scope.date.month += a;
+                    if ($scope.date.month > 12) { //
+                        $scope.date.month = 1;
+                        $scope.date.year++;
+                    } else if ($scope.date.month < 1) { //
+                        $scope.date.month = 12;
+                        $scope.date.year--;
+                    }
+                    $scope.dateFn($scope.date.year, $scope.date.month);
+                }
+            };
+            $scope.dateFn($scope.date.year, $scope.date.month);
+
+            $scope.specialDate.selectDates = formatDatas($scope.specialDate.selectDates);
+            $scope.specialDate.selectDays = formatDatas($scope.specialDate.selectDays);
+            $scope.specialDate.selectWeekDays = formatDatas($scope.specialDate.selectWeekDays);
+
+        },
+    };
+});
+
+angular.module('app').directive('statisticsCoupon', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsCoupon.html", "coupon");
+    return cmd;
+});
+angular.module('app').directive('statisticsCouponDetail', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsCouponDetail.html", "coupon");
+    return cmd;
+});
+angular.module('app').directive('statisticsPoint', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsPoint.html", "point");
+    return cmd;
+});
+angular.module('app').directive('statisticsPointDetail', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsPointDetail.html", "point");
+    return cmd;
+});
+angular.module('app').directive('statisticsRecharge', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsRecharge.html", "charge");
+    return cmd;
+});
+angular.module('app').directive('statisticsRechargeDetail', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsRechargeDetail.html", "charge");
+    return cmd;
+});
+angular.module('app').directive('statisticsRelationDetail', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsRelationDetail.html", "consumption");
+    return cmd;
+});
+angular.module('app').directive('statisticsRelation', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsRelation.html", "consumption");
+    return cmd;
+});
+angular.module('app').directive('statisticsSms', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsSms.html", "sms");
+    return cmd;
+});
+angular.module('app').directive('statisticsSmsDetail', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsSmsDetail.html", "sms");
+    return cmd;
+});
+angular.module('app').directive('statisticsUpgrade', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsUpgrade.html", "upgrade");
+    return cmd;
+});
+angular.module('app').directive('statisticsUpgradeDetail', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsUpgradeDetail.html", "upgrade");
+    return cmd;
+});
+angular.module('app').directive('statisticsOther', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsOther.html", "receivables");
+    return cmd;
+});
+angular.module('app').directive('statisticsOtherDetail', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsOtherDetail.html", "receivables");
+    return cmd;
+});
+angular.module('app').directive('finance', function () {
+    var cmd = FinanceDirective.createNew("public/js/directive/finance.html", "finance");
+    return cmd;
+});
+angular.module('app').factory('CouponFactory', ['$http', function ($http) {
+    var couponObj = {};
+    couponObj.getAllCoupon = function () {
+        return ajaxSendFn({}, '/coupon', 'GET').result || [];
+    };
+    couponObj.addCoupon = function (coupon) {
+        return ajaxSendFn(JSON.stringify(coupon), "/coupon", "POST", 1);
+    };
+    return couponObj;
+}]);
+
+angular.module('app').factory('memberGradeFactory', ['$http', function (argument) {
+    var memberGrade = {};
+
+    memberGrade.getAllGrade = function () {
+        return ajaxSendFn({}, '/memberGrade', 'GET').result || [];
+    }
+
+    return memberGrade;
+}]);
+
+angular.module('app').factory('shopFactory', ['$http', function (argument) {
+    var shopObj = {};
+
+    shopObj.getAllShops = function () {
+        return ajaxSendFn({state: 1003}, "/shops", "GET").result || [];
+    }
+
+    return shopObj;
+}]);
+
+angular.module('app').factory('deviceFactory', ['$http', function ($http) {
+    var deviceObj = {};
+
+    deviceObj.getAllDevices = function (param) {
+        return ajaxSendFn(param || {}, "/activate", "GET").result || [];
+    }
+    deviceObj.jihuo = function (cb) {
+        var data = ajaxSendFn({}, "/activate", "POST");
+        if (data.code == 200) {
+            cb(data);
+        } else {
+            alert(data.message);
+        }
+    }
+
+    return deviceObj;
+}]);
+angular.module('app').config(appRouteConfig);
+//用于生成统计类指令
+var StatisticsDirective = {
+    /**
+     * 构造一个Angularjs指令
+     * @method createNew
+     * @param  {objcect} statisFac    统计工厂，向后台请求数据
+     * @param  {string}  tmplateFile  指令对应的模块文件
+     * @param  {string}  path         子页面对应路由路径
+     * @param  {string}  urlFunc      统计工厂中的方法名，不同指令对应不同的方法
+     * @param  {object}  $routeParams 路由参数
+     * @return {[type]}               Angularjs指令
+     */
+    createNew: function (tmplateFile, urlKey) {
+        var cmd = {
+            restrict: "AE",
+            replace: true,
+            scope: {
+                needSearch: '=',
+                page: '=',
+                count: '=',
+                total: '=',
+                post: "="
+            },
+            templateUrl: tmplateFile,
+        };
+        cmd.controller = function ($scope, $location, $filter) {
+            $scope.view = {};
+            var ajaxFn = function (param) {
+                var url = "/statistics/" + urlKey;
+                $scope.startTime = $filter('date')($scope.post.startTime, "yyyy-MM-dd 00:00:00");
+                $scope.endTime = $filter('date')($scope.post.endTime, "yyyy-MM-dd 23:59:59");
+                param.endTime = $scope.endTime;
+                param.startTime = $scope.startTime;
+                if ($scope.post.shopId) {
+                    url += "/shop";
+                    if ($scope.post.shopId !== "brand") {
+                        param.shopId = $scope.post.shopId
+                    }
+                    //title2
+                    $scope.title = ajaxSendFn(param, url +"/num", "GET").result;
+                }else{
+                    //title2
+                    $scope.title = ajaxSendFn(param, url +"/all/num", "GET").result;
+                }
+                if ($scope.post.type) {
+                    param.type = $scope.post.type;
+                }
+                var data = ajaxSendFn(param, url, "GET");
+                $scope.needSearch = false;
+                if (data.code !== 200) {
+                    if (data.code == 403000) {
+                        location.href = indexUrl;
+                    } else {
+                        $scope.total = 0;
+                    }
+                    delete $scope.view.result;
+                    return;
+                }
+                $scope.total = data.result.total;
+                $scope.count = data.result.count;
+                $scope.page = data.result.page;
+                $scope.view.result = data.result;
+            }
+
+            /**
+             * [$watch 监视页码变动，并向后台发送请求获取新数据]
+             * @method $watch
+             * @param  {number} 'page'   请求的页码数
+             * @param  {function} function 回调函数
+             * @return {[type]}          [description]
+             */
+            $scope.$watch('page', function (newVal, oldVal) {
+                if (newVal && oldVal && newVal !== oldVal) {
+                    ajaxFn({page: $scope.page, count: $scope.count});
+                }
+            });
+
+            /**
+             * 监视needSearch是否变动
+             * @method $watch
+             * @param  {string} 'needSearch' 是否需要搜索
+             * @param  {function} function     (value        回调函数
+             * @param direct 0-初始状态 1-总店 2-单店
+             * @return {[type]}              [description]
+             */
+            $scope.$watch('needSearch', function (value) {
+                if (value) {
+                    ajaxFn({count: 15});
+                    //var param = {
+                    //    endTime: $scope.endTime,
+                    //    startTime: $scope.startTime
+                    //};
+                    //if ($scope.post.shopId) {
+                    //    param.shopId = $scope.post.shopId;
+                    //}
+                    //var data = ajaxSendFn(param, "/order/" + urlKey + "/statall", "GET");
+                    //if (data.code == 200) {
+                    //    $scope.view.collection = data.result;
+                    //}
+                }
+            });
+            $scope.change = function (type) {
+                $scope.needSearch = true;
+                $scope.post.type = type;
+            }
+        }
+
+        return cmd;
+    }
+};
+var FinanceDirective = {
+    /**
+     * 构造一个Angularjs指令
+     * @method createNew
+     * @param  {objcect} statisFac    统计工厂，向后台请求数据
+     * @param  {string}  tmplateFile  指令对应的模块文件
+     * @param  {string}  path         子页面对应路由路径
+     * @param  {string}  urlFunc      统计工厂中的方法名，不同指令对应不同的方法
+     * @param  {object}  $routeParams 路由参数
+     * @return {[type]}               Angularjs指令
+     */
+    createNew: function (tmplateFile, urlKey) {
+        var cmd = {
+            restrict: "AE",
+            replace: true,
+            scope: {
+                needSearch: '=',
+                page: '=',
+                count: '=',
+                total: '=',
+                post: "=",
+                amount: "="
+            },
+            templateUrl: tmplateFile
+        };
+        cmd.controller = function ($scope, $location, $filter) {
+            $scope.view = {};
+            var ajaxFn = function (param) {
+                var url = "/finance";
+                $scope.startTime = $filter('date')($scope.post.startTime, "yyyy-MM-dd 00:00:00");
+                $scope.endTime = $filter('date')($scope.post.endTime, "yyyy-MM-dd 23:59:59");
+                param.endTime = $scope.endTime;
+                param.startTime = $scope.startTime;
+
+                if ($scope.post.shopId) {
+                    url += "/shop";
+                    if ($scope.post.shopId !== "brand") {
+                        param.shopId = $scope.post.shopId;
+                    }
+                    //total
+                    $scope.amount = ajaxSendFn(param, "/finance/shop/stat", "GET").result;
+                } else {
+                    //total
+                    $scope.amount = ajaxSendFn(param, "/finance/stat", "GET").result;
+                }
+                if ($scope.post.reason) {
+                    param.reason = $scope.post.reason;
+                }
+                if ($scope.post.selector) {
+                    var k = ['', "1101", "1005", "1001", "1000"];
+                    param.payMode = k[$scope.post.selector];
+                }
+                var data = ajaxSendFn(param, url, "GET");
+                if (data.code !== 200) {
+                    if (data.code == 403000) {
+                        location.href = indexUrl;
+                    } else {
+                        $scope.total = 0;
+                    }
+                    $scope.needSearch = false;
+                    delete $scope.view.result;
+                    return;
+                }
+                $scope.total = data.result.total;
+                $scope.count = data.result.count;
+                $scope.page = data.result.page;
+                $scope.view.result = data.result;
+                $scope.needSearch = false;
+            };
+
+            /**
+             * [$watch 监视页码变动，并向后台发送请求获取新数据]
+             * @method $watch
+             * @param  {number} 'page'   请求的页码数
+             * @param  {function} function 回调函数
+             * @return {[type]}          [description]
+             */
+            $scope.$watch('page', function (newVal, oldVal) {
+                if (newVal && oldVal && newVal !== oldVal) {
+                    ajaxFn({page: $scope.page, count: $scope.count});
+                }
+            });
+
+            /**
+             * 监视needSearch是否变动
+             * @method $watch
+             * @param  {string} 'needSearch' 是否需要搜索
+             * @param  {function} function     (value        回调函数
+             * @param direct 0-初始状态 1-总店 2-单店
+             * @return {[type]}              [description]
+             */
+            $scope.$watch('needSearch', function (value) {
+                if (value) {
+                    ajaxFn({count: 15});
+                }
+            });
+        }
+
+        return cmd;
+    }
+};
+
+function appRouteConfig($routeProvider) { //路由规则
+    $routeProvider.when('/doc/detail/:orderId', {       //订单查询
+        templateUrl: "admin/doc/detail.html",
+        controller: "OrderCtr"
+    })
+};
+app.controller('OrderCtr', ['$rootScope', '$scope', '$routeParams', function ($rootScope, $scope, $routeParams) { //shoplist over
+    $scope.config.class = "doc";
+    $scope.view = {
+        orderId: $routeParams.orderId,
+        item: ajaxSendFn({}, "/statistics/" + $routeParams.orderId, "GET").result || ""
+    };
+    var size = 0;
+    for (i in $scope.view.item.strategy) {
+        if ($scope.view.item.strategy.hasOwnProperty(i))size++;
+    }
+    if (size > 3)
+        $scope.view.item.show = 1;
+}]);

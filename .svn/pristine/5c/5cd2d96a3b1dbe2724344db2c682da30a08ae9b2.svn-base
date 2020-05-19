@@ -1,0 +1,21 @@
+<div class="container contents bgw">
+    <div class="row">
+        <div class="col-md-12 shopshow user-list">
+            <ul>
+                <li class="rotate-in" ng-repeat="staff in staffs.items">
+                    <div class="menuicon" ng-class="{'shopsIcon':staff.state==1003,'shopsIcon2':(staff.state ==1002 || staff.state ==1001),'shopsIcon3':staff.state == 1005}" ng-click="goto('staff/show/'+staff.id)" data-toggle="tooltip" data-placement="bottom" title="{{staff.name}}">
+                        <div ng-if="staff.state==1003" class="text-center smName" ng-class="{'half': shop.half}" ng-bind="staff.shopKeeper||'暂无店长'"></div>
+                        <div ng-if="staff.state==1003" class="text-center smName" ng-class="{'half': shop.half}" ng-bind="'员工:'+(staff.staffCount||0)+'人'"></div>
+                    </div>
+                    <!--
+					<div class="menuicon"   ng-class="{'shopsIcon':staff.state==1002,'shopsIcon2':staff.state ==1003,'shopsIcon3':staff.state == 1005}" ng-click="goto('staff/show/'+staff.id)">
+						<div class="text-center smName suolue" title="{{staff.shopKeeper||'店长暂无'}}"  ng-bind="staff.shopKeeper||'店长暂无'"></div>
+						<div class="text-center smName" ng-class="{'half': shop.half}" ng-bind="'员工:'+(staff.staffCount||0)+'人'"></div>
+					</div>
+					-->
+                    <div class="shopTile text-center suolue" ng-bind="staff.name"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

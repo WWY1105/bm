@@ -1,0 +1,45 @@
+<div class="row bg-white">
+  <div ng-include="'/keeper/Staff/leftmenu.html'"></div>
+  <div class="v-shadow-content">
+    <div class="container contents bgw">
+      <div class="col-sm-12 tables">
+        <div class="user-list mb10">
+          <div ng-repeat="staffsshow in view.staffs.items">
+            <div class="staffs showedit" ng-mouseover="staffsshow.show=1" ng-mouseleave="staffsshow.show=0">
+              <div class="out" ng-class="{blur:staffsshow.show==1}">
+                <div class="pull-left" ng-class="staffsshow.avatarUrl?'':'menuicon staff'+staffsshow.gender+'Icon'">
+                  <img width="55" style="margin-right: 10px" ng-src="{{staffsshow.avatarUrl}}">
+                </div>
+                <div class="pull-left text text-left">
+                  <div class="name suolue" ng-bind="staffsshow.nickname"></div>
+                </div>
+              </div>
+              <div class="editdialog " ng-show="staffsshow.show==1">
+                <div class="delete">
+                  <i ng-click="staffDelFn($index)" class="glyphicon glyphicon-remove"></i>
+                </div>
+                <span ng-click="goto('staff/staffedit/'+staffsshow.id)">基本信息</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="add" ng-click="goto('staff/staffadd')">
+            <span class="iconadd">
+                <i class=" glyphicon glyphicon-plus"></i>
+            </span>
+
+          </div>
+        </div>
+        <div class="col-sm-12" ng-if="view.staffs.pageSize>1">
+          <pagination items-per-page="view.staffs.count" boundary-link="true" rotate="false" max-size="20"
+                      total-items="view.staffs.total"
+                      ng-model="view.staffs.page" class="pagination-sm" previous-text="&lsaquo;"
+                      next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                      ng-change="pageChange()"></pagination>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

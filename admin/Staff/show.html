@@ -1,0 +1,62 @@
+
+	<div class="container contents bgw">
+
+		<div class="col-md-12 tables">
+			<ul class="list-group  text-center">
+				<div class="list-group-item text-center">
+					<h3 ng-bind="shopget.name"></h3>
+				</div>
+				<div class="list-group-item">
+					<div class="user-list">
+						<div class="keeper " >
+							<div class="showedit" ng-show="user.list.keeper.name" ng-mouseover="user.list.keeper.show=1"  ng-mouseleave="user.list.keeper.show=0">
+								<div class="out " ng-class="{blur:user.list.keeper.show==1}">
+									<div class="menuicon keeperIcon pull-left"></div>
+									<div class="pull-left text text-left">
+										<div class="name suolue" ng-bind="'姓名:'+user.list.keeper.nickname"></div>
+										<!--<div class="code" ng-bind="'编号:'+(user.list.keeper.code?user.list.keeper.code:'暂无')"></div>-->
+										
+									</div>
+								</div>
+								<div class="editdialog " ng-show="user.list.keeper.show==1">
+									<div class="delete"> 										<i ng-click="keepperDelFn()" class="glyphicon glyphicon-remove"></i>
+
+									</div>
+									<span ng-click="goto('staff/keeperedit/'+user.list.keeper.id)">编辑</span>
+								</div>
+							</div>
+							<div  class="add" ng-show="!user.list.keeper.name" ng-click="goto('staff/keeperadd/'+user.shopId)">
+								<span class="iconadd"> <i class=" glyphicon glyphicon-plus"></i></span>
+							</div>
+						</div>
+
+						<div ng-repeat="staffsshow in user.list.staffs" >
+							<div class="staffs showedit "  ng-mouseover="staffsshow.show=1" ng-mouseleave="staffsshow.show=0">
+								<div class="out" ng-class="{blur:staffsshow.show==1}">
+									<div class="menuicon  pull-left" ng-class="'staff'+staffsshow.gender+'Icon'"></div>
+									<div class="pull-left text text-left">
+										<div class="name suolue" ng-bind="'姓名:'+staffsshow.nickname"></div>
+										<div class="code suolue" ng-bind="'工号:'+(staffsshow.code||'暂无')"></div>
+									</div>
+								</div>
+								<div class="editdialog" ng-show="staffsshow.show==1">
+									<div class="delete" >
+										<i ng-click="staffDelFn($index)" class="glyphicon glyphicon-remove"></i>
+									</div>
+									<span ng-click="goto('staff/staffedit/'+staffsshow.id)">编辑</span>
+								</div>
+							</div>
+						</div>
+
+						<div  class="add" ng-click="goto('staff/staffadd/'+user.shopId)">
+							<span class="iconadd">
+								<i class=" glyphicon glyphicon-plus"></i>
+							</span>
+
+						</div>
+					</div>
+				</div>
+			</ul>
+		</div>
+
+	</div>

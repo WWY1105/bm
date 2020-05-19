@@ -1,0 +1,149 @@
+<div class="bgw">
+  <div class="row">
+    <div ng-include="'/admin/mall/leftmenu.html'"></div>
+    <div class="v-shadow-content">
+      <form name="buy_form">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              标题
+            </label>
+
+            <div class="col-sm-4">
+              <input type="text" class="form-control" ng-model="posts.title" name="nickname"
+                     placeholder="标题" ng-minlength='2'
+                     required></div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              图片地址
+            </label>
+
+            <div class="col-sm-6">
+              <pic-send pic-url="posts.picUrl"></pic-send>
+            </div>
+
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              购买策略
+            </label>
+            <div class="col-sm-10 form-inline">
+              <div class="ruleadd2" ng-repeat="item in posts.details">
+                <div class="mt15">
+                  <select ng-model="item.id" class="form-control"
+                          ng-options="item.id as item.name for item in view.member" name="member" required>
+                  </select>
+                  <input type="number" step="0.01" class="form-control" ng-model="item.value" placeholder="购买金额">
+
+                  <div class="form-group">
+                    <a class="add click" ng-if="$first" ng-click="addFn()"> <i
+                            class="glyphicon glyphicon-plus"></i></a>
+                    <a class="remove click" ng-if="!$first"
+                       ng-click="removeFn($index)"> <i class="glyphicon glyphicon-remove"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              商品
+            </label>
+
+            <div class="col-sm-6 form-inline">
+              <select class="form-control coupon-select" ng-model="posts.goods.id"
+                      ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.coupons"
+                      required>
+                <option value="">--请选择券--</option>
+              </select>
+              <input type="number" class="form-control" ng-model="posts.goods.count" name="nickname"
+                     placeholder="券的张数" min="1" required>
+            </div>
+
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              时间
+            </label>
+
+            <div class="col-sm-10">
+              <div class="form-inline">
+                <input class="form-control" type="datetime-local" min="{{view.initTime}}" ng-model="posts.startDate"
+                       required/>
+                <span class="form-control-static"> - </span>
+                <input class="form-control" type="datetime-local" min="{{view.initTime}}" ng-model="posts.endDate"
+                       required/>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              总数量
+            </label>
+
+            <div class="col-sm-6 form-inline">
+              <input type="number" step="1" class="form-control" ng-model="posts.countLimit" name="countLimit"
+                     required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              限制
+            </label>
+
+            <div class="col-sm-10">
+              <div class="form-inline">
+                <span class="form-control-static">每人可参与</span>
+                <input ng-model="posts.timesLimit" type="number" class="form-control" min="0" placeholder="0表示不限制"
+                       required/>
+                <span class="form-control-static">次。</span>
+                <span class="mt15" ng-if="posts.timesLimit>1">
+                  <span class="form-control-static">每天可参与</span>
+                  <input ng-model="posts.dailyLimit" type="number" class="form-control" min="0"
+                         placeholder="0表示不限制"
+                         required/>
+                  <span class="form-control-static">次</span>
+                </span>
+              </div>
+            </div>
+
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              活动描述
+            </label>
+            <div class="col-sm-8 ">
+              <pics-send pic-urls="posts.picUrls"></pics-send>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              附加说明
+            </label>
+
+            <div class="col-sm-6">
+              <textarea style="width: 100%;height: 150px" ng-model="posts.additional" required></textarea>
+            </div>
+
+          </div>
+        </div>
+        <button ng-click="postSend()" ng-disabled="!buy_form.$valid"
+                class="btn btn-primary col-sm-4 col-sm-offset-2">
+          提交
+        </button>
+
+      </form>
+    </div>
+  </div>
+</div>

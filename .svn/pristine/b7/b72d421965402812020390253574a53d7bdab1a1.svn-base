@@ -1,0 +1,42 @@
+<div class="doc">
+  <ul class="bg-muted">
+    <li>合计（条）</li>
+    <li>账单总金额：{{title.amount||0}}</li>
+    <li>权益共抵扣：{{title.deduct||0}}</li>
+    <li>实际共付款：{{title.revenue||0}}</li>
+  </ul>
+  <table class="table" ng-if="view.result.total">
+    <thead>
+    <tr>
+      <td>序号</td>
+      <td>分店</td>
+      <td>
+        <div>账单金额</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>权益抵扣</div>
+        <div>(元)</div>
+      </td>
+      <td>
+        <div>实际付款</div>
+        <div>(元)</div>
+      </td>
+    </tr>
+    </thead>
+    <tbody class="slide-down">
+    <tr ng-repeat="row in view.result.items">
+      <td ng-bind="((page-1)*count)+$index+1"></td>
+      <td ng-bind="row.shopName||'品牌页'"></td>
+      <td ng-bind="row.amount|number"></td>
+      <td ng-bind="row.deduct|number">/</td>
+      <td ng-bind="row.revenue|number"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+

@@ -1,0 +1,6 @@
+<div ng-repeat="(key,value) in DISCOUNT.detail" class="col-sm-6 mb22">
+						<button class="btn btn-danger btn-block"  ng-click="addPanle(key)"  ng-bind="value"></button>
+</div>
+<div class="col-sm-12 mb22">
+						<button class="btn btn-danger btn-block"  ng-click="addCoupon()"  >添加券</button>
+</div>

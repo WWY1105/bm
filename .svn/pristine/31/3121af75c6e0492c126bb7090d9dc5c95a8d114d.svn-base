@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+this is my first word: {{view.word}}
+<div ng-bind="view.word"></div>
+
+<div ng-init="contries=[{local:'chaina'},{local:'american'}]">
+</div>
+<div ng-repeat="con in contries">
+  {{'contry ：'+ con.local}}
+</div>
+<br/>
+<!--filter 只留下有用的；orderby:something 排序；currency接受数字的结果-->
+{{student.fullname()|uppercase}}
+<button ng-click="submit()">kaishi</button>
+</body>
+</html>

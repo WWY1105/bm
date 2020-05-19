@@ -1,0 +1,340 @@
+<div class="container contents bgw">
+  <div class="col-sm-12 ruleadd">
+    <form class="form-horizontal" name="ruleForm" ng-submit="sendJsons()">
+      <div class="out">
+        <div class="col-sm-2 text-right ">
+          <span class="title">名称</span>
+        </div>
+        <div class="col-sm-8 content">
+          <div class="form-group ">
+            <div class="col-sm-5">
+              <input type="text" ng-model="posts.name" name="name" class="form-control" id="Formname"
+                     placeholder="请输入活动名称" ng-minlength='2' ng-maxlength='20' ng-pattern="config.textCheckJson.nickname"
+                     required></div>
+						<span class="help-block " ng-messages="ruleForm.name.$error">
+							<div ng-message="required">2-20字符的汉字英文数字</div>
+							<div class="text-red" ng-message="minlength">需大于2个字符</div>
+							<div class="text-red" ng-message="maxlength">需小于20字符</div>
+							<div class="text-red" ng-message="pattern">
+                              <span ng-bind="config.textCheckErrorJson.nickname"></span>
+                            </div>
+
+						</span>
+            <span class="help-block" ng-show="ruleForm.name.$valid">输入正确</span>
+          </div>
+        </div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">活动广告图</span>
+        </div>
+        <div class="col-sm-8">
+          <pic-send pic-url="posts.picUrl"></pic-send>
+        </div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">发布途径</span>
+        </div>
+        <div class="col-sm-8">
+          <div class="text-grey">如不勾选则本活动对全部顾客可见</div>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <label>
+                <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="ONLINE"
+                       ng-false-value="ALL">仅在活动中心可见（即，仅未到店顾客可见）</label>
+            </div>
+            <div class="col-sm-12" >
+              <label>
+                <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="ARRIVAL"
+                       ng-false-value="ALL">仅在门店首页可见（即，仅已到店顾客可见）</label>
+            </div>
+            <div class="col-sm-12" >
+              <label>
+                <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="HIDDEN"
+                       ng-false-value="ALL">不对任何顾客可见（仅需要获取到本活动URL地址时勾选）</label>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="out ">
+        <div class="col-sm-2 text-right">
+          <span class="title">类型</span>
+        </div>
+        <div class="animate-switch-container"
+             ng-switch on="posts.hasRules">
+          <div class="animate-switch" ng-switch-when="true">
+            <div class="col-sm-8 content">
+              <div class="form-group timecheck">
+                <div class="col-sm-12 ml2 form-control-stack text-left">
+                  <span ng-bind="categoryName(posts.activityCategory)"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="animate-switch" ng-switch-when="false">
+            <div class="col-sm-8 content">
+              <div class="form-group timecheck">
+                <div class="col-sm-12 ml25 form-control-stack text-left">
+                  <label class="radio-inline" ng-repeat="item in ruleCategory" ng-if="posts.activityCategory===item.id">
+                    <!-- <input type="radio" ng-model="posts.activityCategory" value="{{item.id}}"
+                           ng-checked="posts.activityCategory===item.id" > -->
+                    <span ng-bind="item.name"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="out" ng-if="posts.activityCategory == 'CHARGE'">
+        <div class="col-sm-2">
+          <span class="title">系统推荐</span>
+        </div>
+        <div class="col-sm-8">
+          <div class="text-grey">如不勾选则本活动对全部顾客可见</div>
+          <div class="form-group">
+            <div class="col-sm-12 form-inline">
+              当消费金额达到充值后可用部分的
+              <input type="number" step="0.01" min="0" max="1" ng-model="posts.recommend.minCelling"
+                     class="form-control"
+                     placeholder="0-1之间" style="width: 120px"/> 至
+              <input type="number" step="0.01" min="0" max="1" ng-model="posts.recommend.maxCelling"
+                     class="form-control"
+                     placeholder="0-1之间" style="width: 120px"/> 之间才推荐
+            </div>
+
+            <div class="col-sm-12">
+              <label class="radio-inline">
+                <input type="radio" ng-model="posts.recommend.way" value="NONE">
+                不推荐（即，消费策略不包含此活动,默认不推荐）
+              </label>
+            </div>
+            <div class="col-sm-12">
+              <label class="radio-inline">
+                <input type="radio" ng-model="posts.recommend.way" value="PROMPT">
+                独立提示（即，仅做广告提示，不计算优惠）
+              </label>
+            </div>
+            <div class="col-sm-12">
+              <label class="radio-inline">
+                <input type="radio" ng-model="posts.recommend.way" value="AUTOMATIC">
+                自动提示（推荐此活动）
+              </label>
+            </div>
+            <div class="col-sm-12" ng-if="posts.recommend.way == 'AUTOMATIC'">
+              <label>
+                <input type="checkbox" ng-model="posts.recommend.proportion" name="proportion">允许按比例自动匹配充值金额</label>
+            </div>
+          </div>
+          <p class="info">《设置多充几元模式》<br>
+            只需设置起推荐比例，第二等级推荐，需实付达到第二等级本金，才会开始推荐<br>
+            起推荐金额=（本金+赠送）x当天可用比例x起推比例<br>
+            选择逻辑举例<br>
+            （500+50）x0.88x0.3=145.2，    实付区间145.2 ~999，推荐500档，可叠加此档<br>
+            （1000+120）x0.88x0.3=295.7，实付区间295~1999，推荐1000档，可叠加此档<br>
+            （2000+250）x0.88x0.3=594，  实付区间594~无限，推荐2000档，可叠加此档<br>
+            
+            《设置达到本金即推荐下一档模式》<br>
+            需设置推荐结束比例，如有设置当天可用比例，一般设置1即可<br>
+            如可用比例100%，则设置比本金/（本金+赠送）再小一点<br>
+            选择逻辑举例，设置0.3~1，区间重合部分往低档找，比如消费480，推荐500<br>
+            （500+50）x0.88x0.3=145.2，    实付区间145.2 ~484，推荐500档<br>
+            （1000+120）x0.88x0.3=295.7，实付区间295~985.6，推荐1000档<br>
+            （2000+250）x0.88x0.3=594，  实付区间594~1980，推荐2000档，超过1980，不推荐</p>
+        </div>
+       
+      </div>
+
+
+
+
+      <div class="out">
+        <div class="col-sm-2 text-right">
+          <span class="title">有效期</span>
+        </div>
+        <div my-date-picker data="view.data" date-range="view.dateRange" is-edit="view.isEdit"></div>
+      </div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">微信参数二维码</span>
+        </div>
+        <div class="col-sm-8">
+          <div><input type="checkbox" id="wx" ng-model="posts.followLimit" 
+                          class=""/><label for="wx">确认使用</label>
+          </div>
+        </div>
+      </div>
+      <div ng-hide="posts.activityCategory=='COUPONFREE'||posts.activityCategory=='CHARGE'||posts.activityCategory=='GIVENUPGRADE'||posts.activityCategory=='EXCHANGE'||posts.activityCategory=='GAMEBUY'||posts.activityCategory=='FOLLOW'">
+        <div class="out">
+          <div class="col-sm-2">
+            <span class="title">消费运算</span>
+          </div>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <div class="col-sm-12">
+                <label>
+                  <input type="checkbox" ng-model="posts.way" name="way" ng-true-value="NONE"
+                         ng-false-value="ALL">不参与运算</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="out">
+          <div class="col-sm-2 text-right">
+            <span class="title">参与门店</span>
+          </div>
+          <div class="col-sm-8 content">
+            <div class="form-control-stack text-left">
+              <label class="checkbox-inline">
+                <input type="checkbox" ng-model="set.shopAll" ng-click="checkAllShops()">全选</label>
+            </div>
+            <div class="form-control-stack text-left">
+              <label class="checkbox-inline" ng-repeat="shops in set.list">
+              <input type="checkbox" ng-checked="posts.shops[$index]" ng-model="posts.shops[$index]"
+                     id="inlineCheckbox1" ng-true-value="{{shops.id}}" ng-false-value="{{null}}" value="{{shops.id}}"
+                     ng-init="set.list2[$index]=shops.id">
+              <span ng-bind="shops.name"></span>
+            </label>
+            </div>
+          </div>
+        </div>
+        <div class="out ">
+          <div class="col-sm-2 text-right">
+            <span class="title">有效时段</span>
+          </div>
+          <!--<div class="col-sm-8 content">-->
+          <div class="col-sm-8">
+            <div class="">
+              <input type="checkbox" id="allday" ng-model="posts.allDay"/><label for="allday">全天</label>
+            </div>
+            <div class="form-group timecheck" ng-if="!posts.allDay">
+              <div class="col-sm-12 ">
+                <label class="btn glyphicon  btn-default" ng-repeat="(key, value) in set.time"
+                       ng-class="{active:view.periods[$index]}" ng-click="settime($index,key)" ng-bind="value"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="out">
+          <div class="col-sm-2 text-right">
+            <span class="title">不参与商品</span>
+          </div>
+          <div class="col-sm-8 "
+               ng-class="{'content2':shareRuleCategory.length==0,'content':shareRuleCategory.length>0}">
+            <div id="checknon">
+              <input type="checkbox" ng-model="posts.nonParticipationId" ng-true-value="{{set.nonParticipation.id}}"
+                     ng-false-value="" ng-checked="posts.nonParticipationId===set.nonParticipation.id"
+                     ng-if="set.nonParticipation">
+              <span ng-bind="set.nonParticipation.content"></span>
+
+              <!--<div class="add-rad" ng-click="addNonParticipation()" style="display:inline-block"-->
+                   <!--ng-if="!set.nonParticipation"><i class="glyphicon glyphicon-plus"></i></div>-->
+            </div>
+          </div>
+        </div>
+        <div class="out " ng-if="shareRuleCategory.length>0">
+          <div class="col-sm-2 text-right">
+            <span class="title">同享的活动</span>
+          </div>
+          <div class="col-sm-8 content2">
+            <div class="form-control-stack">
+              <label class="checkbox-inline" ng-repeat="item in shareRuleCategory">
+                <input type="checkbox" ng-model="posts.shared[$index]" ng-true-value="{{item.id}}">
+                <span ng-bind="item.name"></span>
+              </label>
+            </div>
+            <div class="col-sm-12 ml25 form-control-stack">
+              <label class="checkbox-inline" ng-if="filterShared().length>0">
+                <input type="checkbox" ng-model="posts.excludeAmount">
+                <span>参与本活动的部分不再参与同享</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="out" ng-if="posts.activityCategory == 'CHARGE'">
+        <div class="col-sm-2 text-right">
+          <span class="title">参与门店</span>
+        </div>
+        <div class="col-sm-8 content">
+          <div class="text-grey" ng-if="posts.activityCategory == 'CHARGE'">充值门店不通用设置方法：1.不能开启品牌店充值，需勾选发布途径—仅在门店首页可见（即，仅已到店顾客可见）2.使用充值卡设置中选择各门店不通用</div>
+          <div class="form-control-stack text-left">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="set.shopAll" ng-click="checkAllShops()">全选</label>
+          </div>
+          <div class="form-control-stack text-left">
+            <label class="checkbox-inline" ng-repeat="shops in set.list">
+              <input type="checkbox" ng-checked="posts.shops[$index]" ng-model="posts.shops[$index]"
+                     id="inlineCheckbox1" ng-true-value="{{shops.id}}" ng-false-value="{{null}}" value="{{shops.id}}"
+                     ng-init="set.list2[$index]=shops.id">
+              <span ng-bind="shops.name"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="out"></div>
+      <div class="out">
+        <div class="col-sm-2">
+          <span class="title">备注</span>
+        </div>
+        <div class="col-sm-8">
+          <div class="form-group ">
+            <div class="col-sm-5">
+              <textarea ng-model="posts.additional" name="name" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="out ">
+        <div class="col-sm-2 text-right"></div>
+        <div class="col-sm-8 mt20">
+          <div class="form-group ">
+            <div class="col-sm-3 col-sm-offset-1 ">
+              <a class="btn btn-default btn-block" back-button>返回</a>
+            </div>
+            <div class="col-sm-3 col-sm-offset-1 ">
+              <button class="btn btn-primary btn-block" ng-disabled="ruleForm.$invalid">保存</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal fade " id="NonParticipation" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form class="form-horizontal" name="addno" ng-submit="NonParticipationSend()">
+          <div class="modal-header ">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+              <span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">添加不参与活动的商品</h4>
+          </div>
+          <div class="modal-body" style="overflow:hidden">
+            <div class="form-group">
+              <div class="form-control-static pull-left ml25">输入多种商品时，用逗号分开</div>
+              <div class="col-sm-11 mt20 ml25">
+                <input ng-model="goods.name" class="form-control" min="1" required/>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-sm-3 col-sm-setoff-6">
+              <div class="btn btn-default btn-block" data-dismiss="modal">关闭</div>
+
+            </div>
+            <div class="col-sm-3">
+              <button class="btn btn-primary btn-block" ng-disabled="!addno.$valid">添加</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

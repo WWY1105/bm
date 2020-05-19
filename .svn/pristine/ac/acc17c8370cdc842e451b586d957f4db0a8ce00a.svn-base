@@ -1,0 +1,107 @@
+<div class="row">
+  <div class="bgw" style="padding: 20px 10%;overflow: hidden">
+
+      <form class="form-inline time-search" name="searchData"
+            ng-submit="searchFn()">
+        <div class="form-group">
+          <label>时间：</label>
+          <input type="datetime-local" style="color: #18A0D4" ng-model="posts.startTime" class="form-control"
+                 placeholder="起始时间"
+                 name="startTime" max="{{view.initTime}}" required/>
+          ~
+          <input type="datetime-local" style="color: #18A0D4" ng-model="posts.endTime" class="form-control"
+                 placeholder="结束时间" max="{{view.initTime}}" name="endTime" required/>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-default btn-primary" ng-disabled="searchData.$invalid">筛选</button>
+        </div>
+      </form>
+
+    <div ng-if="!view.result">
+      <p class="direct">您好，我是您的上宾助理，小宾。<br/>
+        您可以从“选择时间”开始，<br>
+        查询出您需要的报表。<br/>
+        起止日期不能超过31天哟~</p>
+    </div>
+    <div class="doc" ng-if="view.result.summary">
+
+      <table class="table">
+        <thead>
+        <tr>
+          <td>类型</td>
+          <td>微信（元/笔数）</td>
+          <td>支付宝（元/笔数）</td>
+          <td>刷卡（元/笔数）</td>
+          <td>现金（元/笔数）</td>
+          <td style="font-size: 14px;font-weight: 700">总计（元/笔数）</td>
+        </tr>
+        </thead>
+        <tbody class="slide-down">
+        <tr ng-repeat="row in view.result.details">
+          <td ng-bind="view.projects[row.category]"></td>
+          <td>
+            <a ng-click="detailFn(row.shopId,1005)" ng-if="row.channels[1005]">￥{{row.channels[1005].amount}} /{{row.channels[1005].count}}</a>
+
+            <div ng-if="!row.channels[1005]">0</div>
+          </td>
+          <td>
+            <a ng-click="detailFn(row.shopId,1101)" ng-if="row.channels[1101]">￥{{row.channels[1101].amount}} /{{row.channels[1101].count}}</a>
+
+            <div ng-if="!row.channels[1101]">0</div>
+          </td>
+          <td>
+            <a ng-click="detailFn(row.shopId,1000)" ng-if="row.channels[1000]">￥{{row.channels[1000].amount}} /{{row.channels[1000].count}}</a>
+
+            <div ng-if="!row.channels[1000]">0</div>
+          </td>
+
+          <td>
+            <a ng-click="detailFn(row.shopId,1001)" ng-if="row.channels[1001]">￥{{row.channels[1001].amount}} /{{row.channels[1001].count}}</a>
+
+            <div ng-if="!row.channels[1001]">0</div>
+          </td>
+          <td style="font-size: 14px;"><a ng-click="detailFn(row.shopId,false)" ng-bind="'￥'+ row.amount"></a></td>
+        </tr>
+        <tr style="background: #c1e8ff;font-size: 14px;font-weight: 700">
+          <td>
+            合计
+          </td>
+          <td>
+            <div ng-if="view.result.summary.channels[1005]">￥{{view.result.summary.channels[1005].amount}}
+              /{{view.result.summary.channels[1005].count}}</div>
+
+            <div ng-if="!view.result.summary.channels[1005]">0</div>
+          </td>
+          <td>
+            <div ng-if="view.result.summary.channels[1101]">￥{{view.result.summary.channels[1101].amount}}
+              /{{view.result.summary.channels[1101].count}}</div>
+
+            <div ng-if="!view.result.summary.channels[1101]">0</div>
+          </td>
+          <td>
+            <div ng-if="view.result.summary.channels[1000]">￥{{view.result.summary.channels[1000].amount}}
+              /{{view.result.summary.channels[1000].count}}</div>
+
+            <div ng-if="!view.result.summary.channels[1000]">0</div>
+          </td>
+
+          <td>
+            <div ng-if="view.result.summary.channels[1001]">￥{{view.result.summary.channels[1001].amount}}
+              /{{view.result.summary.channels[1001].count}}</div>
+
+            <div ng-if="!view.result.summary.channels[1001]">0</div>
+          </td>
+          <td>￥{{view.result.summary.amount}}/{{view.result.summary.count}}</td>
+        </tr>
+
+
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-12 text-center" ng-if="view.result&&view.result.length==0">
+      <div style="border: 1px solid #e1e1e1;height: 240px">
+        <img src="public/img/tv.svg" style="margin-bottom: 95px;margin-top: 63px;">没有可查询的信息
+      </div>
+    </div>
+  </div>
+</div>

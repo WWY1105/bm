@@ -1,0 +1,157 @@
+	<div class="out ruleadd2" >
+		<div class="col-sm-2 text-right ">
+			<span class="title">活动详情</span>
+		</div>
+		<div class="col-sm-10 content mb0">
+			<div class="col-sm-12 ml25 mb22 form-control-stack text-left">
+					<label class="checkbox-inline">
+						<input type="checkbox"  ng-model="posts.POINT.POINT.check" ng-checked="posts.POINT.POINT.check">
+						单次消费的百分比转化为积分</label>
+				</div>
+			<div ng-repeat="(key, detail) in posts.POINT.POINT.detail" ng-show="posts.POINT.POINT.check" >
+				<div class="form-group mb22"  ng-repeat="details in detail" ng-init="details.id=key">
+				<div class="col-sm-3">
+					<select ng-model="details.id"   class="form-control " 
+  					ng-options="item.id as item.name for item in view.member" name="member" required></select>
+				</div>
+				<div class=" form-control-static pull-left">消费</div>
+				<div class="col-sm-2 ">
+					<input type="number" class="form-control" ng-model="details.amount "/>
+				</div>
+				<div class=" form-control-static pull-left">元,转化为</div>
+				<div class="col-sm-2 ">
+					<input type="number" class="form-control" ng-model="details.value "/>
+				</div>
+				<div class=" form-control-static pull-left">积分</div>
+				<a class="add click" ng-if="$parent.$first&&$first" ng-click="ruleFn.addFn('POINT')">
+					<i class="glyphicon glyphicon-plus"></i>
+				</a>
+				<a class="remove click" ng-if="!$first||!$parent.$first" ng-click="ruleFn.removeFn('POINT',key,$index)">
+					<i class="glyphicon glyphicon-remove"></i>
+				</a>
+			</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="out ruleadd2" >
+		<div class="col-sm-2 text-right ">
+		</div>
+		<div class="col-sm-10 content mb0">
+			<div class="col-sm-12 ml25 mb22 form-control-stack text-left">
+					<label class="checkbox-inline">
+					<input type="checkbox"  ng-model="posts.POINT.POINT_CONSUME.check" ng-checked="posts.POINT.POINT_CONSUME.check">积分抵现</label>
+				</div>
+			<div class="form-group mb22 ml25 clear" >
+				<div class=" form-control-static pull-left">每</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" />
+				</div>
+				<div class=" form-control-static pull-left">积分，抵现</div>
+				<div class="col-sm-3 ">
+					<input type="text" class="form-control" />
+				</div>
+				<div class=" form-control-static pull-left">元</div>
+				
+			</div>
+			<div class="form-group mb22"  ng-repeat="(key, value) in discount2.post">
+				<div class="col-sm-3">
+					<select ng-change="area1change()" ng-model="discount.post[0].member"  class="form-control "  ng-options="item.code as item.text for item in member" name="area" required></select>
+				</div>
+				<div class=" form-control-static pull-left">消费满</div>
+				<div class="col-sm-2 ">
+					<input type="text" class="form-control" />
+				</div>
+				<div class=" form-control-static pull-left">元，可最多积分抵现金额</div>
+				<div class="col-sm-2 ">
+					<input type="text" class="form-control" />
+				</div>
+					
+
+				<a class="add click" ng-show="$first" ng-click="discountFn.add()"> <i class="glyphicon glyphicon-plus"></i>
+				</a>
+				<a class="remove click" ng-show="!$first" ng-click="discountFn.remove($index)"> <i class="glyphicon glyphicon-remove"></i>
+				</a>
+			</div>
+		</div>
+		
+	</div>
+	<div class="out ruleadd2" >
+		<div class="col-sm-2 text-right ">
+		
+		</div>
+		<div class="col-sm-10 content mb0">
+			<div class="col-sm-12 ml25 mb22 form-control-stack text-left">
+					<label class="checkbox-inline">
+						<input type="checkbox"  ng-model="posts.POINT.POINT_COUPON.check" ng-checked="posts.POINT.POINT_COUPON.check">积分换券</label>
+				</div>
+				<div    ng-repeat="(key, detail) in posts.POINT.POINT_COUPON.detail" ng-show="posts.POINT.POINT_COUPON.check" >
+
+				<div class="form-group mb22"  ng-repeat="details in detail" ng-init="details.id=key">
+				<div class="col-sm-3">
+					<select ng-model="details.id"   class="form-control " 
+  					ng-options="item.id as item.name for item in view.member" name="member" required></select>
+				</div>
+				
+				<div class="col-sm-2 ">
+					<input type="text" class="form-control" ng-model="details.amount" />	
+				</div>
+				<div class=" form-control-static pull-left">积分可兑换</div>
+				
+				<div class="col-sm-2 " ng-show="view.coupons">
+					<div class="row">
+						<select class="form-control coupon-select" ng-change="ruleFn.addCouponPlanFn(details.value)" ng-model="details.value" ng-options="item._id as item.name group by view.counponType[item.type] for item in view.coupons"  >
+						<option value="">请选择</option>
+
+					</select>
+					</div>
+					
+				</div>
+				<div class="col-sm-2 " ng-show="!view.coupons">
+					<A class="btn btn-default" ng-click="addCoupon()">点击添加券</A>
+				</div>
+
+				<a class="add click" ng-if="$parent.$first&&$first" ng-click="ruleFn.addFn('POINT_COUPON')">
+					<i class="glyphicon glyphicon-plus"></i>
+				</a>
+				<a class="remove click" ng-if="!$first||!$parent.$first" ng-click="ruleFn.removeFn('POINT_COUPON',key,$index)">
+					<i class="glyphicon glyphicon-remove"></i>
+				</a>
+			</div>
+			</div>
+		</div>
+		
+	</div>
+	<div class="out ruleadd2" >
+		<div class="col-sm-2 text-right ">
+			
+		</div>
+		<div class="col-sm-10 content2 mb0">
+			<div class="col-sm-12 ml25 mb22 form-control-stack text-left">
+					<label class="checkbox-inline">
+							<input type="checkbox"  ng-model="posts.POINT.POINT_GIFT.check" ng-change="console(posts.POINT.POINT_GIFT.check)" ng-checked="posts.POINT.POINT_GIFT.check">积分送礼</label>
+				</div>
+			<div    ng-repeat="(key, detail) in posts.POINT.POINT_GIFT.detail " ng-show="posts.POINT.POINT_GIFT.check" >
+			<div class="form-group mb22" ng-repeat="details in detail" ng-init="details.id=key">
+				<div class="col-sm-3">
+					<select ng-model="details.id"   class="form-control " 
+  					ng-options="item.id as item.name for item in view.member" name="member" required></select>
+				</div>
+				<div class="col-sm-2 ">
+					<input type="number" ng-model="details.amount" class="form-control" />
+				</div>
+				<div class=" form-control-static pull-left">积分可送</div>
+				<div class="col-sm-3 ">
+					<input type="text" ng-model="details.value" class="form-control" />
+				</div>
+				<a class="add click" ng-if="$parent.$first&&$first" ng-click="ruleFn.addFn('POINT_GIFT')">
+					<i class="glyphicon glyphicon-plus"></i>
+				</a>
+				<a class="remove click" ng-if="!$first||!$parent.$first" ng-click="ruleFn.removeFn('POINT_GIFT',key,$index)">
+					<i class="glyphicon glyphicon-remove"></i>
+				</a>
+			</div>
+			</div>
+		</div>
+		
+	</div>

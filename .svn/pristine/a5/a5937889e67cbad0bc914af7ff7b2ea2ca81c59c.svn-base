@@ -1,0 +1,192 @@
+<div class="row">
+  <div class="v-shadow">
+    <div class="mt15">
+      <label class="left-tag">考核类型</label>
+      <ul class="col-sm-12 mt15 mb15 timecheck">
+        <li class="col-sm2 glyphicon btn btn-default active">评价管理</li>
+      </ul>
+
+    </div>
+
+  </div>
+  <div class="v-shadow-content bgw">
+    <div class="bg-primary"> 历史累计好评总数:{{view.num.satisfied||0}} 历史累计差评总数：{{view.num.dissatisfied||0}}</div>
+
+    <!--search-->
+    <div>
+      <form class="form-inline time-search" name="searchData" ng-submit="doSearchFn()">
+        <div class="form-group" ng-if="view.shops&&view.roleType!='K'" ng-mouseenter="posts.check=1"
+             ng-mouseleave="posts.check=0">
+          <label>门店：</label>
+
+          <div class="select_showbox" ng-model="posts.shopId">{{posts.shopName || "请点击选择"}} <span
+                  class="caret pull-right" style="margin-top: 7px"></span>
+          </div>
+          <div style="height: 5px"></div>
+          <ul class="select_option" ng-show="posts.check">
+            <li ng-click="selectShop()">所有</li>
+            <li ng-repeat="o in view.shops"
+                ng-click="selectShop(o)">
+              {{o.name}}
+            </li>
+            <li class="select_last text-center">没有更多了</li>
+          </ul>
+        </div>
+        <div ng-if="view.roleType=='K'"
+             style="line-height: 35px;border-bottom: 1px solid #eeeeee;margin-bottom: 15px;font-size: 16px">当前门店 : <span
+                class="text-primary">{{config.staff.shopName}}</span></div>
+
+        <div class="form-group" ng-mouseenter="posts.check2=1"
+             ng-mouseleave="posts.check2=0">
+          <label>员工：</label>
+
+          <div class="select_showbox" ng-model="posts.staffId">{{posts.staffName || "请点击选择"}} <span
+                  class="caret pull-right" style="margin-top: 7px"></span>
+          </div>
+          <div style="height: 5px"></div>
+          <ul class="select_option" ng-show="posts.check2">
+            <li ng-if="!posts.shopId" ng-click="selectStaff('','忽略员工')">忽略员工</li>
+            <li ng-click="selectStaff('all','所有员工')">所有员工</li>
+            <li ng-click="selectStaff(o.id,o.nickname)" ng-repeat="o in view.staffs">
+              {{o.nickname}}
+            </li>
+            <li class="select_last text-center">没有更多了</li>
+          </ul>
+        </div>
+
+        <div class="form-group">
+          <label>时间：</label>
+          <input type="date" style="color: #18A0D4" ng-model="posts.startTime" class="form-control" placeholder="起始时间"
+                 name="startDate" required/>
+          ~
+          <input type="date" style="color: #18A0D4;margin-right: 90px" ng-model="posts.endTime" class="form-control"
+                 placeholder="结束时间"
+                 name="endDate" required/>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-default btn-primary" ng-disabled="searchData.$invalid">筛选</button>
+        </div>
+      </form>
+    </div>
+
+    <!--search-->
+    <!---->
+
+    <div ng-if="!view.direct">
+      <p class="direct">您好，我是您的上宾助理，小宾。<br/>
+        您可以从“选择门店和时间段”开始，查询出您需要的报表。<br/>
+        起止日期不能超过31天哟~</p>
+    </div>
+    <div class="doc" ng-if="view.direct">
+      <div class="bg-muted" style="overflow: hidden">
+        <div class="text-white">
+          <span>好评率: {{(view.title.rate?view.title.rate:0)+"%"}}</span>
+          <span>好评: {{view.title.satisfiedCount||0}} </span>
+          <span>差评: {{view.title.dissatisfiedCount||0}} </span>
+        </div>
+        <div class="text-white pull-right" style="margin-top:-20px;width: 538px;text-align: right">
+          <span class="label label-primary click" ng-if="view.title" ng-click="redirectTagFn()"
+                style="margin-right: 12px;display: inline-block;margin-bottom: 10px;background: #f39365;line-height: 1.5">
+             最新
+          </span>
+          <span class="label label-primary click" ng-click="redirectTagFn(value.id)"
+                style="margin-right: 12px;display: inline-block;margin-bottom: 10px;background: #5ab9ff;line-height: 1.5"
+                ng-repeat="value in view.title.satisfied">
+              {{value.content}}({{value.count}})
+          </span>
+          <span class="label label-primary click" ng-click="redirectTagFn(value.id)"
+                style="margin-right: 12px;display: inline-block;margin-bottom: 10px;background: #e4e4e4;line-height: 1.5;color: #6b6868"
+                ng-repeat="value in view.title.dissatisfied">
+                         {{value.content}}({{value.count}})
+          </span>
+        </div>
+      </div>
+      <!--汇总-->
+      <table class="table" ng-if="view.direct == 1" ng-if="view.data.total">
+        <thead>
+        <tr>
+          <td>序号</td>
+          <td>分店</td>
+          <td>
+            好评率（%）
+          </td>
+          <td>好评/差评</td>
+        </tr>
+        </thead>
+        <tbody class="slide-down">
+        <tr ng-repeat="row in view.data.items">
+          <td ng-bind="((view.data.page-1)*view.data.count)+$index+1"></td>
+          <td ng-bind="row.shopName"></td>
+          <td ng-bind="row.rate+'%'"></td>
+          <td ng-bind="row.satisfiedCount+' / '+row.dissatisfiedCount"></td>
+        </tr>
+        </tbody>
+      </table>
+      <!--明细 shopId-->
+      <table class="table" ng-if="view.direct == 2" ng-if="view.data.total">
+        <thead>
+        <tr>
+          <td>序号</td>
+          <td ng-if="posts.staffId=='all'">门店</td>
+          <td>服务员</td>
+          <td>
+            好评率（%）
+          </td>
+          <td>好评/差评</td>
+          <!--<td>打赏金额</td>-->
+          <!--<td>标签</td>-->
+        </tr>
+        </thead>
+        <tbody class="slide-down" ng-repeat="item in view.data.items">
+        <tr>
+          <td ng-bind="((view.data.page-1)*view.data.count)+$index+1"></td>
+          <td ng-if="posts.staffId=='all'">{{item.shopName}}</td>
+          <td ng-bind="item.staffName"></td>
+          <td ng-bind="item.rate+'%'"></td>
+          <td ng-bind="item.satisfiedCount+' / '+item.dissatisfiedCount"></td>
+          <!--<td ng-bind="item.staffName"></td>-->
+        </tr>
+        </tbody>
+      </table>
+      <!--明细 staffId-->
+      <table class="table" ng-if="view.direct == 3" ng-if="view.data.total">
+        <thead>
+        <tr>
+          <td>序号</td>
+          <td>消费订单</td>
+          <td>服务员</td>
+          <td>上宾号</td>
+          <td>打赏金额</td>
+          <td>评价类型</td>
+          <td>时间</td>
+          <td>标签</td>
+        </tr>
+        </thead>
+        <tbody class="slide-down" ng-repeat="item in view.data.items">
+        <tr>
+          <td ng-bind="((view.data.page-1)*view.data.count)+$index+1"></td>
+          <td><a ng-click="goto('doc/detail/'+ item.orderNo)">{{item.orderNo}}</a></td>
+          <td ng-bind="item.staffName"></td>
+          <td><a ng-click="goto('customer/details/'+ item.userId)">{{item.username}}</a></td>
+          <td ng-bind="item.gratuityAmount||0"></td>
+          <td ng-bind="item.satisfied?'好评':'差评'"></td>
+          <td ng-bind="item.time"></td>
+          <td><span ng-repeat=" tag in item.tags">#{{tag}} </span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-sm-12 text-center" ng-if="!view.data.total&&view.direct">
+      <div style="border: 1px solid #e1e1e1;height: 240px">
+        <img src="public/img/tv.svg" style="margin-bottom: 95px;margin-top: 63px;">没有可查询的信息
+      </div>
+    </div>
+    <div class="col-sm-12" ng-if="view.data&&view.data.pageSize>1&&view.direct">
+      <pagination items-per-page="view.data.count" boundary-links="true" rotate="false" max-size="20"
+                  total-items="view.data.total" ng-model="view.data.page" ng-change="pageChange()"
+                  class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+                  first-text="&laquo;" last-text="&raquo;"></pagination>
+    </div>
+  </div>
+</div>

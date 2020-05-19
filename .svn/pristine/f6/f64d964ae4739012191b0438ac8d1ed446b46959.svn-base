@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+<!--<embed src="//music.163.com/style/swf/widget.swf?sid=432506345&type=2&auto=1&width=320&height=66-->
+
+<!--" width="340" height="86"  allowNetworking="all"></embed>-->
+<!--<video src="//music.163.com/style/swf/widget.swf?sid=432506345&type=2&auto=1&width=320&height=66" controls="controls" width="320" height="240" autoplaycontrolsloop></video>-->
+<!--<object data="//music.163.com/style/swf/widget.swf?sid=432506345&type=2&auto=1&width=320&height=66" type="application/x-shockwave-flash">-->
+<!--<param name="movie" value="demo.swf"/>-->
+<!--<embed src="//music.163.com/style/swf/widget.swf?sid=432506345&type=2&auto=1&width=320&height=66"/>-->
+<!--</object>-->
+<!--<object type="application/x-shockwave-flash" width="180" height="60">-->
+<!--<param name="fileName" value="//music.163.com/style/swf/widget.swf?sid=432506345&type=2&auto=1&width=320&height=66">-->
+<!--<param name="autostart" value="1">-->
+<!--<param name="ShowStatusBar" value="1">-->
+<!--</object>-->
+<iframe border=" 0" marginwidth="0" marginheight="0" src="//music.163.com/outchain/player?type=2&amp;id=439915614&amp;auto=1&amp;
+height=66" height="86" frameborder="no" width="330"></iframe>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript" src="public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="public/js/jquery/jqcookie.min.js"></script>
+
+<script type="text/javascript" src="public/js/jquery/md5.min.js"></script>
+<!--<script type="text/javascript" src="public/js/dest/config.js?v=1"></script>-->
+<script src="https://cdn.bootcss.com/vue/2.4.1/vue.min.js"></script>
+<script>
+    var basicUrl = location.origin;
+    //+ "/bm";//ajax首页
+    var indexUrl = location.origin;
+
+    function ajaxSendFn(j, u, h, l) {
+//json,url,http,l
+//传入数据，提交地址，提交方法，是否加JSON CONTENT-TYPE
+        var redata;
+        var api_key = "5d85a0398cb74c66a46affbb98efaf41";
+        if (!$.cookie("apikey")) {
+            $.cookie("apikey", api_key, {expire: 30, path: "/"});
+        }
+        if (h == "GET" || h == "get") {
+            $.ajax({
+                url: basicUrl + u,
+                data: objSort(j),
+                type: h,
+                dataType: "json",
+                async: false,
+                beforeSend: function (xhr) {
+                    if (l == 1) {//
+                        xhr.setRequestHeader("Content-Type", "application/json");
+                    }
+                },//这里设置header
+                success: function (data) {
+                    if (data.code == 403000) {
+                        location.href = indexUrl;
+                        return;
+                    }
+                    if (data.code == 400000) {
+                        alert(data.message);
+                        return;
+                    }
+                    if (data.code != 200) {
+                        console.log(data.message);
+                    }
+                    redata = data;
+                }, loading: function () {
+                }
+            });
+        }
+        return redata;
+    }
+
+    var json = {
+        page: 1,
+        count: 100
+    }
+    var data = ajaxSendFn(json, "/customer", "GET").result;
+    for (; data.page < data.pageSize; data.page++) {
+        json.page++;
+        var data1 = ajaxSendFn(json, "/customer", "GET").result;
+        data.items = data.items.concat(data1.items);
+        console.log(JSON.stringify(data.items));
+    }
+
+</script>
+</body>
+</html>
