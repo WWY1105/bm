@@ -1,7 +1,7 @@
 <div class="row bg-white">
     <div ng-include="'/admin/rule/leftmenu.html?v12'"></div>
     <div class="v-shadow-content ruleadd">
-        <form class="form-horizontal" name="ruleForm" ng-submit="sendJsons()">
+        <form class="form-horizontal" name="ruleForm" >
             <div class="out">
                 <div class="col-sm-2">
                     <span class="title"><span class="text-red">*</span>名称</span>
@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-control-stack">
                         <label class="checkbox-inline" ng-repeat="(key,shops) in set.list" ng-class="{ml30:$index==0}">
-                            <input type="checkbox" ng-model="set.shops[key]" ng-true-value="{{shops.id}}"
+                            <input type="checkbox" ng-checked="set.shops[$index]" ng-model="set.shops[key]" ng-true-value="{{shops.id}}"
                                 ng-change="checkShops(set.shops[key])">
                             <span ng-bind="shops.name"></span>
                         </label>
@@ -45,13 +45,14 @@
             <div class="out">
                 <div class="col-sm-2">
                     <span class="title">发布途径</span>
+                    
                 </div>
                 <div class="col-sm-8">
                     <div class="text-grey">如不勾选则本活动对全部顾客可见</div>
-                    <div class="form-group" ng-init="posts.pathway='ALL'">
+                    <div class="form-group">
                         <div class="col-sm-12">
                             <label>
-                                <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="ONLINE"
+                                <input type="checkbox" ng-model="posts.pathway" name="lineway"  ng-true-value="ONLINE"
                                     ng-false-value="ALL">仅在活动中心可见（即，仅未到店顾客可见）</label>
                         </div>
                         <div class="col-sm-12">
@@ -116,7 +117,7 @@
                     <!--<a class="btn btn-default btn-block" back-button>返回</a>-->
                     <!--</div>-->
                     <div class="col-sm-4">
-                        <button class="btn btn-primary btn-block">保存</button>
+                        <button class="btn btn-primary btn-block" ng-click="sendJsons1()">保存</button>
                     </div>
                 </div>
             </div>

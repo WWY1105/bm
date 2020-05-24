@@ -4,8 +4,8 @@
   <div class="v-shadow-content">
     <ul class="nav nav-tabs">
       <li role="presentation" class="active"><a ng-class="{'bg-grey':!view.state}"><strong>会员等级设定 </strong>
-        <button class="btn btn-primary btn-xs" ng-show="!view.state">已停用</button>
-      </a></li>
+          <button class="btn btn-primary btn-xs" ng-show="!view.state">已停用</button>
+        </a></li>
       <li class="pull-right">
         <button class="btn rule-add-btn" ng-hide="view.state" ng-click="addnewFn()">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>添加会员等级
@@ -38,7 +38,8 @@
               <span class="text-orange">●</span> {{strategy}}
             </li>
           </ul>
-          <div style="width: 400px;word-wrap:break-word; "><span class="text-red">升级链接：</span>https://m.ishangbin.com/upgrade.html?guestid={{config.staff.guestId}}&tid={{members.toId}}
+          <div style="width: 400px;word-wrap:break-word; "><span
+              class="text-red">升级链接：</span>https://m.ishangbin.com/upgrade.html?guestid={{config.staff.guestId}}&tid={{members.toId}}
           </div>
         </td>
         <td class="rule-edit" ng-hide="view.state">
@@ -57,8 +58,7 @@
 </div>
 <!--修改和添加策略-->
 <div id="memberedit" ng-class="{'opacity':!plan.add}" class="modal fade addpanel" tabindex="-1" role="dialog"
-     aria-labelledby="mySmallModalLabel"
-     aria-hidden="true">
+  aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" style="overflow:hidden">
       <div class="modal-header">
@@ -76,7 +76,7 @@
               <span class="title">名称 :</span>
             </div>
             <div class="col-sm-10">
-              <input type="text" class="form-control col-sm-5" ng-show="!plan.add" ng-model="view.show.toName"/>
+              <input type="text" class="form-control col-sm-5" ng-show="!plan.add" ng-model="view.show.toName" />
               <button class="btn bg-black btn-primary col-sm-2" ng-hide="!plan.add">{{view.show.toName}}</button>
             </div>
           </div>
@@ -85,7 +85,8 @@
               <span class="title">背景颜色 :</span>
             </div>
             <div class="col-sm-10">
-              <input type="text" class="form-control col-sm-5" maxLength="7" placeholder="默认为白色，例如 #ffffff"  ng-model="view.show.backgroundColor"/>
+              <input type="text" class="form-control col-sm-5" maxLength="7" placeholder="默认为白色，例如 #ffffff"
+                ng-model="view.show.backgroundColor" />
             </div>
           </div>
           <div class="out">
@@ -97,7 +98,7 @@
             </div>
           </div>
           <div class="out">
-            <div class="col-sm-2">                                   
+            <div class="col-sm-2">
               <span class="title">*海报 :</span>
             </div>
             <div class="col-sm-10">
@@ -122,7 +123,7 @@
                   <label>
                     <input type="checkbox" ng-model="check.CHARGE">充值</label>
                   <label ng-show="view.show.toGrade===1">
-                    <input type="checkbox" ng-model="check.FREE" ng-change="posts.FREE=check.FREE?{}:undefined"/> 免费升级
+                    <input type="checkbox" ng-model="check.FREE" ng-change="posts.FREE=check.FREE?{}:undefined" /> 免费升级
                   </label>
               </div>
 
@@ -150,6 +151,21 @@
               </div>
             </div>
           </div> -->
+          <div class="out" ng-if="check.FREE">
+            <div class="col-sm-2">
+              <span class="title">*免费升级 :</span>
+            </div>
+            <div class="col-sm-10">
+              <div class="form-inline">
+                分账:
+                <select  ng-model="view.freeAllocateId" class="form-control"
+                  style="width: 80px" ng-options="i.id as i.name for i in view.show.allocates" name="members"></select>
+              </div>
+            </div>
+          </div>
+
+
+
           <div class="out" ng-if="check.BUY">
             <div class="col-sm-2">
               <span class="title">*购买 :</span>
@@ -158,167 +174,162 @@
               <div class="form-inline">
                 <div class="form-group" ng-repeat="buy in posts.BUY">
                   <span class="form-control-static">花费</span>
-                  <input type="number" step="0.01" min="0" class="form-control" style="width: 64px"
-                         ng-model="buy.value" required/>
+                  <input type="number" step="0.01" min="0" class="form-control" style="width: 64px" ng-model="buy.value"
+                    required />
                   <span class="form-control-static"> 元，从</span>
                   <select ng-model="buy.fromId" class="form-control"
-                          ng-options="item.fromId as item.fromName for item in rules.strategies"
-                          name="" required></select>
+                    ng-options="item.fromId as item.fromName for item in rules.strategies" name="" required></select>
                   <span class="form-control-static"> 升级到
                     <strong ng-bind="rules.toName"></strong></span>;分账:
-                    <select ng-model="buy.allocate.id"  class="form-control"  style="width: 80px"
+                  <select ng-model="buy.allocate.id" class="form-control" style="width: 80px"
                     ng-options="i.id as i.name for i in view.show.allocates" name="members"></select>
                   <div class="form-group">
-                    </div>
-                    <a class="add click" ng-if="$first" ng-click="addFn(posts.BUY)"> <i
-                            class="glyphicon glyphicon-plus"></i></a>
-                    <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.BUY,$index)"> <i
-                            class="glyphicon glyphicon-remove"></i></a>
                   </div>
+                  <a class="add click" ng-if="$first" ng-click="addFn(posts.BUY)"> <i
+                      class="glyphicon glyphicon-plus"></i></a>
+                  <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.BUY,$index)"> <i
+                      class="glyphicon glyphicon-remove"></i></a>
                 </div>
-
-              </div>
-            </div>
-
-          </div>
-          <div class="out" ng-if="check.POINT_EXCHANGE">
-            <div class="col-sm-2">
-              <span class="title">*积分兑换 :</span>
-            </div>
-            <div class="col-sm-10">
-              <div class="form-inline">
-                <div class="form-group" ng-repeat="buy in posts.POINT_EXCHANGE">
-                  <span class="form-control-static">兑换</span>
-                  <input type="number" step="0.01" min="0" class="form-control" style="width: 64px"
-                         ng-model="buy.value" required/>
-                  <span class="form-control-static"> 元，从</span>
-                  <select ng-model="buy.fromId" class="form-control"
-                          ng-options="item.fromId as item.fromName for item in rules.strategies"
-                          name="" required></select>
-                  <span class="form-control-static"> 升级到
-                    <strong ng-bind="rules.toName"></strong></span>
-                  <div class="form-group">
-                    <a class="add click" ng-if="$first" ng-click="addFn(posts.POINT_EXCHANGE)"> <i
-                            class="glyphicon glyphicon-plus"></i></a>
-                    <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.POINT_EXCHANGE,$index)"> <i
-                            class="glyphicon glyphicon-remove"></i></a>
-                  </div>
-                </div>
-
               </div>
 
             </div>
           </div>
-          <div class="out" ng-if="check.POINT">
-            <div class="col-sm-2">
-              <span class="title">*累积积分升级 :</span>
-            </div>
-            <div class="col-sm-10">
-              <div class="form-inline">
-                <div class="form-group" ng-repeat="buy in posts.POINT">
-                  <span class="form-control-static">累积</span>
-                  <input type="number" step="0.01" min="0" class="form-control" style="width: 64px"
-                         ng-model="buy.value" required/>
-                  <span class="form-control-static"> 积分，从</span>
-                  <select ng-model="buy.fromId" class="form-control"
-                          ng-options="item.fromId as item.fromName for item in rules.strategies"
-                          name="" required></select>
-                  <span class="form-control-static"> 升级到
-                    <strong ng-bind="rules.toName"></strong></span>
-                  <div class="form-group">
-                    <a class="add click" ng-if="$first" ng-click="addFn(posts.POINT)"> <i
-                            class="glyphicon glyphicon-plus"></i></a>
-                    <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.POINT,$index)"> <i
-                            class="glyphicon glyphicon-remove"></i></a>
-                  </div>
-                </div>
 
-              </div>
-            </div>
+        </div>
+        <div class="out" ng-if="check.POINT_EXCHANGE">
+          <div class="col-sm-2">
+            <span class="title">*积分兑换 :</span>
           </div>
-          <div class="out" ng-if="check.SUM_COST">
-            <div class="col-sm-2">
-              <span class="title">*累积消费升级 :</span>
-            </div>
-            <div class="col-sm-10">
-              <div class="form-inline">
-                <div class="form-group" ng-repeat="buy in posts.SUM_COST">
-                  <span class="form-control-static">累积</span>
-                  <input type="number" step="0.01" min="0" class="form-control" style="width: 64px"
-                         ng-model="buy.value" required/>
-                  <span class="form-control-static"> 元，从</span>
-                  <select ng-model="buy.fromId" class="form-control"
-                          ng-options="item.fromId as item.fromName for item in rules.strategies"
-                          name="" required></select>
-                  <span class="form-control-static"> 升级到
-                    <strong ng-bind="rules.toName"></strong></span>
-                  <div class="form-group">
-                    <a class="add click" ng-if="$first" ng-click="addFn(posts.SUM_COST)"> <i
-                            class="glyphicon glyphicon-plus"></i></a>
-                    <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.SUM_COST,$index)"> <i
-                            class="glyphicon glyphicon-remove"></i></a>
-                  </div>
+          <div class="col-sm-10">
+            <div class="form-inline">
+              <div class="form-group" ng-repeat="buy in posts.POINT_EXCHANGE">
+                <span class="form-control-static">兑换</span>
+                <input type="number" step="0.01" min="0" class="form-control" style="width: 64px" ng-model="buy.value"
+                  required />
+                <span class="form-control-static"> 元，从</span>
+                <select ng-model="buy.fromId" class="form-control"
+                  ng-options="item.fromId as item.fromName for item in rules.strategies" name="" required></select>
+                <span class="form-control-static"> 升级到
+                  <strong ng-bind="rules.toName"></strong></span>
+                <div class="form-group">
+                  <a class="add click" ng-if="$first" ng-click="addFn(posts.POINT_EXCHANGE)"> <i
+                      class="glyphicon glyphicon-plus"></i></a>
+                  <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.POINT_EXCHANGE,$index)"> <i
+                      class="glyphicon glyphicon-remove"></i></a>
                 </div>
-
               </div>
 
             </div>
+
           </div>
-          <div class="out" ng-if="check.CHARGE">
-            <div class="col-sm-2">
-              <span class="title">*充值 :</span>
-            </div>
-            <div class="col-sm-10">
-              <div class="form-inline">
-                <div class="form-group" ng-repeat="buy in posts.CHARGE">
-                  <span class="form-control-static">充值</span>
-                  <input type="number" step="0.01" min="0" class="form-control" style="width: 64px"
-                         ng-model="buy.value" required/>
-                  <span class="form-control-static"> 元，从</span>
-                  <select ng-model="buy.fromId" class="form-control"
-                          ng-options="item.fromId as item.fromName for item in rules.strategies"
-                          name="" required></select>
-                  <span class="form-control-static"> 升级到
-                    <strong ng-bind="rules.toName"></strong></span>
-                  <div class="form-group">
-                    <a class="add click" ng-if="$first" ng-click="addFn(posts.CHARGE)"> <i
-                            class="glyphicon glyphicon-plus"></i></a>
-                    <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.CHARGE,$index)"> <i
-                            class="glyphicon glyphicon-remove"></i></a>
-                  </div>
+        </div>
+        <div class="out" ng-if="check.POINT">
+          <div class="col-sm-2">
+            <span class="title">*累积积分升级 :</span>
+          </div>
+          <div class="col-sm-10">
+            <div class="form-inline">
+              <div class="form-group" ng-repeat="buy in posts.POINT">
+                <span class="form-control-static">累积</span>
+                <input type="number" step="0.01" min="0" class="form-control" style="width: 64px" ng-model="buy.value"
+                  required />
+                <span class="form-control-static"> 积分，从</span>
+                <select ng-model="buy.fromId" class="form-control"
+                  ng-options="item.fromId as item.fromName for item in rules.strategies" name="" required></select>
+                <span class="form-control-static"> 升级到
+                  <strong ng-bind="rules.toName"></strong></span>
+                <div class="form-group">
+                  <a class="add click" ng-if="$first" ng-click="addFn(posts.POINT)"> <i
+                      class="glyphicon glyphicon-plus"></i></a>
+                  <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.POINT,$index)"> <i
+                      class="glyphicon glyphicon-remove"></i></a>
                 </div>
-
               </div>
 
-
-            </div>
-          </div>
-          <div class="col-sm-10 col-sm-offset-2" >
-            <div class="row mb15 mt15">
-              <div class="col-sm-3">
-                <a data-dismiss="modal" class="btn btn-default btn-block">返回</a>
-              </div>
-              <div class="col-sm-3 col-sm-offset-1">
-                <button class="btn btn-primary btn-block" type="submit" ng-disabled="!add_form.$valid"
-                        disabled="disabled">确定
-                </button>
-              </div>
             </div>
           </div>
         </div>
+        <div class="out" ng-if="check.SUM_COST">
+          <div class="col-sm-2">
+            <span class="title">*累积消费升级 :</span>
+          </div>
+          <div class="col-sm-10">
+            <div class="form-inline">
+              <div class="form-group" ng-repeat="buy in posts.SUM_COST">
+                <span class="form-control-static">累积</span>
+                <input type="number" step="0.01" min="0" class="form-control" style="width: 64px" ng-model="buy.value"
+                  required />
+                <span class="form-control-static"> 元，从</span>
+                <select ng-model="buy.fromId" class="form-control"
+                  ng-options="item.fromId as item.fromName for item in rules.strategies" name="" required></select>
+                <span class="form-control-static"> 升级到
+                  <strong ng-bind="rules.toName"></strong></span>
+                <div class="form-group">
+                  <a class="add click" ng-if="$first" ng-click="addFn(posts.SUM_COST)"> <i
+                      class="glyphicon glyphicon-plus"></i></a>
+                  <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.SUM_COST,$index)"> <i
+                      class="glyphicon glyphicon-remove"></i></a>
+                </div>
+              </div>
 
-       
-      </form>
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
+            </div>
+
+          </div>
+        </div>
+        <div class="out" ng-if="check.CHARGE">
+          <div class="col-sm-2">
+            <span class="title">*充值 :</span>
+          </div>
+          <div class="col-sm-10">
+            <div class="form-inline">
+              <div class="form-group" ng-repeat="buy in posts.CHARGE">
+                <span class="form-control-static">充值</span>
+                <input type="number" step="0.01" min="0" class="form-control" style="width: 64px" ng-model="buy.value"
+                  required />
+                <span class="form-control-static"> 元，从</span>
+                <select ng-model="buy.fromId" class="form-control"
+                  ng-options="item.fromId as item.fromName for item in rules.strategies" name="" required></select>
+                <span class="form-control-static"> 升级到
+                  <strong ng-bind="rules.toName"></strong></span>
+                <div class="form-group">
+                  <a class="add click" ng-if="$first" ng-click="addFn(posts.CHARGE)"> <i
+                      class="glyphicon glyphicon-plus"></i></a>
+                  <a class="remove click" ng-if="!$first" ng-click="removeFn(posts.CHARGE,$index)"> <i
+                      class="glyphicon glyphicon-remove"></i></a>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+        </div>
+        <div class="col-sm-10 col-sm-offset-2">
+          <div class="row mb15 mt15">
+            <div class="col-sm-3">
+              <a data-dismiss="modal" class="btn btn-default btn-block">返回</a>
+            </div>
+            <div class="col-sm-3 col-sm-offset-1">
+              <button class="btn btn-primary btn-block" type="submit" ng-disabled="!add_form.$valid"
+                disabled="disabled">确定
+              </button>
+            </div>
+          </div>
+        </div>
     </div>
+
+
+    </form>
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
   </div>
+</div>
 
 </div>
 <!--增加名称-->
 <div id="memberadd" class="modal fade addpanel" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-     aria-hidden="true">
+  aria-hidden="true">
   <div class="modal-dialog" style="width: 700px!important">
     <form name="planform">
       <div class="modal-content" style="overflow-y:hidden">
@@ -338,24 +349,24 @@
 
               <div class="col-sm-5">
                 <input class="form-control" name="memberName" ng-model="tem.name" type="text" placeholder="输入该级别的名称"
-                       ng-minlength='2' ng-maxlength='10' ng-pattern="/[\u4e00-\u9fa5\d\w]/" required/>
+                  ng-minlength='2' ng-maxlength='10' ng-pattern="/[\u4e00-\u9fa5\d\w]/" required />
 
                 <div class="help-block ">
                   <div class="" ng-show="!planform.memberName.$valid&&!planform.memberName.$touched">2-10个字符</div>
                   <span ng-messages="planform.memberName.$error" ng-show="planform.memberName.$touched">
-                                    <div class="text-red" ng-message="minlength">至少需要2个字符</div>
-                                    <div class="text-red" ng-message="maxlength">需小于10字符</div>
-                                    <div class="text-red" ng-message="pattern">
-                                      <span ng-bind="config.textCheckErrorJson.nickname"></span>
-                                    </div>
-                            <div class="text-red" ng-message="required">2-20字符的汉字英文数字</div>
-                            </span>
+                    <div class="text-red" ng-message="minlength">至少需要2个字符</div>
+                    <div class="text-red" ng-message="maxlength">需小于10字符</div>
+                    <div class="text-red" ng-message="pattern">
+                      <span ng-bind="config.textCheckErrorJson.nickname"></span>
+                    </div>
+                    <div class="text-red" ng-message="required">2-20字符的汉字英文数字</div>
+                  </span>
 
                   <div class="text-success" ng-show="planform.memberName.$valid">输入正确</div>
                 </div>
               </div>
               <div class="col-sm-3"><a class="btn btn-primary btn-block" ng-disabled="!planform.$valid"
-                                       ng-click="handleClick(view.plan.level)">下一步</a></div>
+                  ng-click="handleClick(view.plan.level)">下一步</a></div>
             </div>
           </div>
         </div>
@@ -365,7 +376,7 @@
 </div>
 <!--启用停用计划-->
 <div id="turnoff" class="modal fade addpanel" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-     aria-hidden="true">
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" style="overflow:hidden">
       <div class="modal-header">
@@ -380,7 +391,7 @@
           <div class="col-sm-2 col-sm-offset-3">
             <img src="/public/img/know.png">
           </div>
-          <div class="col-sm-7 mt15"><span>贵店已有顾客加入会员<br/>请谨慎选择是否停用会员计划</span>
+          <div class="col-sm-7 mt15"><span>贵店已有顾客加入会员<br />请谨慎选择是否停用会员计划</span>
           </div>
         </div>
       </div>
@@ -399,7 +410,7 @@
 </div>
 <!--停用计划-->
 <div id="turnon" class="modal fade addpanel" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-     aria-hidden="true">
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" style="overflow:hidden">
       <div class="modal-header">
