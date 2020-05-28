@@ -273,7 +273,7 @@ function appRouteConfig($routeProvider) { //路由规则
             templateUrl: "admin/rule/order/add.html",
             controller: "addOrderCtr"
         }) //代客下单-新增
-        .when('/rule/edit/:id', {
+        .when('/rule/editOrder/:id', {
             templateUrl: "admin/rule/order/edit.html",
             controller: "editOrderCtr"
         }) //代客下单-修改
@@ -2272,6 +2272,7 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
     $scope.plan = {
         add: 0
     };
+   
     $scope.upgradeType = {
         "CUSTOMER": "CUSTOMER",
         "MEMBER": "MEMBER"
@@ -2285,6 +2286,7 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
         isUpdate: false,
         maxGrades: 6, //级别数量
         rules: {}, //新增加的字段，升级的每个等级,
+        freeAllocateId:''
 
     };
 
@@ -2393,7 +2395,15 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
         $scope.view.show.allocates = allocates;
         $scope.view.show.allocate = '';
         if (!$scope.view.member[a - 1].Upgrade) {
+            // 获取已有的规则
             var data = ajaxSendFn({}, "/memberUpgrade/toId/" + $scope.view.member[a - 1].toId, "GET");
+            if(data.result.strategies){
+                data.result.strategies.map(function(i){
+                    if(i.type=='FREE'&&i.allocate){
+                        $scope.view.freeAllocateId=i.allocate.id
+                    }
+                })
+            }
             $scope.view.member[a - 1].Upgrade = data.result.strategies || [];
             $scope.rules = data.result;
             $scope.rules.strategies = [];
@@ -2413,10 +2423,12 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
             POINT_EXCHANGE: [],
             POINT: [],
             SUM_COST: [],
-            CHARGE: []
+            CHARGE: [],
+            FREE:[]
         };
         $scope.check = {};
         for (x in $scope.view.member[a - 1].Upgrade) {
+          
             type = $scope.view.member[a - 1].Upgrade[x].type;
             if (!$scope.posts[type]) {
                 $scope.posts[type] = [{}];
@@ -2437,6 +2449,7 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
                 $scope.posts[type].push({});
             }
         }
+        console.log($scope.posts.FREE)
         $("#memberedit").modal("show");
     }
     $scope.addFn = function (obj) {
@@ -2460,7 +2473,9 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
             alert(data.message);
         };
     }
+  
     $scope.postSend = function () { //提交表单，添加、修改会员升级规则
+      
         var jsons = {};
         var json = [];
         toid = $scope.view.member[$scope.view.show.toGrade - 1].toId;
@@ -2468,6 +2483,8 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
             alert("会员名称已被占用");
             return;
         }
+        console.log('$scope.posts')
+        console.log($scope.posts)
         for (var x in $scope.posts) {
             if (!$scope.check[x]) {
                 continue;
@@ -2476,11 +2493,15 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
                 json.push({
                     toId: toid,
                     type: x,
-                    fromId: "CUSTOMER"
+                    fromId: "CUSTOMER",
+                    allocate:{
+                        id:$scope.view.freeAllocateId
+                    }
+                    
                 })
                 continue;
             }
-            console.log($scope.posts[x])
+          
             for (var item in $scope.posts[x]) {
 
                 var send = {
@@ -2488,10 +2509,10 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
                     type: x,
                     fromId: $scope.posts[x][item].fromId,
                 };
+              
                 // 购买升级需要设置分规则
                 if ($scope.posts[x][item].allocate) {
                     send.allocate = $scope.posts[x][item].allocate
-
                 }
 
                 if ($scope.posts[x][item].value) send.value = $scope.posts[x][item].value;
@@ -2506,6 +2527,9 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
 
         jsons.backgroundColor = $scope.view.show.backgroundColor;
         jsons.strategies = json;
+        // console.log(jsons)
+        // console.log($scope.free)
+        // return false;
         re = ajaxSendFn(JSON.stringify(jsons), "/memberUpgrade", "POST", 1);
         if (re.code == 200) {
             $scope.view.member = ajaxSendFn({}, "/memberUpgrade", "GET").result.strategy || [];
@@ -2654,7 +2678,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             console.log(ruletem.category)
             // 如果是充值活动   处理一下分账规则
             if (ruletem.category == 'CHARGE') {
-                if(ruletem.rules&& ruletem.rules.detail){
+                if (ruletem.rules && ruletem.rules.detail) {
                     ruletem.rules.detail.ALL.forEach(function (item) {
                         if (item.allocates && item.allocates.length) {
                             console.log('附近的萨克发货的比较萨克洛夫的话就撒开发')
@@ -2663,7 +2687,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
                         }
                     })
                 }
-              
+
             }
             if (ruletem.category.indexOf('_') > 0) {
                 $scope.tem.activityCategory = ruletem.category.split('_')[0];
@@ -9011,8 +9035,10 @@ app.controller('videoCtr', function ($scope, $sce, $location, $http) { //shoplis
     }
 
 });
-// 代客下单
-app.controller("shareGoldCtr", ["$scope", "$http", "$filter", "$document", "$compile", "$rootScope", function ($scope, $http, $filter, $document, $compile, $rootScope) {
+
+
+// 代客下单--列表
+app.controller("orderCtr", ["$scope", "$http", "$filter", "$document", "$compile", "$rootScope", function ($scope, $http, $filter, $document, $compile, $rootScope) {
     $scope.config.breadset = [{ //
         name: "代客下单",
         href: indexUrl + "/admin.html#/rule/order",
@@ -9020,12 +9046,764 @@ app.controller("shareGoldCtr", ["$scope", "$http", "$filter", "$document", "$com
     }, {
         name: "代客下单"
     }]; //面包屑;
+    $scope.shops = ajaxSendFn({
+        state: 1002
+    }, "/shops", "GET").result;
+
+    $scope.list = ajaxSendFn({}, "/activity/takeout", "GET").result;
+    // 获取店铺对应的文字
+    $scope.filterfn = function (id) {
+        for (var i = 0; i < $scope.shops.length; i++) {
+            if ($scope.shops[i].id == id) {
+                return $scope.shops[i].name
+            }
+        }
+    }
+    // 处理配送信息
+    $scope.list.items.map(function (item) {
+        let str = '';
+        for (var i in item.deliver) {
+            str += i + "公里:";
+            item.deliver[i].map(function (k) {
+                str += '订单金额' + k.amount + '元,收取配送费' + k.value + '元'
+            })
+        }
+        item.deliverText = str;
+
+    })
+    // 上线
+    $scope.onFn = function (id) {
+        let url = '/activity/takeout/' + id + '/on'
+        var res = ajaxSendFn({}, url, "POST");
+        if (res.code.code == 200) {
+            alert('上线成功')
+            $scope.list = ajaxSendFn({}, "/activity/takeout", "GET").result;
+        } else {
+            alert(res.message)
+        }
+    };
+    // 下线
+    $scope.offFn = function (id) {
+        let url = '/activity/takeout/' + id + '/off'
+        var res = ajaxSendFn({}, url, "POST");
+        if (res.code.code == 200) {
+            alert('下线成功')
+            $scope.list = ajaxSendFn({}, "/activity/takeout", "GET").result;
+        } else {
+            alert(res.message)
+        }
+    };
+    // 删除
+    $scope.removeFn = function (id) {
+        let url = '/activity/takeout/' + id;
+        var a = confirm("确认删除？");
+        if (a) {
+            var res = ajaxSendFn({}, url, "DELETE");
+            if (res.code.code == 200) {
+                alert('删除成功')
+                $scope.list = ajaxSendFn({}, "/activity/takeout", "GET").result;
+            } else {
+                alert(res.message)
+            }
+        }
+
+    }
 
 }]);
+// 代客下单--修改
+app.controller("editOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$location", 'CouponFactory', function ($scope, $http, $routeParams, $filter, $location, couponFac) {
+    $scope.config.breadset = [{ //
+        name: "代客下单",
+        href: indexUrl + "/admin.html#/rule/editOrder",
+        class: "edit"
+    }, {
+        name: "代客下单"
+    }]; //面包屑;
+  
+    $scope.view = {
+        date:{
+            dateType:''
+        },
+       
+        category: []
+    };
+    $scope.view1 = {};
+    $scope.transferMap = {
+        POINT_CONSUME: "POINTCONSUME",
+        COUPON_FREE: "COUPONFREE",
+        CHARGE_CONSUME: "CHARGECONSUME",
+        SPECIAL_PRICE: "SPECIALPRICE",
+        LIMIT_REDUCE: "LIMITREDUCE",
+        SPEND_AS: "SPENDAS",
+        SET_MEAL: "SETMEAL",
+        GIVEN_UPGRADE: "GIVENUPGRADE",
+        CHARGE_FREE: "CHARGEFREE",
+        BIRTH_BENEFIT: "BIRTHBENEFIT",
+        FIRST_GIFT: "FIRSTGIFT",
+
+    };
+    $scope.transferMapRev = {
+        POINTCONSUME: "POINT_CONSUME",
+        COUPONFREE: "COUPON_FREE",
+        CHARGECONSUME: "CHARGE_CONSUME",
+        SPECIALPRICE: "SPECIAL_PRICE",
+        LIMITREDUCE: "LIMIT_REDUCE",
+        SPENDAS: "SPEND_AS",
+        SETMEAL: "SET_MEAL",
+        GIVENUPGRADE: "GIVEN_UPGRADE",
+        CHARGEFREE: "CHARGE_FREE",
+        BIRTHBENEFIT: "BIRTH_BENEFIT",
+        FIRSTGIFT: "FIRST_GIFT"
+    };
+    $scope.tem = {
+        rules: {}
+    };
+    $scope.allShop = false;
+    $scope.posts=ajaxSendFn({}, "/activity/takeout/"+$routeParams.id, "GET").result;
+
+    $scope.view.dateRange = $scope.posts.dateRange;
+    var dateRangeCategory = $scope.posts.dateRangeCategory;
+   
+    // $scope.view.date[dateRangeCategory] = $scope.posts.dateRange
+    $scope.view.date.dateType = dateRangeCategory
+
+    $scope.set = {
+        times: ajaxSendFn({}, "/businesstimes/all", "GET").result,
+        list: ajaxSendFn({
+            state: 1002
+        }, "/shops", "GET").result,
+        allocate: ajaxSendFn({}, "/activity/allocate/8015", "GET").result || [],
+        // 业务提成
+        allocates: [{
+            key: '',
+            value: ''
+        }],
+        // 配送
+        deliver: [
+        ],
+        list2: [],
+        timeType: {
+            "1001": "早市",
+            "1002": "午市",
+            "1003": "下午茶",
+            "1004": "晚市",
+            "1005": "宵夜"
+        },
+        // shops: [],
+        personLimitDetail: [{
+            'amount': '',
+            "count": ''
+        }],
+        countLimit: 0,
+        shops:$scope.posts.shops,
+        pathways:$scope.posts.pathways
+    };
+
+    // 处理一下提成
+    if( $scope.posts.allocates){
+
+    }else{
+        $scope.posts.allocates={}
+    }
+ 
+  
+    // 处理一下配送费
+    if( $scope.posts.deliver){
+        for(var item in $scope.posts.deliver){
+            let obj={};
+            obj.key=item-0;
+            obj.values= $scope.posts.deliver[item];
+            $scope.set.deliver.push(obj);
+        }
+    }
+    console.log('获取配送')
+    console.log( $scope.set.deliver)
+   
+    // 添加一个业务提成
+    $scope.addAllocates = function () {
+        $scope.set.allocates.push({
+            key: '',
+            value: ''
+        })
+    }
+    // 添加配送费
+    $scope.addDeliverData = function () {
+        $scope.set.deliver.push({
+            key: 0,
+            values: [{
+                "amount": 0,
+                "value": 0
+            }]
+        })
+    }
+    $scope.addEachMile = function (index) {
+        $scope.set.deliver[index].values.push({
+                "amount": 0,
+                "value": 0
+            }
+
+        )
+    }
+
+    // 添加配送费---end
+
+    $scope.set.time = getSubtimes($scope.set.times, $scope.set.timeType);
+    if (!$scope.set.list) {
+        alert("目前还没有添加门店");
+        $location.path("/shops");
+    }
+    $scope.checkallstr = 0;
+
+    $scope.coupon = {
+        shared: [],
+        shops: []
+    };
+    $scope.cons = function (val) {
+        console.log("highest")
+        console.log(val)
+    }
+    console.log($scope.vidUrl)
+
+    $scope.temcoupons2 = {};
+    $scope.temcoupons = [];
+    $scope.ruleCategory = consumeRuleObj;
+    $scope.ruleCategory1 = onlineRuleObj;
+    $scope.obtainRepeatCategory = obtainRepeatCategory;
+
+    $scope.ruleFn = {
+        openOrClose: function () {
+            $("#add").modal("show");
+            $scope.isOpenOrClose = true;
+        },
+        testAddOk: function () {
+            $("#add").modal("hide");
+            $scope.isOpenOrClose = false;
+            alert("添加成功");
+            //$scope.view.coupons = couponFac.getAllCoupon();
+        },
+        testAddFail: function (result) {
+            //console.log("错误编号:" + result.code + ", 错误信息:" + result.message);
+            errorMsg(result);
+        },
+        getCpouponFn: function () {
+            console.log($scope.view);
+            $scope.view1 = ajaxSendFn({}, "/activity/factor", "GET").result || [];
+            $scope.view.coupons = $scope.view1.COUPON || [];
+            $scope.view.rewards = $scope.view1.REWARD || [];
+            console.log("1111");
+            console.log($scope.view);
+            // $scope.view.allocate = $scope.view1.ALLOCATE || [];
+            // $scope.view.coupons = ajaxSendFn({}, "/activity/factor", "GET").result || [];
+            // $scope.view.rewards = ajaxSendFn({}, "/activity/factor", "GET").result || [];
+        },
+        getCouponType: function (id) {
+            for (var i = 0; $scope.view.coupons && i < $scope.view.coupons.length; i++) {
+                if ($scope.view.coupons[i].id === id) {
+                    return $scope.view.coupons[i].category;
+                }
+            }
+        },
+        changeCoupon: function (value, dv) {
+            if (dv.id) {
+                dv.count = 1;
+                for (var i = 0; i < $scope.view.coupons.length; i++) {
+                    if ($scope.view.coupons[i].id === dv.id) {
+                        dv.name = $scope.view.coupons[i].name;
+                        break;
+                    }
+                }
+            }
+        },
+        oldRuleFn: function () { //从服务器获取目前的规则列表
+
+            $scope.ruleFn.getCpouponFn();
+            switch ('CHARGE') {
+                case "DISCOUNT":
+                    $scope.view.rules = {
+                        "DISCOUNT": {
+                            name: "打折",
+                            uncheck: true,
+                            state: "",
+                            show: 0,
+                            addFunc: $scope.ruleFn.addFn,
+                            postFunc: $scope.ruleFn.sendFn,
+                            content: {
+                                DISCOUNT: []
+                            }
+                        }
+                    };
+                    break;
+                case "CHARGE":
+                    $scope.view.rules = {
+                        "CHARGE": {
+                            name: "充值",
+                            uncheck: true,
+                            state: "",
+                            show: 0,
+                            addFunc: $scope.ruleFn.addCouponFn,
+                            postFunc: $scope.ruleFn.sendCouponFn,
+                            content: {
+                                CHARGE: []
+                            }
+                        }
+                    };
+                    break;
+
+            }
+
+            console.log($scope.view.rules)
+            $scope.view.shop = ajaxSendFn({
+                state: "1002"
+            }, "/shops", "GET").result || [];
+            $scope.tem.shops = [];
+            for (var x in $scope.view.shop) $scope.tem.shops.push($scope.view.shop[x].id);
+
+            $scope.tem.rules = {}
+            $scope.tem.rules[$scope.tem.rules.type] = $scope.tem.rules;
+
+        },
+        stateFn: function (a, b, c, d) { //key,state,show,点击添加规则时调用
+            var aRe = a.split("_")[0];
+            if (aRe in $scope.view.rules) {
+                $scope.view.rules[aRe].state = b;
+                $scope.view.rules[aRe].show = c;
+            }
+            if (b == "add") $scope.ruleFn.buttonFn(a);
+            if (!d) { //只让添加一项,就让设定活动内容按钮灰掉,d无值表示是手动点击
+                $scope.btnDisable = 1;
+                return;
+            }
+            var tem = d.type;
+            if (c) {
+                d.celling && (d.celling = d.celling * 100);
+                $scope.view.rules[aRe].content[tem] = d
+            }
+        },
+        closeFn: function (a) { //取消按钮
+            if ($scope.view.rules[a].state == "edit") { //保存
+                $scope.view.rules[a].state = "show";
+            } else if ($scope.view.rules[a].state == "add") { //新增
+                $scope.view.rules[a].state = "show";
+            }
+        },
+        buttonFn: function (a) { //活动保存按钮  del
+            if ($scope.view.rules[a].state == "show") { //修改
+                $scope.ruleFn.postFn(a);
+                $scope.ruleFn.memberFn();
+                $scope.view.rules[a].state = "edit";
+            } else if ($scope.view.rules[a].state == "edit") { //保存
+                var res = $scope.ruleFn.sendCouponFn();
+                if (res) {
+                    //$location.path("/rule");
+                    $scope.view.rules[a].state = "show";
+                }
+            } else if ($scope.view.rules[a].state == "add") { //新增
+                for (x in $scope.view.rules[a].content) $scope.view.rules[a].addFunc(x);
+                $scope.view.rules[a].state = "edit";
+                $("#showadd").modal("hide");
+            }
+        },
+
+        postFn: function (a) { //发送数据
+            var tem = $scope.view.rules[a].content;
+            console.log(tem)
+            $scope.posts[a] = {};
+            for (x in tem) {
+                var needCheck = true;
+                $scope.posts[a][x] = tem[x];
+                if (tem[x] instanceof Array) {
+                    needCheck = false;
+                }
+                $scope.posts[a][x].check = needCheck;
+                if (!tem[x].detail || !Object.keys(tem[x].detail).length) {
+                    $scope.view.rules[a].addFunc(x);
+                }
+            }
+
+        },
+        addCouponFn: function (x) {
+            $scope.ruleFn.addFn(x, function (a, b) {
+                //if (a === "COUPON" || a === "GAME" || b === "COUPON" || x === "COUPONFREE" || x === "SPECIALPRICE") {
+                if ($scope.posts[a][x].detail != undefined) {
+                    if ($scope.posts[a][x].detail.ALL != undefined) {
+                        var arr = $scope.posts[a][x].detail.ALL;
+                    } else {
+                        $scope.posts[a][x].detail.ALL = []
+                    }
+                } else {
+                    $scope.posts[a][x].detail = {}
+                    $scope.posts[a][x].detail.ALL = []
+                }
+
+                if (arr && arr.length > 0 && !isEmptyObject(arr[0])) {
+                    var obj = {};
+                    obj.value = {};
+                    obj.allocates = []
+                    for (var i = 0; i < $scope.set.list.length; i++) {
+                        obj.allocates[i] = {
+                            'highest': 'false',
+                            'id': ''
+                        }
+                    }
+                    $scope.posts[a][x].detail.ALL.push(obj);
+                    console.log("obj1")
+                    console.log(obj)
+                } else {
+                    var obj = {}
+                    obj.value = {};
+                    obj.allocates = []
+                    for (var i = 0; i < $scope.set.list.length; i++) {
+                        obj.allocates[i] = {
+                            'highest': 'false',
+                            'id': ''
+                        }
+                    }
+                    $scope.posts[a][x].detail.ALL.push(obj);
+                    console.log("obj2")
+                    console.log(obj)
+                }
+
+                console.log("$$hashKey")
+                console.log($scope.posts[a][x].detail.ALL)
+                //}
+            })
+
+        },
+
+        addFn: function (x, cb) { //
+            var cnt = 0;
+            var a, b;
+            var arr = x.split("_");
+            if (arr && arr.length > 0) {
+                a = arr[0];
+            }
+            if (arr && arr.length > 1) {
+                b = arr[1];
+            }
+            if (!$scope.posts[a] || !$scope.posts[a][x] || !$scope.posts[a][x].detail || isEmptyObject($scope.posts[a][x].detail)) {
+                if (!$scope.posts[a]) $scope.posts[a] = {};
+                $scope.posts[a][x] = $scope.view.rules[a].content[x];
+                // if (!$scope.posts[a][x].detail || isEmptyObject($scope.posts[a][x].detail))
+                // $scope.posts[a][x].detail = {
+                //     "ALL": [{}]
+                // };
+                if (cb) cb(a, b);
+                return;
+            }
+            if ($scope.posts[a][x].detail.ALL) {
+                // var obj = {};
+                if (cb) {
+                    cb(a, b);
+                } else {
+                    // $scope.posts[a][x].detail.ALL.push(obj);
+                }
+            } else {
+                // $scope.posts[a][x].detail.ALL = [{}];
+                if (cb) cb(a, b);
+            }
+            console.log("$$hashKey")
+            console.log($scope.posts[a][x].detail.ALL)
+
+        },
+        removeFn: function (x, b, c) {
+            var a = x.split("_")[0];
+            if ($scope.posts[a][x].detail[b][c]) $scope.posts[a][x].detail[b].splice(c, 1);
+        },
+        //构建使用充值卡的数据
+        sendChargeConsumeFn: function (a) {
+            return $scope.ruleFn.sendFn(a, undefined, undefined, function (json) {
+                var obj = json.detail.ALL[0];
+
+                obj.amount = 1;
+                obj.currentAmount = obj.count = 0;
+            });
+        },
+        sendFn: function (a, beforeValidateFunc, afterValidateFunc, fixFunc) { ///没搞完，发送规则
+            var tem = $scope.posts[a];
+            var json = {};
+            for (var x in tem) {
+                if (!$scope.view.rules[a].uncheck) {
+                    if (!tem[x].check) {
+                        continue;
+                    }
+                }
+                if ($scope.transferMapRev.hasOwnProperty(x)) {
+                    json.type = $scope.transferMapRev[x];
+                } else {
+                    json.type = x;
+                }
+                json.detail = {};
+                tem[x]._id && (json._id = tem[x]._id);
+                tem[x].amountLimit && (json.amountLimit = tem[x].amountLimit);
+                if (tem[x].celling) {
+                    json.celling = parseInt(tem[x].celling) / 100;
+                    // 仅限首次充值
+                    if (tem[x].firstLimit) {
+                        json.firstLimit = true;
+                    } else {
+                        json.firstLimit = false;
+                    }
+                }
+                // 是否支持充值卡余额通用
+                if (json.type == "CHARGE_CONSUME") {
+                    if (tem[x].allpurpose) {
+                        json.allpurpose = true;
+                    } else {
+                        json.allpurpose = false;
+                    }
+                }
+
+                typeof tem[x].countLimit == 'number' && (json.countLimit = tem[x].countLimit);
+                tem[x].timesLimit && (json.timesLimit = tem[x].timesLimit);
+                tem[x].obtainCategory && (json.obtainCategory = tem[x].obtainCategory);
+
+                var tem2 = tem[x].detail;
+
+                var b;
+                var arr = x.split("_");
+                if (arr && arr.length > 1) {
+                    b = arr[1];
+                }
+
+                for (z in tem2) {
+                    for (w in tem2[z]) {
+                        var tem3 = tem2[z][w],
+                            json2 = {};
+                        (typeof (tem3.amount) == 'number' || tem3.amount) && (json2.amount = tem3.amount);
+                        tem3.score && (json2.score = tem3.score);
+                        tem3.gradeId && (json2.gradeId = tem3.gradeId);
+                        if (tem3.value && tem3.value.length != 0) {
+                            json2.value = tem3.value;
+                            if (json2.value && json2.value.length) {
+                                for (var x in json2.value) {
+                                    delete json2.value[x].$$hashKey;
+                                }
+                            }
+                        } else if (json.type == "CHARGE_CONSUME") {
+                            json2.value = false;
+                        }
+                        tem3.limit !== undefined && (json2.limit = tem3.limit);
+                        tem3.count && (json2.count = tem3.count);
+                        tem3.currentAmount && (json2.currentAmount = tem3.currentAmount);
+                        // 添加分账规则
+                        if (json.detail[tem3.id]) json.detail[tem3.id].push(json2);
+                        else json.detail[tem3.id] = [json2];
+                    }
+                }
+
+                if (json.type == "CHARGE") {
+                    angular.forEach(json.detail.ALL, function (each, index) {
+                        if (!each.value || !each.value[0].category) {
+                            delete each.value
+                        }
+                    })
+                }
+                if (afterValidateFunc && typeof (afterValidateFunc) === "function") {
+                    obj = afterValidateFunc(b, json);
+                    if (obj) {
+                        alert(obj.message);
+                        return false;
+                    }
+                }
+                if (fixFunc && typeof (fixFunc) === "function") {
+                    fixFunc(json);
+                }
+            }
+            // 验证授权邀请码是否正确
+            if ($scope.tem.activityCategory == "TICKET") {
+                if ($scope.tel.inviters) {
+                    json.inviters = $scope.tel.inviters.split(",")
+                } else {
+                    alert("请输入邀请码");
+                    return;
+                }
+            }
+            var rulesend = ajaxSendFn(json, "/activity/" + $routeParams.activityid + "/rule", "POST", 1);
+            if (rulesend.code == 200) { //
+                $scope.ruleFn.oldRuleFn();
+            } else {
+                errorMsg(rulesend);
+                return false;
+            }
+            return true;
+        },
+        addRuleFn: function () { //显示添加面板
+            $scope.view.modal = {
+                title: "添加活动内容",
+                html: "addrule"
+            };
+            $("#showadd").modal("show");
+        },
+
+        put: function (details, dv) {
+            if (!details.value) {
+                details.value = {};
+            }
+            dv = {};
+            details.value.push(dv);
+        },
+        resetCouponCntFn: function (details, dv) {
+            angular.forEach(details.value, function (data, idx) {
+                if (data && data.id === dv.id) {
+                    this.splice(idx, 1);
+                }
+            }, details.value);
+        },
+        containsCoupon: function (details, id) {
+            var tmpIdx = -1;
+            for (var i = 0; details.value && i < details.value.length; i++) {
+                if (details.value[i].id === id) {
+                    tmpIdx = i;
+                    break;
+                }
+            }
+            return tmpIdx;
+        }
+    };
+    $scope.addPepFn = function () {
+        if ($scope.set.personLimitDetail) {
+            $scope.set.personLimitDetail.push({
+                'amount': '',
+                "count": ''
+            })
+        }
+    };
+    $scope.removePepFn = function (b) {
+        if ($scope.set.personLimitDetail[b]) $scope.set.personLimitDetail.splice(b, 1);
+    };
+    $scope.ruleFn.oldRuleFn();
+    $scope.sendJsons1 = function () {
+
+
+        $scope.posts.shops = $scope.set.shops.filter(function (s) {
+            return s && s.trim();
+        });
+
+        var json = angular.copy($scope.posts);
+
+        delete json.CHARGE;
+  
+        console.log(json);
+        json.dateRange = {};
+        json.dateRangeCategory = $scope.view.date.dateType;
+
+        if ($scope.view.date.dateType === "CONTINUOUS") {
+            if (!$scope.view.dateRange.startDate || !$scope.view.dateRange.endDate) {
+                alert("请填写开始和结束日期!");
+                return;
+            }
+            if ($scope.view.dateRange.endDate < $scope.view.dateRange.startDate) {
+                alert("结束日期不能小于开始日期!");
+                return;
+            } else {
+                json.dateRange.startDate = $filter("date")($scope.view.dateRange.startDate, "yyyy-MM-dd 00:00:00");
+                json.dateRange.endDate = $filter("date")($scope.view.dateRange.endDate, "yyyy-MM-dd 23:59:59");
+            }
+        } else if ($scope.view.date.dateType === "BIRTHDAY" && $scope.view.date.subType === "AROUND_FIX_DATE") {
+            json.dateRange.beforeDays = $scope.view.dateRange.beforeDays || 0;
+            json.dateRange.afterDays = $scope.view.dateRange.afterDays || 0;
+        }
+
+        json.dateRange.selectCategory = $scope.view.dateRange.selectCategory || 'NONE';
+        if ($scope.view.dateRange.subType === "MANUAL_SELECT") {
+            var arr = arrayMap(objectKeys($scope.view.dateRange.selectDates), function (date) {
+                return date + " 00:00:00";
+            });
+            if (!isEmptyObject(arr)) {
+                json.dateRange.selectDates = arr;
+            }
+        } else if ($scope.view.dateRange.subType === "MONTH_DAYS") {
+            var arr = arrayMap(objectKeys(mapFilter($scope.view.dateRange.selectDays, notNull)), parseInt);
+            if (!isEmptyObject(arr)) {
+                json.dateRange.selectDays = arr;
+            }
+        } else if ($scope.view.dateRange.subType === "WEEKLY_DAY") {
+            var arr = arrayMap(objectKeys(mapFilter($scope.view.dateRange.selectWeekDays, notNull)), parseInt);
+            if (!isEmptyObject(arr)) {
+                json.dateRange.selectWeekDays = arr;
+            }
+        }
+
+        //选择排除，必须要指定排队日期
+        if ((json.dateRangeCategory !== "SELECTED_DATES") && (json.dateRange.selectCategory === 'EXCLUDE') && (objectCount(json.dateRange) == 1)) {
+            alert("没有指定排除日期！");
+            return;
+        }
+
+        //'指定日期'类型必须有数据
+        if ((json.dateRangeCategory === "SELECTED_DATES") && (objectCount(json.dateRange) == 1)) {
+            alert("没有指定日期！");
+            return;
+        }
+        //end
+        if (json.advertisement && !json.advertisement.id) {
+            delete json.advertisement;
+        }
+
+        var url = "/activity/takeout/"+$routeParams.id;
+        json.deliver = {}
+        $scope.set.deliver.map(function (item) {
+            console.log(item)
+            let key = item.key;
+            let value = item.values;
+            for (var x in item.values) {
+                delete item.values[x].$$hashKey;
+            }
+            json.deliver[key] = value
+
+        })
+        if (json.packetActId) {
+            delete json.packetActId
+        }
+        var data = ajaxSendFn(json, url, "POST");
+        if (data.code == 200) {
+            alert("操作成功");
+            $location.path("/rule/order");
+        } else {
+            alert(data.message);
+        }
+    }
+    // $scope.ruleFn.buttonFn("CHARGE");
+    $scope.ruleFn.postFn("CHARGE");
+
+    // $scope.ruleFn.getCpouponFn();
+    if ($scope.tem && $scope.tem.activityCategory && isEmptyObject($scope.tem.rules)) {
+        $scope.ruleFn.stateFn($scope.tem.activityCategory, 'add', 1)
+    }
+    $scope.checkAllShops = function () { //
+        console.log($scope.posts.allShop)
+
+        if ($scope.posts.allShop) { //
+            var shops = [];
+            for (var i = 0; i < $scope.set.list.length; i++) {
+                shops.push($scope.set.list[i].id)
+            }
+            $scope.set.shops = shops
+        } else { //
+            $scope.set.shops = [];
+            $scope.posts.shops = []
+        }
+    }
+    $scope.checkShops = function (key) {
+        if (key == false) {
+            delete key
+            $scope.posts.allShop = false;
+        }
+        var arr = $scope.set.shops.filter(function (s) {
+            return s && s.trim();
+        });
+        if (arr.length == $scope.set.list.length) {
+            $scope.posts.allShop = true
+        } else {
+            $scope.posts.allShop = false;
+        }
+    }
+}]);
+// 代客下单--添加
 app.controller("addOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$location", 'CouponFactory', function ($scope, $http, $routeParams, $filter, $location, couponFac) {
     $scope.config.breadset = [{ //
         name: "代客下单",
-        href: indexUrl + "/admin.html#/rule/order/add",
+        href: indexUrl + "/admin.html#/rule/orderAdd",
         class: "add"
     }, {
         name: "代客下单"
@@ -9071,10 +9849,24 @@ app.controller("addOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$l
         list: ajaxSendFn({
             state: 1002
         }, "/shops", "GET").result,
-        allocate: ajaxSendFn({}, "/activity/allocate/8003", "GET").result || [],
-        allocates: [],
-        packet: ajaxSendFn({}, "/activity/packet/usable", "GET").result || [],
-        commision: ajaxSendFn({}, "/activity/commision/usable", "GET").result || [],
+        allocate: ajaxSendFn({}, "/activity/allocate/8015", "GET").result || [],
+        // 业务提成
+        allocates: [{
+            key: '',
+            value: ''
+        }],
+        // 配送
+        deliver: [{
+                key: 0,
+                values: [{
+                    "amount": 0,
+                    "value": 0
+                }]
+            }
+
+        ],
+        // packet: ajaxSendFn({}, "/activity/packet/usable", "GET").result || [],
+        // commision: ajaxSendFn({}, "/activity/commision/usable", "GET").result || [],
         list2: [],
         timeType: {
             "1001": "早市",
@@ -9090,8 +9882,34 @@ app.controller("addOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$l
         }],
         countLimit: 0
     };
-    console.log($scope.set.packet)
-    console.log($scope.set.commision)
+    // 添加一个业务提成
+    $scope.addAllocates = function () {
+        $scope.set.allocates.push({
+            key: '',
+            value: ''
+        })
+    }
+    // 添加配送费
+    $scope.addDeliverData = function () {
+        $scope.set.deliver.push({
+            key: 0,
+            values: [{
+                "amount": 0,
+                "value": 0
+            }]
+        })
+    }
+    $scope.addEachMile = function (index) {
+        $scope.set.deliver[index].values.push({
+                "amount": 0,
+                "value": 0
+            }
+
+        )
+    }
+
+    // 添加配送费---end
+
     $scope.set.time = getSubtimes($scope.set.times, $scope.set.timeType);
     if (!$scope.set.list) {
         alert("目前还没有添加门店");
@@ -9101,8 +9919,6 @@ app.controller("addOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$l
 
     $scope.posts = {
         shops: [],
-        // video:{},
-        packetActId: ''
     };
     $scope.coupon = {
         shared: [],
@@ -9363,7 +10179,7 @@ app.controller("addOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$l
         sendChargeConsumeFn: function (a) {
             return $scope.ruleFn.sendFn(a, undefined, undefined, function (json) {
                 var obj = json.detail.ALL[0];
-               
+
                 obj.amount = 1;
                 obj.currentAmount = obj.count = 0;
             });
@@ -9523,11 +10339,7 @@ app.controller("addOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$l
     };
     $scope.ruleFn.oldRuleFn();
     $scope.sendJsons = function () {
-        console.log($scope.posts)
-        if (!$scope.posts.picUrl) {
-            alert("请先上传图片");
-            return;
-        }
+
 
         $scope.posts.shops = $scope.set.shops.filter(function (s) {
             return s && s.trim();
@@ -9536,29 +10348,10 @@ app.controller("addOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$l
         var json = angular.copy($scope.posts);
 
         delete json.CHARGE;
-        json.rule = {}
-        json.rule.expiredLimit = $scope.set.expiredLimit
-        json.rule.personLimit = $scope.set.personLimit
-        json.rule.timesLimit = $scope.set.timesLimit
-        json.rule.countLimit = $scope.set.countLimit
-        json.rule.distanceLimit = $scope.set.distanceLimit
-        json.rule.allpurpose = $scope.set.allpurpose
-        json.rule.personLimitDetail = angular.copy($scope.set.personLimitDetail)
-        json.rule.detail = angular.copy($scope.posts.CHARGE.CHARGE.detail)
-        for (var k = 0; k < $scope.posts.CHARGE.CHARGE.detail.ALL.length; k++) {
-            var allocates = $scope.posts.CHARGE.CHARGE.detail.ALL[k].allocates
-            json.rule.detail.ALL[k].allocates = []
-            for (var i = 0; i < allocates.length; i++) {
-                if (allocates[i].id) {
-                    json.rule.detail.ALL[k].allocates.push(allocates[i])
-                }
-            }
-        }
         console.log(json);
         json.dateRange = {};
         json.dateRangeCategory = $scope.view.date.dateType;
-        // delete json.date;
-        //start
+
         if ($scope.view.date.dateType === "CONTINUOUS") {
             if (!$scope.view.dateRange.startDate || !$scope.view.dateRange.endDate) {
                 alert("请填写开始和结束日期!");
@@ -9611,15 +10404,44 @@ app.controller("addOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$l
         if (json.advertisement && !json.advertisement.id) {
             delete json.advertisement;
         }
-        console.log(json);
-        var url = "/activity/rebate";
+
+        var url = "/activity/takeout/";
         // if ($routeParams.id) {
         //     url += "/" + $routeParams.id;
         // }
+        json.allocates = {}
+        // $scope.set.allocates.map(function(item){
+        //     let key=item.key;
+        //     let value=item.value;
+        //     json.allocates[key]=value
+
+        // })
+        json.deliver = {}
+        $scope.set.deliver.map(function (item) {
+            console.log(item)
+            let key = item.key;
+            let value = item.values;
+            for (var x in item.values) {
+                delete item.values[x].$$hashKey;
+            }
+            json.deliver[key] = value
+
+        })
+        if (json.packetActId) {
+            delete json.packetActId
+        }
+
+        console.log('----------------------------------------')
+        console.log(json);
+        // console.log($scope.post)
+        // console.log($scope.set)
+
+
+        // return false;
         var data = ajaxSendFn(json, url, "POST");
         if (data.code == 200) {
             alert("操作成功");
-            $location.path("/rule/share");
+            $location.path("/rule/order");
         } else {
             alert(data.message);
         }
@@ -10341,7 +11163,7 @@ app.controller("addshareCtr", ["$scope", "$http", '$routeParams', "$filter", "$l
         }
         console.log(json);
         var url = "/activity/rebate";
-       
+
         var data = ajaxSendFn(json, url, "POST");
         if (data.code == 200) {
             alert("操作成功");
@@ -13046,6 +13868,7 @@ app.controller('CustomerMassCtr', function ($scope, tyFnFactory, $http, $locatio
             }
         }
     };
+    // 提交
     $scope.sendJson = function () {
         var json1 = {
             timeCategory: $scope.single.timeCategory,
@@ -14646,7 +15469,7 @@ app.controller('DocCtr', ['$rootScope', '$scope', '$location', 'shopFactory', fu
 
         STATISTICS_TEXT: ["当前总消费数（笔）", "当前总收款数（笔）", "当前总余额（元）", "当前会员总人数（人）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "当前总余量（分）", "当前总余量（张）", "当前总余额（元）", "短信余额（条）"],
         //TYPE: ["consumption", "receivables", "recharge", "upgrade", "point", "coupon", "shortmessage"],
-        buttons: ["惠买单消费报表", "快速收款报表", "充值报表", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡",'业务推广报表'],
+        buttons: ["惠买单消费报表", "快速收款报表", "充值报表", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡", '业务推广报表'],
         coupons: ajaxSendFn({}, "/reports/coupon/coupons", "GET").result || [],
         staff: ajaxSendFn({}, "/reports/profits/staffs", "GET").result || [],
         business: [{

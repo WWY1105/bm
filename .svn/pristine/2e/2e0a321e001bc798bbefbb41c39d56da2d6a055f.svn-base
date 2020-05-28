@@ -1,7 +1,0 @@
-<div class="col-sm-12 mt15 mb15 timecheck">
-  <button class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===0}" ng-click="select(0)">充值报表</button>
-  <button class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===1}" ng-click="select(1)">积分报表</button>
-  <button class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===2}" ng-click="select(2)">优惠券报表</button>
-  <button class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===3}" ng-click="select(3)">短信报表</button>
-  <button class="col-sm2 glyphicon btn btn-default" ng-class="{active:selector===4}" ng-click="select(4)">上宾往来报表</button>
-</div>

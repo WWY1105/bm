@@ -1,6 +1,0 @@
-<div  class="col-sm-6 col-sm-offset-3 mb22" ng-if="!view.rules[tem.activityCategory].state">
-						<button class="btn btn-primary btn-block"  ng-click="ruleFn.stateFn(tem.activityCategory,'add',1)"  ng-bind="view.rules[tem.activityCategory].name"></button>
-</div>
-<div class="col-sm-12 mb22">
-						<button class="btn btn-primary btn-block" ng-if="tem.activityCategory==='COUPON'"  ng-click="ruleFn.showCouponPlanFn()"  >添加券</button>
-</div>

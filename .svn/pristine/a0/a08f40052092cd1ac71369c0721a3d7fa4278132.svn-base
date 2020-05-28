@@ -1,6 +1,0 @@
-<div ng-repeat="(key,value) in view.rules" class="col-sm-6 mb22" ng-if="!value.state">
-						<button class="btn btn-primary btn-block"  ng-click="ruleFn.stateFn(key,'add',1)"  ng-bind="value.name"></button>
-</div>
-<div class="col-sm-12 mb22">
-						<button class="btn btn-primary btn-block"  ng-click="ruleFn.showCouponPlanFn()"  >添加券</button>
-</div>
