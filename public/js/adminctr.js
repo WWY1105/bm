@@ -2533,16 +2533,14 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
                         id: $scope.view.freeAllocateId
                     }
                 }
+              
                 if ($scope.view.validityType) {
-                    obj.allocate = {
-                        id: $scope.view.validityType
-                    }
+                    obj.validityType = $scope.view.validityType
                 }
                 if ($scope.view.validity) {
-                    obj.allocate = {
-                        id: $scope.view.validity
-                    }
+                    obj.validity = $scope.view.validity
                 }
+
 
                 json.push(obj)
                 continue;
@@ -15290,7 +15288,7 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         initTime:'',
         mall: ajaxSendFn({}, "/mall", "GET").result || {},
         coupons: ajaxSendFn({}, "/coupon/usable", "GET").result || [],
-        allocates: ajaxSendFn({}, "/activity/allocate/8011", "GET").result
+        allocates: ajaxSendFn({}, "/activity/allocate/8012", "GET").result
     };
 
     if ($routeParams.id) {
