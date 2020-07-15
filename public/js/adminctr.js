@@ -15245,7 +15245,8 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         $scope.posts = {
             details: [{}],
             category: "BOUGHT",
-            picUrls: [{}]
+            picUrls: [{}],
+            goods:[{}]
         };
     }
     $scope.view = {
@@ -15264,11 +15265,22 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         id: "MEMBER",
         name: "任一会员"
     }].concat($scope.view.member);
+    // 添加购买策略
     $scope.addFn = function () {
         $scope.posts.details.push({});
     };
+    // 删除购买策略
     $scope.removeFn = function (i) {
         $scope.posts.details.splice(i, 1);
+    }
+
+     // 添加商品
+     $scope.addGoodsFn = function () {
+        $scope.posts.goods.push({});
+    };
+    // 删除商品
+    $scope.removeGoodsFn = function (i) {
+        $scope.posts.goods.splice(i, 1);
     }
 
     $scope.postSend = function () {
