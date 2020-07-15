@@ -13185,6 +13185,7 @@ app.controller('RuleuEditorCtr', ['$rootScope', '$scope', function ($rootScope, 
         materials: []
     }
     var editor = new wangEditor('#div1');
+    editor.create();
     // editor.config.uploadImgUrl = '/pic';
 
     // 配置自定义参数（举例）
@@ -13215,7 +13216,7 @@ app.controller('RuleuEditorCtr', ['$rootScope', '$scope', function ($rootScope, 
     //     }
     //     return item;
     // });
-    editor.create();
+  
 
     function init() {
         var data1 = ajaxSendFn({}, "/medials", "GET");
@@ -15281,10 +15282,21 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
     }, {
         name: "添加商品"
     }]; //面包屑
+    var editor = new wangEditor('#div1');
+    editor.create();
+    
     $scope.obtainRepeatCategory = obtainRepeatCategory;
-    $scope.posts.allocates= ajaxSendFn({}, "/activity/allocate/8012", "GET").result;
+    $scope.view = {
+        initTime:'',
+        mall: ajaxSendFn({}, "/mall", "GET").result || {},
+        coupons: ajaxSendFn({}, "/coupon/usable", "GET").result || [],
+        allocates: ajaxSendFn({}, "/activity/allocate/8011", "GET").result
+    };
+
     if ($routeParams.id) {
+        // 修改
         $scope.posts = ajaxSendFn({}, "/mall/" + $routeParams.id, "GET").result;
+        editor.txt.html($scope.posts.additional)
         $scope.posts.startDate = new Date($scope.posts.startDate);
         $scope.posts.endDate = new Date($scope.posts.endDate);
         $scope.posts.details = [];
@@ -15296,18 +15308,37 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         }
         delete $scope.posts.detail;
     } else {
-        $scope.posts = {
+          // 添加
+          $scope.posts = {
             details: [{}],
             category: "BOUGHT",
             picUrls: [{}],
             goods:[{}],
-            allocates:[{}]
+            allocates:[{}],
+            startDate:'',
+            endDate:''
         };
+        $scope.initTimeFn = function () {
+            var date = new Date();
+            date.setHours(23);
+            date.setMinutes(59);
+            date.setSeconds(59);
+            $scope.posts.endDate = date;
+            var date1 = new Date();
+            date1.setHours(0);
+            date1.setMinutes(0);
+            date1.setSeconds(0);
+            date1.setDate(date.getDate() - 30);
+            $scope.posts.startDate = date1;
+            $scope.view.initTime = ($filter('date')(new Date(), "yyyy-MM-dd") + "T59:59")
+        };
+        $scope.initTimeFn();
+      
     }
-    $scope.view = {
-        mall: ajaxSendFn({}, "/mall", "GET").result || {},
-        coupons: ajaxSendFn({}, "/coupon/usable", "GET").result || [],
-    };
+    
+
+
+
     $scope.view.member = ajaxSendFn({}, "/memberGrade", "GET").result || [];
     $scope.view.member = $filter('orderBy')($scope.view.member, 'grade');
     $scope.view.member = [{
@@ -15339,10 +15370,17 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
     }
 
     $scope.postSend = function () {
+        console.log($scope.posts)
         if (!$scope.posts.picUrl) {
             alert("请先选择图片");
             return;
         }
+        // 遍历商品
+        $scope.posts.goods.map((i)=>{
+            i.category='COUPON'
+        })
+        // 富文本
+        $scope.posts.additional=editor.txt.html()
         var json = angular.copy($scope.posts);
         json.detail = {};
         for (var i in json.details) {

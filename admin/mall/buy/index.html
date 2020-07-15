@@ -9,30 +9,42 @@
       </div>
       <table class="table table-bordered">
         <thead>
-        <tr class="plan-title">
-          <td>序号</td>
-          <td>商品</td>
-          <td>编号</td>
-          <td>总数</td>
-          <td>库存</td>
-          <td>操作</td>
-        </tr>
+          <tr class="plan-title">
+            <td>序号</td>
+            <th>编号</th>
+            <th>标题</th>
+            <td>总数</td>
+            <td>商品</td>
+            <th>发布场景</th>
+            <th>链接地址</th>
+            <td>操作</td>
+          </tr>
         </thead>
         <tbody class="slide-down">
-        <tr ng-repeat="row in view.mall.items" ng-class="{'active':!row.on}">
-          <td ng-bind="((view.mall.page-1)*view.mall.count)+$index+1"></td>
-          <td ng-bind="row.goods.name"></td>
-          <td ng-bind="row.code"></td>
-          <td ng-bind="row.countLimit||'不限量'"></td>
-          <td ng-bind="row.stock"></td>
-          <td>
-            <a ng-click="detailFn($index)">详情</a>
-            <a ng-if="!row.on" ng-click="goto('mall/buy/edit/'+ row.id)">修改</a>
-            <a ng-if="row.on" ng-click="turnFn($index,'off')">下架</a>
-            <a ng-if="!row.on" ng-click="turnFn($index,'on')">上架</a>
-            <a ng-click="deleteFn($index)">删除</a>
-          </td>
-        </tr>
+          <tr ng-repeat="row in view.mall.items" ng-class="{'active':!row.on}">
+            <td ng-bind="((view.mall.page-1)*view.mall.count)+$index+1"></td>
+            <td ng-bind="row.code"></td>
+            <td ng-bind="row.title"></td>
+            <td ng-bind="row.stock"></td>
+            <td >
+              <p ng-repeat="item in row.goods" >{{item.name}}</p>
+            </td>
+            <td>
+              <p ng-if="row.pathway=='ONLINE'">仅在活动中心可见</p>
+              <p ng-if="row.pathway=='ARRIVAL'">仅在门店首页可见</p>
+              <p ng-if="row.pathway=='HIDDEN'">不对任何顾客可见</p>
+              <p  ng-if="row.pathway=='ALL'">全部可见</p>
+            </td>
+            <td ng-bind="row.url"></td>
+            
+            <td>
+              <a ng-click="detailFn($index)">详情</a>
+              <a ng-if="!row.on" ng-click="goto('mall/buy/edit/'+ row.id)">修改</a>
+              <a ng-if="row.on" ng-click="turnFn($index,'off')">下架</a>
+              <a ng-if="!row.on" ng-click="turnFn($index,'on')">上架</a>
+              <a ng-click="deleteFn($index)">删除</a>
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="col-sm-12 plan-son text-left" ng-if="!view.mall.items">
@@ -40,8 +52,8 @@
       </div>
       <div class="col-sm-12" ng-if="view.mall.pageSize>1">
         <pagination items-per-page="view.mall.count" boundary-links="true" total-items="view.mall.total"
-                    ng-model="view.mall.page" class="pagination-sm" previous-text="&lsaquo;" ng-change="pageChange()"
-                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+          ng-model="view.mall.page" class="pagination-sm" previous-text="&lsaquo;" ng-change="pageChange()"
+          next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
       </div>
     </div>
   </div>
@@ -75,5 +87,3 @@
   </div>
   <!-- /.modal -->
 </div>
-
-
