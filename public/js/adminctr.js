@@ -15282,6 +15282,7 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         name: "添加商品"
     }]; //面包屑
     $scope.obtainRepeatCategory = obtainRepeatCategory;
+    $scope.posts.allocates= ajaxSendFn({}, "/activity/allocate/8012", "GET").result;
     if ($routeParams.id) {
         $scope.posts = ajaxSendFn({}, "/mall/" + $routeParams.id, "GET").result;
         $scope.posts.startDate = new Date($scope.posts.startDate);
@@ -15299,7 +15300,8 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
             details: [{}],
             category: "BOUGHT",
             picUrls: [{}],
-            goods:[{}]
+            goods:[{}],
+            allocates:[{}]
         };
     }
     $scope.view = {
@@ -15318,11 +15320,11 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         id: "MEMBER",
         name: "任一会员"
     }].concat($scope.view.member);
-    // 添加购买策略
+    // 添加价格
     $scope.addFn = function () {
         $scope.posts.details.push({});
     };
-    // 删除购买策略
+    // 删除价格
     $scope.removeFn = function (i) {
         $scope.posts.details.splice(i, 1);
     }
