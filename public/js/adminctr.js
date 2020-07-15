@@ -2533,15 +2533,12 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
                         id: $scope.view.freeAllocateId
                     }
                 }
+                // alert($scope.view.validityType)
                 if ($scope.view.validityType) {
-                    obj.allocate = {
-                        id: $scope.view.validityType
-                    }
+                    obj.validityType = $scope.view.validityType
                 }
                 if ($scope.view.validity) {
-                    obj.allocate = {
-                        id: $scope.view.validity
-                    }
+                    obj.validity = $scope.view.validity
                 }
 
                 json.push(obj)
