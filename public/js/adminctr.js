@@ -2272,7 +2272,32 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
     $scope.plan = {
         add: 0
     };
-   
+    // 有效期类型
+    $scope.validityType = [{
+            key: 'PERMANENT',
+            value: '长期有效'
+        }, {
+            key: 'CONTINUOUS',
+            value: '时间范围'
+
+        }, {
+            key: 'REMAINING',
+            value: '余额存在有效'
+        }
+
+    ];
+    // validity
+    $scope.validity = [{
+        key: true,
+        value: '使用余额支付才参加'
+    }, {
+        key: false,
+        value: '不适用消费余额也参加'
+
+    }
+
+];
+
     $scope.upgradeType = {
         "CUSTOMER": "CUSTOMER",
         "MEMBER": "MEMBER"
@@ -2286,7 +2311,7 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
         isUpdate: false,
         maxGrades: 6, //级别数量
         rules: {}, //新增加的字段，升级的每个等级,
-        freeAllocateId:''
+        freeAllocateId: ''
 
     };
 
@@ -2397,10 +2422,13 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
         if (!$scope.view.member[a - 1].Upgrade) {
             // 获取已有的规则
             var data = ajaxSendFn({}, "/memberUpgrade/toId/" + $scope.view.member[a - 1].toId, "GET");
-            if(data.result.strategies){
-                data.result.strategies.map(function(i){
-                    if(i.type=='FREE'&&i.allocate){
-                        $scope.view.freeAllocateId=i.allocate.id
+            if (data.result.strategies) {
+                data.result.strategies.map(function (i) {
+                    if (i.type == 'FREE' && i.allocate) {
+                        $scope.view.freeAllocateId = i.allocate.id;
+                    }
+                    if (i.validityType) {
+                        $scope.view.validityType = i.validityType;
                     }
                 })
             }
@@ -2424,19 +2452,22 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
             POINT: [],
             SUM_COST: [],
             CHARGE: [],
-            FREE:[]
+            FREE: []
         };
         $scope.check = {};
         for (x in $scope.view.member[a - 1].Upgrade) {
-          
+
             type = $scope.view.member[a - 1].Upgrade[x].type;
             if (!$scope.posts[type]) {
                 $scope.posts[type] = [{}];
             }
             let jsons = {
                 fromId: $scope.view.member[a - 1].Upgrade[x].fromId,
+                validity: $scope.view.member[a - 1].Upgrade[x].validity,
+                validityType: $scope.view.member[a - 1].Upgrade[x].validityType,
                 value: $scope.view.member[a - 1].Upgrade[x].value,
-                _id: $scope.view.member[a - 1].Upgrade[x]._id
+                _id: $scope.view.member[a - 1].Upgrade[x]._id,
+
             }
             if ($scope.view.member[a - 1].Upgrade[x].allocate) {
                 jsons.allocate = $scope.view.member[a - 1].Upgrade[x].allocate;
@@ -2473,9 +2504,9 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
             alert(data.message);
         };
     }
-  
+
     $scope.postSend = function () { //提交表单，添加、修改会员升级规则
-      
+
         var jsons = {};
         var json = [];
         toid = $scope.view.member[$scope.view.show.toGrade - 1].toId;
@@ -2485,34 +2516,54 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
         }
         console.log('$scope.posts')
         console.log($scope.posts)
+
+
         for (var x in $scope.posts) {
             if (!$scope.check[x]) {
                 continue;
             }
             if (x == 'FREE') {
-                json.push({
+                let obj = {
                     toId: toid,
                     type: x,
-                    fromId: "CUSTOMER",
-                    allocate:{
-                        id:$scope.view.freeAllocateId
+                    fromId: "CUSTOMER"
+                }
+                if ($scope.view.freeAllocateId) {
+                    obj.allocate = {
+                        id: $scope.view.freeAllocateId
                     }
-                    
-                })
+                }
+                if ($scope.view.validityType) {
+                    obj.allocate = {
+                        id: $scope.view.validityType
+                    }
+                }
+                if ($scope.view.validity) {
+                    obj.allocate = {
+                        id: $scope.view.validity
+                    }
+                }
+
+                json.push(obj)
                 continue;
             }
-          
-            for (var item in $scope.posts[x]) {
 
+            for (var item in $scope.posts[x]) {
                 var send = {
                     toId: toid,
                     type: x,
                     fromId: $scope.posts[x][item].fromId,
                 };
-              
+
                 // 购买升级需要设置分规则
                 if ($scope.posts[x][item].allocate) {
                     send.allocate = $scope.posts[x][item].allocate
+                }
+                if ($scope.posts[x][item].validityType) {
+                    send.validityType = $scope.posts[x][item].validityType
+                }
+                if ($scope.posts[x][item].validity) {
+                    send.validity = $scope.posts[x][item].validity
                 }
 
                 if ($scope.posts[x][item].value) send.value = $scope.posts[x][item].value;
@@ -2524,10 +2575,13 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
         jsons.toName = $scope.view.show.toName;
         jsons.posterUrl = $scope.view.show.posterUrl;
         jsons.cardUrl = $scope.view.show.cardUrl;
+        // jsons.validityType = $scope.view.show.validityType;
+        // jsons.validity = $scope.view.show.validity;
 
         jsons.backgroundColor = $scope.view.show.backgroundColor;
         jsons.strategies = json;
-        // console.log(jsons)
+
+        console.log(jsons)
         // console.log($scope.free)
         // return false;
         re = ajaxSendFn(JSON.stringify(jsons), "/memberUpgrade", "POST", 1);
@@ -9119,12 +9173,12 @@ app.controller("editOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$
     }, {
         name: "代客下单"
     }]; //面包屑;
-  
+
     $scope.view = {
-        date:{
-            dateType:''
+        date: {
+            dateType: ''
         },
-       
+
         category: []
     };
     $scope.view1 = {};
@@ -9159,11 +9213,11 @@ app.controller("editOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$
         rules: {}
     };
     $scope.allShop = false;
-    $scope.posts=ajaxSendFn({}, "/activity/takeout/"+$routeParams.id, "GET").result;
+    $scope.posts = ajaxSendFn({}, "/activity/takeout/" + $routeParams.id, "GET").result;
 
     $scope.view.dateRange = $scope.posts.dateRange;
     var dateRangeCategory = $scope.posts.dateRangeCategory;
-   
+
     // $scope.view.date[dateRangeCategory] = $scope.posts.dateRange
     $scope.view.date.dateType = dateRangeCategory
 
@@ -9179,8 +9233,7 @@ app.controller("editOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$
             value: ''
         }],
         // 配送
-        deliver: [
-        ],
+        deliver: [],
         list2: [],
         timeType: {
             "1001": "早市",
@@ -9195,30 +9248,30 @@ app.controller("editOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$
             "count": ''
         }],
         countLimit: 0,
-        shops:$scope.posts.shops,
-        pathways:$scope.posts.pathways
+        shops: $scope.posts.shops,
+        pathways: $scope.posts.pathways
     };
 
     // 处理一下提成
-    if( $scope.posts.allocates){
+    if ($scope.posts.allocates) {
 
-    }else{
-        $scope.posts.allocates={}
+    } else {
+        $scope.posts.allocates = {}
     }
- 
-  
+
+
     // 处理一下配送费
-    if( $scope.posts.deliver){
-        for(var item in $scope.posts.deliver){
-            let obj={};
-            obj.key=item-0;
-            obj.values= $scope.posts.deliver[item];
+    if ($scope.posts.deliver) {
+        for (var item in $scope.posts.deliver) {
+            let obj = {};
+            obj.key = item - 0;
+            obj.values = $scope.posts.deliver[item];
             $scope.set.deliver.push(obj);
         }
     }
     console.log('获取配送')
-    console.log( $scope.set.deliver)
-   
+    console.log($scope.set.deliver)
+
     // 添加一个业务提成
     $scope.addAllocates = function () {
         $scope.set.allocates.push({
@@ -9682,7 +9735,7 @@ app.controller("editOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$
         var json = angular.copy($scope.posts);
 
         delete json.CHARGE;
-  
+
         console.log(json);
         json.dateRange = {};
         json.dateRangeCategory = $scope.view.date.dateType;
@@ -9740,7 +9793,7 @@ app.controller("editOrderCtr", ["$scope", "$http", '$routeParams', "$filter", "$
             delete json.advertisement;
         }
 
-        var url = "/activity/takeout/"+$routeParams.id;
+        var url = "/activity/takeout/" + $routeParams.id;
         json.deliver = {}
         $scope.set.deliver.map(function (item) {
             console.log(item)
