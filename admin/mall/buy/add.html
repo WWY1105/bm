@@ -7,11 +7,11 @@
           <div class="form-group">
             <label class="col-sm-2 control-label text-right">
               <span class="text-red">*</span>
-              标题
+              标题()
             </label>
 
             <div class="col-sm-4">
-              <input type="text" class="form-control" ng-model="posts.title" name="nickname" placeholder="标题"
+              <input type="text" class="form-control" max='20'  ng-model="posts.title" name="nickname" placeholder="标题"
                 ng-minlength='2' required></div>
           </div>
 
@@ -50,14 +50,14 @@
           </div>
           <div class="form-group flexCenter">
             <label class="col-sm-2 control-label text-right">
-              <span class="text-red">*</span>
+              <!-- <span class="text-red">*</span> -->
               业务提成
             </label>
             <div class="col-sm-10 form-inline">
               <div class="col-sm-10 form-inline" ng-repeat="item in posts.allocates">
                 <div class="mt15">
                   <select ng-model="item.id" class="form-control"
-                    ng-options="item.id as item.name for item in view.allocates" name="member" required>
+                    ng-options="item.id as item.name for item in view.allocates" name="member" >
                   </select>
 
                 </div>

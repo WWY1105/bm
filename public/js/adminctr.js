@@ -15287,7 +15287,7 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         initTime:'',
         mall: ajaxSendFn({}, "/mall", "GET").result || {},
         coupons: ajaxSendFn({}, "/coupon/usable", "GET").result || [],
-        allocates: ajaxSendFn({}, "/activity/allocate/8011", "GET").result
+        allocates: ajaxSendFn({}, "/activity/allocate/8012", "GET").result
     };
 
     if ($routeParams.id) {
@@ -15297,6 +15297,9 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         $scope.posts.startDate = new Date($scope.posts.startDate);
         $scope.posts.endDate = new Date($scope.posts.endDate);
         $scope.posts.details = [];
+        if(!$scope.posts.allocates){
+            $scope.posts.allocates=[{}];
+        }
         for (var i in $scope.posts.detail) {
             $scope.posts.details.push({
                 id: i,
@@ -15384,6 +15387,9 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
             json.detail[json.details[i].id] = json.details[i].value;
         }
         delete json.details;
+        if(!json.allocates[0].id){
+            delete json.allocates
+        }
         if (JSON.stringify(json.picUrls) == "[{}]") {
             delete json.picUrls;
         }
