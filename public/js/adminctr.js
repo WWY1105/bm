@@ -15567,7 +15567,7 @@ app.controller('MealAddCtr', function ($scope, $location, $http, $routeParams) {
         }
     };
 });
-/*------------------------------------------------------------------*/
+/*------------------------统计报表------------------------------------------*/
 
 app.controller('DocCtr', ['$rootScope', '$scope', '$location', 'shopFactory', function ($rootScope, $scope, $location, shopFac) { //shoplist over
     $scope.config.class = "doc";
@@ -15577,7 +15577,7 @@ app.controller('DocCtr', ['$rootScope', '$scope', '$location', 'shopFactory', fu
 
         STATISTICS_TEXT: ["当前总消费数（笔）", "当前总收款数（笔）", "当前总余额（元）", "当前会员总人数（人）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "当前总余量（分）", "当前总余量（张）", "当前总余额（元）", "短信余额（条）"],
         //TYPE: ["consumption", "receivables", "recharge", "upgrade", "point", "coupon", "shortmessage"],
-        buttons: ["惠买单消费报表", "快速收款报表", "充值报表", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡", '业务推广报表'],
+        buttons: ["惠买单消费报表", "快速收款报表", "充值报表", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡", '业务推广报表',"充值卡门店结算"],
         coupons: ajaxSendFn({}, "/reports/coupon/coupons", "GET").result || [],
         staff: ajaxSendFn({}, "/reports/profits/staffs", "GET").result || [],
         business: [{
@@ -15601,6 +15601,9 @@ app.controller('DocCtr', ['$rootScope', '$scope', '$location', 'shopFactory', fu
     };
 
 }]);
+
+
+
 app.controller('FinanceCtr', ['$rootScope', '$scope', '$location', 'shopFactory', "$filter", function ($rootScope, $scope, $location, shopFac, $filter) { //shoplist over
     $scope.config.class = "doc";
     $scope.posts = {

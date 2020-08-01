@@ -11,14 +11,13 @@ angular.module('app').directive('buttons', function () {
                 $scope.view.title = ajaxSendFn({}, "/reports/consumption", "GET").result || {};
             }
             $scope.select = function (index) {
+                console.log("index==="+index)
                 $scope.posts.selector = index;
-            
                 //$scope.direct = 0;
                 /*历史累计*/
                 if ($scope.$root.config.staff.roleType == "M") {
-                    var TYPE = ["consumption", "receivables", "charge", "upgrade", "gratuity", "groupon", "lottery", "mall", "point", "coupon", "reward", "sms","profits","marketing","card","promotes"];
+                    var TYPE = ["consumption", "receivables", "charge", "upgrade", "gratuity", "groupon", "lottery", "mall", "point", "coupon", "reward", "sms","profits","marketing","card","promotes","chargeuse"];
                     $scope.view.title = ajaxSendFn({}, "/reports/" + TYPE[index], "GET").result || {};
-                 
                 }
                 delete $scope.posts.staffId;
                 $scope.doSearch();
@@ -638,7 +637,14 @@ angular.module('app').directive('mySpecialDate', function () {
         }
     };
 });
-
+angular.module('app').directive('statisticsChargeuse', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsChargeuse.html", "chargeuse");
+    return cmd;
+});
+angular.module('app').directive('statisticsChargeuseDetail', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsChargeuseDetail.html", "chargeuse");
+    return cmd;
+});
 angular.module('app').directive('statisticsCoupon', function () {
     var cmd = StatisticsDirective.createNew("public/js/directive/statisticsCoupon.html", "coupon");
     return cmd;
@@ -827,7 +833,7 @@ var StatisticsDirective = {
      * @return {[type]}               Angularjs指令
      */
     createNew: function (tmplateFile, urlKey) {
-        console.log()
+   
         var cmd = {
             restrict: "AE",
             replace: true,
@@ -855,11 +861,15 @@ var StatisticsDirective = {
                 if ($scope.post.couponId) {
                     param.couponId = $scope.post.couponId;
                 }
-
-                if (urlKey == 'groupon') {
+                console.log('执行了')
+                console.log('urlKey----'+urlKey+'===chargeuse')
+                console.log(urlKey == 'chargeuse'+$scope.post.shopId)
+               
+                 if (urlKey == 'groupon') {
                     $scope.title = ajaxSendFn(param, url + "/summary", "GET").result;
                     url += "/detail/shop";
                 } else if (urlKey == 'gratuity') {
+                    // 打赏 
                     if ($scope.post.staffId&&$scope.post.staffId) {
                         param.shopId = $scope.post.shopId;
                         $scope.title = ajaxSendFn(param, "/reports/gratuity/summary/staff/" + $scope.post.staffId, "GET").result;
@@ -875,6 +885,7 @@ var StatisticsDirective = {
                         url += "/statistics/shop";
                     }
                 }else if (urlKey == 'promotes') {
+                    // 
                     if ($scope.post.staffId&&$scope.post.staffId) {
                         param.shopId = $scope.post.shopId;
                         $scope.title = ajaxSendFn(param, "/reports/promotes/summary/staff/" + $scope.post.staffId, "GET").result;
@@ -925,13 +936,6 @@ var StatisticsDirective = {
                         url += "/statistics/shop";
                     }
                 } else if (urlKey == 'card') {
-                    // if ($scope.post.cardId) {
-                    //     param.shopId = $scope.post.shopId;
-                    //     $scope.title = ajaxSendFn(param, "/reports/profits/summary/staff/" + $scope.post.staffId, "GET").result;
-                    //     param.staffId = $scope.post.staffId;
-                    //     url += "/detail/shop";
-                    // } else 
-                    console.log($scope.post)
                     if( $scope.post.shopId ){
                         if($scope.post.cardId){
                             param.cardId = $scope.post.cardId;
@@ -946,11 +950,17 @@ var StatisticsDirective = {
                         $scope.title = ajaxSendFn(param, url + "/summary", "GET").result;
                         url += "/statistics/shop";
                     }
-                }  else if ($scope.post.shopId) {
-                    // if ($scope.post.shopId !== "brand") {
-                        param.shopId = $scope.post.shopId
-                    // }
-                    //title2
+                } // 充值卡门店结算
+                else if (urlKey == 'chargeuse') {
+                    if (Boolean($scope.post.shopId)){  
+                        param.shopId = $scope.post.shopId;
+                        url += "/detail/shop";
+                    }else{
+                        url += "/statistics/shop";
+                    }
+                    // $scope.title = ajaxSendFn(param, "/reports/chargeuse/statistics/shop", "GET").result;
+                }else if ($scope.post.shopId) {
+                    param.shopId = $scope.post.shopId
                     $scope.title = ajaxSendFn(param, url + "/summary/shop", "GET").result;
                     url += "/detail/shop";
                 } else {

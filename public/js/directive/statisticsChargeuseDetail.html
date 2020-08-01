@@ -1,0 +1,40 @@
+<div class="doc">
+  <ul class="bg-muted">
+    <li>合计（张）</li>
+    <li>发放：{{title.count||0}}</li>
+    <li>已核销：{{title.usedCount||0}}</li>
+  </ul>
+  <div>
+    <div ng-if="view.result.items">
+      <table class="table">
+        <thead>
+        <tr>
+          <td>序号</td>
+          <td>订单号</td>
+          <td>上宾号</td>
+          <td>
+            <div>使用</div>
+            <div>(分)</div>
+          </td>
+          <td>使用途径</td>
+          <td>操作员</td>
+          <td>充值来源</td>
+          <td>时间</td>
+        </tr>
+        </thead>
+        <tbody class="slide-down">
+        <tr ng-repeat="row in view.result.items">
+          <td ng-bind="((page-1)*count)+$index+1"></td>
+          <td><a ng-click="goto('doc/detail/'+ row.orderNo)">{{row.orderNo}}</a></td>
+          <td><a ng-click="goto('customer/details/'+ row.userId)">{{row.username}}</a></td>
+          <td ng-bind="row.amount|number"></td>
+          <td class="center" ng-bind="row.reason"></td>
+          <td class="center" ng-bind="row.staffName||'自助'"></td>
+          <td ng-bind="row.rechargeShop"></td>
+          <td class="center" ng-bind="row.time"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

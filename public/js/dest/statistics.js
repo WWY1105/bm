@@ -294,6 +294,9 @@ appRouteConfig.$inject = ["$routeProvider"], angular.module("app").directive("bu
             }, e.dateFn(e.date.year, e.date.month), e.specialDate.selectDates = formatDatas(e.specialDate.selectDates), e.specialDate.selectDays = formatDatas(e.specialDate.selectDays), e.specialDate.selectWeekDays = formatDatas(e.specialDate.selectWeekDays)
         }]
     }
+}),angular.module('app').directive('statisticsChargeuse', function () {
+    var cmd = StatisticsDirective.createNew("public/js/directive/statisticsChargeuse.html", "chargeuse");
+    return cmd;
 }), angular.module("app").directive("statisticsCoupon", function () {
     var e = StatisticsDirective.createNew("public/js/directive/statisticsCoupon.html", "coupon");
     return e

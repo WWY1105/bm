@@ -1,0 +1,62 @@
+<div class="doc">
+  <ul class="bg-muted">
+    <li>合计（张）</li>
+    <li>发放：{{title.count||0}}</li>
+    <li>已核销：{{title.usedCount||0}}</li>
+  </ul>
+  
+  <div ng-if="view.result.items">
+    <div class="head-list">
+      <table class="table" ng-if="!post.shopId">
+        <thead>
+          <tr>
+            <th rowspan="2" style="border-right: 1px solid #ddd;text-align: center;">序号</th>
+            <th rowspan="2" style="border-right: 1px solid #ddd;text-align: center;">门店</th>
+
+            <th colspan="4" style="border-right: 1px solid #ddd;text-align: center;">本店充值本店使用</th>
+            <th colspan="4" style="border-right: 1px solid #ddd;text-align: center;">本店充值他店使用</th>
+            <th colspan="4" style="border-right: 1px solid #ddd;text-align: center;">他店充值他店使用</th>
+          </tr>
+          <tr class="secondTr">
+            <th style="border-right: 1px solid #ddd;text-align: center;">总金额</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">本金</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">赠送</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">笔数</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">总金额</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">本金</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">赠送</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">笔数</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">总金额</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">本金</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">赠送</th>
+            <th style="border-right: 1px solid #ddd;text-align: center;">笔数</th>
+          </tr>
+        </thead>
+        <!-- </table>
+    </div>
+    <div class="body-list">
+      <table class="table"> -->
+        <tbody>
+          <tr ng-repeat="row in view.result.items">
+            <td ng-bind="((page-1)*count)+$index+1"></td>
+            <td ng-bind="row.shopName">门店</td>
+            <td>{{row.self.amount||0}}</td>
+            <td>{{row.self.principal||0}}</td>
+            <td>{{row.self.given||0}}</td>
+            <td>{{row.self.count||0}}</td>
+            <td>{{row.local.amount||0}}</td>
+            <td>{{row.local.principal||0}}</td>
+            <td>{{row.local.given||0}}</td>
+            <td>{{row.local.count||0}}</td>
+            <td>{{row.other.amount||0}}</td>
+            <td>{{row.other.principal||0}}</td>
+            <td>{{row.other.given||0}}</td>
+            <td>{{row.other.count||0}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+</div>
