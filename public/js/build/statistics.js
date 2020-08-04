@@ -7,16 +7,23 @@ angular.module('app').directive('buttons', function () {
             $scope.posts.selector = 0;
             $scope.posts.couponId = "";
             $scope.posts.couponName = "所有";
+
+            if ($scope.$root.config.staff.roleType == "K") {
+                $scope.view.roleType = "K";
+                $scope.posts.shopId = $scope.$root.config.staff.shopId|| $scope.$root.config.staff.guestId;
+                $scope.posts.shopName = $scope.$root.config.staff.shopName;
+                $scope.view.staffs = ajaxSendFn({}, "/reports/profits/staffs/shop", "GET").result || "";
+            } 
+          
             if ($scope.$root.config.staff.roleType == "M") {
                 $scope.view.title = ajaxSendFn({}, "/reports/consumption", "GET").result || {};
             }
             $scope.select = function (index) {
-                console.log("index==="+index)
                 $scope.posts.selector = index;
                 //$scope.direct = 0;
                 /*历史累计*/
                 if ($scope.$root.config.staff.roleType == "M") {
-                    var TYPE = ["consumption", "receivables", "charge", "upgrade", "gratuity", "groupon", "lottery", "mall", "point", "coupon", "reward", "sms","profits","marketing","card","promotes","chargeuse"];
+                    var TYPE = ["consumption", "receivables", "charge","chargeuse","upgrade", "gratuity", "groupon", "lottery", "mall", "point", "coupon", "reward", "sms","profits","marketing","card","promotes"];
                     $scope.view.title = ajaxSendFn({}, "/reports/" + TYPE[index], "GET").result || {};
                 }
                 delete $scope.posts.staffId;
@@ -44,12 +51,12 @@ angular.module('app').directive('buttons', function () {
                     $scope.posts.shopId = o.id;
                     $scope.posts.shopName = o.name;
                     $scope.posts.check = 0;
-                    if ($scope.posts.selector == 12||$scope.posts.selector == 15) {
+                    if ($scope.posts.selector == 13||$scope.posts.selector == 16) {
                         $scope.view.staffs = $scope.view.staff[$scope.posts.shopId]
                     }
                 }
                 delete $scope.posts.staffId;
-
+                $scope.doSearch();
             }
             $scope.selectStaff = function (id, name) {
                 $scope.posts.staffId = id;
@@ -422,7 +429,7 @@ angular.module('app').directive('searchByDate', ['shopFactory', '$location', fun
             $scope.init = function () {
                 if (!$scope.posts.startTime) {
                     var date = new Date();
-                    date.setDate(date.getDate() - 30);
+                    date.setDate(date.getDate() -1);
                     date.setHours(0);
                     date.setMinutes(0);
                     date.setSeconds(0);
@@ -863,14 +870,15 @@ var StatisticsDirective = {
                 }
                 console.log('执行了')
                 console.log('urlKey----'+urlKey+'===chargeuse')
-                console.log(urlKey == 'chargeuse'+$scope.post.shopId)
+                console.log('门店')
+                console.log( $scope.post.staffId&&$scope.post.shopId)
                
                  if (urlKey == 'groupon') {
                     $scope.title = ajaxSendFn(param, url + "/summary", "GET").result;
                     url += "/detail/shop";
                 } else if (urlKey == 'gratuity') {
                     // 打赏 
-                    if ($scope.post.staffId&&$scope.post.staffId) {
+                    if ($scope.post.staffId&&$scope.post.shopId) {
                         param.shopId = $scope.post.shopId;
                         $scope.title = ajaxSendFn(param, "/reports/gratuity/summary/staff/" + $scope.post.staffId, "GET").result;
                         param.staffId = $scope.post.staffId;
@@ -885,13 +893,12 @@ var StatisticsDirective = {
                         url += "/statistics/shop";
                     }
                 }else if (urlKey == 'promotes') {
-                    // 
                     if ($scope.post.staffId&&$scope.post.staffId) {
                         param.shopId = $scope.post.shopId;
                         $scope.title = ajaxSendFn(param, "/reports/promotes/summary/staff/" + $scope.post.staffId, "GET").result;
                         param.staffId = $scope.post.staffId;
                         url += "/detail/shop";
-                    }else if (Boolean($scope.post.shopId)&&!$scope.post.staffId) {
+                    }else if (Boolean($scope.post.shopId)&&$scope.post.staffId) {
                         param.shopId = $scope.post.shopId;
                         $scope.title = ajaxSendFn(param, "/reports/promotes/summary/shop", "GET").result;
                         url += "/detail/shop";
@@ -972,7 +979,7 @@ var StatisticsDirective = {
                 if ($scope.post.type) {
                     param.type = $scope.post.type;
                 }
-
+                // 请求表格数据
                 var data = ajaxSendFn(param, url, "GET");
                 $scope.needSearch = false;
                 if (data.code !== 200) {
@@ -980,7 +987,6 @@ var StatisticsDirective = {
                         location.href = indexUrl;
                     } else {
                         $scope.total = 0;
-                        alert(data.message)
                     }
                     delete $scope.view.result;
                     return;
@@ -1014,7 +1020,7 @@ var StatisticsDirective = {
              */
             $scope.$watch('needSearch', function (value) {
                 if (value) {
-                    ajaxFn({count: 15});
+                    ajaxFn({count: 20});
                     //var param = {
                     //    endTime: $scope.endTime,
                     //    startTime: $scope.startTime
@@ -1107,10 +1113,10 @@ app.controller('AchievementsCtr', ['$rootScope', '$scope', '$routeParams', '$fil
     var date1 = new Date();
     date1.setDate(date.getDate() - 30);
     $scope.posts.startTime = date1;
-
+  
     if ($scope.$root.config.staff.roleType == "K") {
         $scope.view.roleType = "K";
-        $scope.posts.shopId = $scope.$root.config.staff.shopId;
+        $scope.posts.shopId = $scope.$root.config.staff.shopId|| $scope.$root.config.staff.guestId;
         $scope.posts.shopName = $scope.$root.config.staff.shopName;
         $scope.view.staffs = ajaxSendFn({}, "/reports/profits/staffs/shop", "GET").result || "";
     } else {
@@ -1118,6 +1124,7 @@ app.controller('AchievementsCtr', ['$rootScope', '$scope', '$routeParams', '$fil
         $scope.view.staff = ajaxSendFn({}, "/reports/profits/staffs", "GET").result || ""
 
     }
+ 
     $scope.selectShop = function (o) {
         if (!o) {
             $scope.posts.shopId = '';

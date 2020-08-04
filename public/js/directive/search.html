@@ -8,16 +8,16 @@
       </div>
       <div style="height: 5px"></div>
       <ul class="select_option" ng-show="posts.check">
-        <li ng-click="posts.shopId = '';posts.shopName = '所有';posts.check=0">所有</li>
+        <li ng-click="posts.shopId = '';posts.shopName = '所有';posts.check=0;selectShop()">所有</li>
         <!--<li ng-click="posts.shopId = 'brand';posts.shopName = '品牌虚拟店';posts.check=0">品牌虚拟店</li>-->
-        <li ng-if="posts.selector!=7&&posts.selector!=5&&posts.selector!=6" ng-repeat="o in view.shops"
+        <li ng-if="posts.selector!=9&&posts.selector!=7&&posts.selector!=8" ng-repeat="o in view.shops"
             ng-click="selectShop(o)">
           {{o.name}}
         </li>
         <li class="select_last text-center">没有更多了</li>
       </ul>
     </div>
-    <div class="form-group" ng-if="view.coupons&&posts.selector==9" ng-mouseenter="posts.check0=1"
+    <div class="form-group" ng-if="view.coupons&&posts.selector==10" ng-mouseenter="posts.check0=1"
          ng-mouseleave="posts.check0=0">
       <label>券名：</label>
 
@@ -40,7 +40,8 @@
       <!--<li class="select_last text-center">没有更多了</li>-->
       <!--</ul>-->
     </div>
-    <div class="form-group" ng-if="(view.staffs&&posts.shopId&&posts.selector==12)||(view.staffs&&posts.shopId&&posts.selector==15)" ng-mouseenter="posts.check2=1"
+ 
+    <div class="form-group" ng-if="(view.staffs&&posts.shopId&&posts.selector==13)||(view.staffs&&posts.shopId&&posts.selector==16)" ng-mouseenter="posts.check2=1"
          ng-mouseleave="posts.check2=0">
       <label>员工：</label>
 
@@ -64,7 +65,7 @@
       <!--</ul>-->
     </div>
 
-    <div class="form-group" ng-if="view.business&&posts.selector==13&&posts.shopId" ng-mouseenter="posts.check2=1"
+    <div class="form-group" ng-if="view.business&&posts.selector==14&&posts.shopId" ng-mouseenter="posts.check2=1"
          ng-mouseleave="posts.check2=0">
       <label>业务：</label>
 
@@ -81,7 +82,7 @@
       </ul>
     </div>
 
-    <div class="form-group" ng-if="view.card&&posts.selector==14" ng-mouseenter="posts.check3=1"
+    <div class="form-group" ng-if="view.card&&posts.selector==15" ng-mouseenter="posts.check3=1"
          ng-mouseleave="posts.check3=0">
       <label>卡：</label>
 

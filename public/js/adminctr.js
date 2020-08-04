@@ -2663,7 +2663,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
         console.log(key)
         console.log(newkey)
         $scope.posts.detail[key] = newkey;
-
+      
     }
     $scope.ruleFn = {
         openOrClose: function () {
@@ -2675,11 +2675,9 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             $("#add").modal("hide");
             $scope.isOpenOrClose = false;
             alert("添加成功");
-            console.log("33")
-            //$scope.view.coupons = couponFac.getAllCoupon();
+         
         },
         testAddFail: function (result) {
-            //console.log("错误编号:" + result.code + ", 错误信息:" + result.message);
             errorMsg(result);
             console.log("44")
         },
@@ -2712,8 +2710,13 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
                 }
             }
         },
-        oldRuleFn: function () { //从服务器获取目前的规则列表
+        oldRuleFn: function () {
             var ruletem = ajaxSendFn({}, "/activity/" + $routeParams.activityid + "/rule", "GET").result;
+            console.log(' //从服务器获取目前的规则列表')
+            console.log(ruletem)
+            if(ruletem.rules.reduceType&&ruletem.rules.reduceType=="RATIO"){
+                ruletem.rules.reduceType=true;
+            }
             $scope.view = {
                 counponType: {
                     "OFFSETCASH": "代金券",
@@ -2727,12 +2730,13 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             $scope.ruleFn.getCpouponFn();
             console.log('ruletem.category')
             console.log(ruletem.category)
+           
+            // 如果是充值活动   处理一下分账规则
             // 如果是充值活动   处理一下分账规则
             if (ruletem.category == 'CHARGE') {
                 if (ruletem.rules && ruletem.rules.detail) {
                     ruletem.rules.detail.ALL.forEach(function (item) {
                         if (item.allocates && item.allocates.length) {
-                            console.log('附近的萨克发货的比较萨克洛夫的话就撒开发')
                             console.log(item.allocates[0].id)
                             item.allocate = item.allocates[0].id;
                         }
@@ -3240,13 +3244,13 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             if (!$scope.posts[a] || !$scope.posts[a][x] || !$scope.posts[a][x].detail || isEmptyObject($scope.posts[a][x].detail)) {
                 if (!$scope.posts[a]) $scope.posts[a] = {};
                 $scope.posts[a][x] = $scope.view.rules[a].content[x];
-                // if (!$scope.posts[a][x].detail || isEmptyObject($scope.posts[a][x].detail))
                 $scope.posts[a][x].detail = {
                     "ALL": [{}]
                 };
                 if (cb) cb(a, b);
                 console.log(!!cb)
-                console.log($scope.posts)
+
+                
                 return;
             }
 
@@ -3261,6 +3265,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
                 $scope.posts[a][x].detail.ALL = [{}];
                 if (cb) cb(a, b);
             }
+        
         },
         removeFn: function (x, b, c) {
             console.log("1414")
@@ -3293,11 +3298,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             console.log("1616")
             return $scope.ruleFn.sendFn(a, undefined, undefined, function (json) {
                 var obj = json.detail.ALL[0];
-                // if (obj.value) {
-                //    obj.value = false;
-                // } else {
-                //    obj.value = true;
-                // }
+            
                 obj.amount = 1;
                 obj.currentAmount = obj.count = 0;
             });
@@ -3361,10 +3362,6 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             });
         },
         sendFn: function (a, beforeValidateFunc, afterValidateFunc, fixFunc) { ///没搞完，发送规则
-            console.log("1818")
-            console.log(a)
-            console.log($scope.posts)
-
             var tem = $scope.posts[a];
             console.log('tem')
             console.log(tem)
@@ -3419,6 +3416,12 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
                         json.realIncome = true;
                     } else {
                         json.realIncome = false;
+                    }
+                 
+                    if (tem[x].reduceType) {
+                        json.reduceType='RATIO';
+                    }else{
+                        json.reduceType='PRINCIPAL_FIRST'
                     }
                 }
                 // 会员价
@@ -6787,11 +6790,13 @@ app.controller("addpacketsCtr", ["$scope", "$http", '$routeParams', "$filter", "
                 }
                 // 是否支持充值卡余额通用
                 if (json.type == "CHARGE_CONSUME") {
+                  
                     if (tem[x].allpurpose) {
                         json.allpurpose = true;
                     } else {
                         json.allpurpose = false;
                     }
+                 
                 }
 
                 typeof tem[x].countLimit == 'number' && (json.countLimit = tem[x].countLimit);
@@ -6869,10 +6874,6 @@ app.controller("addpacketsCtr", ["$scope", "$http", '$routeParams', "$filter", "
                     return;
                 }
             }
-
-            // if (json.type == "CHARGE_CONSUME") {
-            //     delete json.detail;
-            // }
 
             var rulesend = ajaxSendFn(json, "/activity/" + $routeParams.activityid + "/rule", "POST", 1);
             if (rulesend.code == 200) { //
@@ -7360,6 +7361,7 @@ app.controller("editpacketsCtr", ["$scope", "$http", '$routeParams', "$filter", 
                     } else {
                         json.allpurpose = false;
                     }
+                      
                 }
 
                 typeof tem[x].countLimit == 'number' && (json.countLimit = tem[x].countLimit);
@@ -15577,7 +15579,7 @@ app.controller('DocCtr', ['$rootScope', '$scope', '$location', 'shopFactory', fu
 
         STATISTICS_TEXT: ["当前总消费数（笔）", "当前总收款数（笔）", "当前总余额（元）", "当前会员总人数（人）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "当前总余量（分）", "当前总余量（张）", "当前总余额（元）", "短信余额（条）"],
         //TYPE: ["consumption", "receivables", "recharge", "upgrade", "point", "coupon", "shortmessage"],
-        buttons: ["惠买单消费报表", "快速收款报表", "充值报表", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡", '业务推广报表',"充值卡门店结算"],
+        buttons: ["惠买单消费报表", "快速收款报表", "充值报表","充值卡门店结算", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡", '业务推广报表'],
         coupons: ajaxSendFn({}, "/reports/coupon/coupons", "GET").result || [],
         staff: ajaxSendFn({}, "/reports/profits/staffs", "GET").result || [],
         business: [{

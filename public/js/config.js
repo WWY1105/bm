@@ -126,7 +126,7 @@ var onlineRuleObj = [
     //{id: "GAMEBUY", name: "游戏"},
     {id: "FOLLOW", name: "关注有礼"},
     {id: "COUPONFREE", name: "送券"},
-    // {id: "CHARGE", name: "储值卡"},
+    {id: "CHARGE", name: "充值"},
     {id: "GIVENUPGRADE", name: "升级赠送"},
     {id: "EXCHANGE", name: "积分兑换"},
     {id: "BIRTHBENEFIT", name: "生日活动"},
@@ -147,7 +147,7 @@ var consumeRuleObj = [
     {id: "SPENDAS", name: "抵扣"},
     {id: "SETMEAL", name: "套餐组合"},
     {id: "CHARGEFREE", name: "充值免单"},
-    {id: "CHARGE", name: "充值"},
+  
     {id: "COMMENTREDUCE", name: "评价立减"}
     
 ];

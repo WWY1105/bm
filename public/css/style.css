@@ -2465,7 +2465,7 @@ option {
 /*}*/
 
 .doc .table > tbody > tr > td {
-    padding: 24px;
+    padding:5px;
 }
 
 .doc thead {

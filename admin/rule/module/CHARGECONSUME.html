@@ -1,5 +1,25 @@
 <div class="out ruleadd2">
   <div class="col-sm-3 text-right ">
+    <span class="title">扣减方式</span>
+  </div>
+
+  <div class="col-sm-9 content" style="margin-top: -5px;padding-left:20px;border-bottom: 1px solid #f0f0f0;">
+    <div ng-repeat="(key,detail) in posts.CHARGECONSUME.CHARGECONSUME.detail">
+      <div class="form-group" ng-repeat="details in detail" ng-init="details.id=key">
+        <label class="radio-inline">
+          <input type="radio" name="reduceType"  
+          ng-model="posts.CHARGECONSUME.CHARGECONSUME.reduceType"  ng-value="true" >按充值比例扣减</input>
+        </label>
+        <label class="radio-inline">
+          <input  type="radio" name="reduceType" 
+          ng-model="posts.CHARGECONSUME.CHARGECONSUME.reduceType"  ng-value="false">优先扣减本金</input>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="out ruleadd2">
+  <div class="col-sm-3 text-right ">
     <span class="title">余额使用条件</span>
   </div>
 

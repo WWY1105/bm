@@ -48,81 +48,90 @@
                     <div ng-if="view.direct === 2" statistics-recharge-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
-          
 
-
+               <!-- 充值卡门店结算 start-->
+               <!--  statistics-是类型,请求的接口需要用这个判断 -->
+               <!-- ng-switch-when=里的数字跟D:\amt-starter-kit-master\bm\public\js\build\statistics.js /*历史累计*/ -->
                <div class="animate-switch" ng-switch-when="3">
+                    <div ng-if="view.direct === 1" statistics-chargeuse need-search="view.needSearch" page="view.page"
+                         count="view.count" total="view.total" post="posts"></div>
+                    <div ng-if="view.direct === 2" statistics-chargeuse-detail need-search="view.needSearch"
+                         page="view.page" count="view.count" total="view.total" post="posts"></div>
+               </div>
+               <!-- 充值卡门店结算 end-->
+
+               <div class="animate-switch" ng-switch-when="4">
                     <div ng-if="view.direct === 1" statistics-upgrade need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-upgrade-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
                <!-- 打赏 -->
-               <div class="animate-switch" ng-switch-when="4">
+               <div class="animate-switch" ng-switch-when="5">
                     <div ng-if="view.direct === 1" statistics-gratuity need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-gratuity-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
-               <div class="animate-switch" ng-switch-when="5">
+               <div class="animate-switch" ng-switch-when="6">
                     <div statistics-groupon need-search="view.needSearch" page="view.page" count="view.count"
                          total="view.total" post="posts"></div>
                </div>
 
-               <div class="animate-switch" ng-switch-when="6">
+               <div class="animate-switch" ng-switch-when="7">
                     <div ng-if="view.direct === 1" statistics-lottery need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-lottery-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
-               <div class="animate-switch" ng-switch-when="7">
+               <div class="animate-switch" ng-switch-when="8">
                     <div ng-if="view.direct === 1" statistics-mall need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-mall-detail need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                </div>
-               <div class="animate-switch" ng-switch-when="8">
+               <div class="animate-switch" ng-switch-when="9">
                     <div ng-if="view.direct === 1" statistics-point need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-point-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
-               <div class="animate-switch" ng-switch-when="9">
+               <div class="animate-switch" ng-switch-when="10">
                     <div ng-if="view.direct === 1" statistics-coupon need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-coupon-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
 
-               <div class="animate-switch" ng-switch-when="10">
+               <div class="animate-switch" ng-switch-when="11">
                     <div ng-if="view.direct === 1" statistics-reward need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-reward-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
 
-               <div class="animate-switch" ng-switch-when="11">
+               <div class="animate-switch" ng-switch-when="12">
                     <div ng-if="view.direct === 1" statistics-sms need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-sms-detail need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                </div>
 
-               <div class="animate-switch" ng-switch-when="12">
+               <div class="animate-switch" ng-switch-when="13">
                     <div ng-if="view.direct === 1" statistics-profits need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-profits-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
 
-               <div class="animate-switch" ng-switch-when="13">
+               <div class="animate-switch" ng-switch-when="14">
                     <div ng-if="view.direct === 1" statistics-marketing need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-marketing-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
 
-               <div class="animate-switch" ng-switch-when="14">
+               <div class="animate-switch" ng-switch-when="15">
                     <div ng-if="view.direct === 1" statistics-card need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-card-detail need-search="view.needSearch" page="view.page"
@@ -130,25 +139,16 @@
                </div>
 
                <!-- 业务推广报表 -->
-               <div class="animate-switch" ng-switch-when="15">
+               <div class="animate-switch" ng-switch-when="16">
                     <div ng-if="view.direct === 1" statistics-promotes need-search="view.needSearch" page="view.page"
                          count="view.count" total="view.total" post="posts"></div>
                     <div ng-if="view.direct === 2" statistics-promotes-detail need-search="view.needSearch"
                          page="view.page" count="view.count" total="view.total" post="posts"></div>
                </div>
-               <!-- 充值卡门店结算 start-->
-                    <!--  statistics-是类型,请求的接口需要用这个判断 -->
-                    <div class="animate-switch" ng-switch-when="16">
-                         <div ng-if="view.direct === 1" statistics-chargeuse need-search="view.needSearch" page="view.page"
-                              count="view.count" total="view.total" post="posts"></div>
-                         <div ng-if="view.direct === 2" statistics-chargeuse-detail need-search="view.needSearch"
-                              page="view.page" count="view.count" total="view.total" post="posts"></div>
-                    </div>
-                    <!-- 充值卡门店结算 end-->
-
+               <!-- end--业务推广报表 -->
           </div>
 
-          <!-- end--业务推广报表 -->
+
 
 
           <div class="col-sm-12 text-center" ng-if="!view.total&&view.direct">
