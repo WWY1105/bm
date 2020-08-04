@@ -143,9 +143,9 @@
                <img src="public/img/tv.svg" style="margin-bottom: 95px;margin-top: 63px;">没有可查询的信息
           </div>
      </div>
-     <div class="col-sm-12" ng-if="view.total>15&&view.direct">
+     <div class="col-sm-12" ng-if="view.total>20&&view.direct">
           <pagination items-per-page="view.count" boundary-links="true" rotate="false" max-size="20"
-               total-items="view.total" ng-model="view.page" class="pagination-sm" previous-text="&lsaquo;"
+               total-items="view.total" ng-model="view.page" class="pagination-sm pull-right" previous-text="&lsaquo;"
                next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
      </div>
 </div>

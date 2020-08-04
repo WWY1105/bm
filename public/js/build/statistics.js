@@ -19,6 +19,7 @@ angular.module('app').directive('buttons', function () {
                 $scope.view.title = ajaxSendFn({}, "/reports/consumption", "GET").result || {};
             }
             $scope.select = function (index) {
+                console.log(index)
                 $scope.posts.selector = index;
                 //$scope.direct = 0;
                 /*历史累计*/
