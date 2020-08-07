@@ -25,21 +25,20 @@
         <div class="col-sm-8">
           <div class="form-group ">
             <div class="col-sm-5">
-              <input type="text" ng-model="posts.name" name="name" class="form-control"
-                     placeholder="请输入活动名称" ng-minlength='2' ng-maxlength='20' ng-pattern="config.textCheckJson.nickname"
-                     required/>
+              <input type="text" ng-model="posts.name" name="name" class="form-control" placeholder="请输入活动名称"
+                ng-minlength='2' ng-maxlength='20' ng-pattern="config.textCheckJson.nickname" required />
             </div>
             <div class="col-sm-5">
               <span class="help-block text-red" ng-messages="ruleForm.name.$error">
-	                        <span ng-message="required">不能为空</span>
-	                        <span ng-message="minlength">需大于2个字符</span>
-	                        <span ng-message="maxlength">需小于20字符</span>
-	                        <span ng-message="pattern" ng-bind="config.textCheckErrorJson.nickname">
-                            </span>
+                <span ng-message="required">不能为空</span>
+                <span ng-message="minlength">需大于2个字符</span>
+                <span ng-message="maxlength">需小于20字符</span>
+                <span ng-message="pattern" ng-bind="config.textCheckErrorJson.nickname">
+                </span>
               </span>
               <span class="help-block" ng-show="ruleForm.name.$valid">输入正确</span>
               <span class="help-block" ng-show="ruleForm.name.$untouched&&ruleForm.name.$pristine">
-              2-20字符的汉字、英文、数字或者它们的组合
+                2-20字符的汉字、英文、数字或者它们的组合
               </span>
 
             </div>
@@ -56,8 +55,8 @@
             <div class="col-sm-12 ml2 form-control-stack text-left">{{onlineRuleObj}}
               <span ng-repeat="item in ruleCategory">
                 <label style="width: 104px" class="btn glyphicon  btn-default"
-                      ng-class="{active:posts.activityCategory == item.id}"
-                      ng-click="posts.activityCategory = item.id">{{item.name}}</label>
+                  ng-class="{active:posts.activityCategory == item.id}"
+                  ng-click="posts.activityCategory = item.id">{{item.name}}</label>
                 <!--<label class="radio-inline">-->
                 <!--<input type="radio" ng-model="posts.activityCategory" value="{{item.id}}">-->
                 <!--<span style="padding-right: 10px" ng-bind="item.name"></span>-->
@@ -77,26 +76,32 @@
       </div>
       <div class="out">
         <div class="col-sm-2">
-          <span class="title">发布途径</span>
+          <span class="title">发布场景</span>
         </div>
         <div class="col-sm-8">
-          <div class="text-grey">如不勾选则本活动对全部顾客可见</div>
-          <div class="form-group" ng-init="posts.pathway='ALL'">
-            <div class="col-sm-12">
+          <div class="text-grey">如不勾选则本活动会发布到全平台</div>
+          <div class="form-group" >
+            <div class="col-sm-12"  ng-repeat="item in view.scenes">
+              <label>
+                <input type="checkbox" ng-model="item.value" name="lineway" ng-true-value="true"
+                  >{{item.text}}</label>
+            </div>
+           
+            <!-- <div class="col-sm-12">
               <label>
                 <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="ONLINE"
-                       ng-false-value="ALL">仅在活动中心可见（即，仅未到店顾客可见）</label>
-            </div>
-            <div class="col-sm-12">
+                  ng-false-value="ALL">仅在活动中心可见（即，仅未到店顾客可见）</label>
+            </div> -->
+            <!-- <div class="col-sm-12">
               <label>
                 <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="ARRIVAL"
-                       ng-false-value="ALL">仅在门店首页可见（即，仅已到店顾客可见）</label>
+                  ng-false-value="ALL">仅在门店首页可见（即，仅已到店顾客可见）</label>
             </div>
             <div class="col-sm-12">
               <label>
                 <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="HIDDEN"
-                       ng-false-value="ALL">不对任何顾客可见（仅需要获取到本活动URL地址时勾选）</label>
-            </div>
+                  ng-false-value="ALL">不对任何顾客可见（仅需要获取到本活动URL地址时勾选）</label>
+            </div> -->
           </div>
         </div>
       </div>
@@ -110,11 +115,9 @@
             <div class="col-sm-12 form-inline">
               当消费金额达到充值后可用部分的
               <input type="number" step="0.01" min="0" max="1" ng-model="posts.recommend.minCelling"
-                     class="form-control"
-                     placeholder="0-1之间" style="width: 120px"/> 至
+                class="form-control" placeholder="0-1之间" style="width: 120px" /> 至
               <input type="number" step="0.01" min="0" max="1" ng-model="posts.recommend.maxCelling"
-                     class="form-control"
-                     placeholder="0-1之间" style="width: 120px"/> 之间才推荐
+                class="form-control" placeholder="0-1之间" style="width: 120px" /> 之间才推荐
             </div>
 
             <div class="col-sm-12">
@@ -154,13 +157,13 @@
           <span class="title">微信参数二维码</span>
         </div>
         <div class="col-sm-8">
-          <div><input type="checkbox" id="wx" ng-model="followLimit" 
-                          class=""/><label for="wx">确认使用</label>
+          <div><input type="checkbox" id="wx" ng-model="followLimit" class="" /><label for="wx">确认使用</label>
           </div>
         </div>
       </div>
 
-      <div class="out" ng-if="posts.activityCategory == 'CHARGE'||posts.activityCategory =='FIRSTGIFT'||posts.activityCategory =='COUPONFREE'">
+      <div class="out"
+        ng-if="posts.activityCategory == 'CHARGE'||posts.activityCategory =='FIRSTGIFT'||posts.activityCategory =='COUPONFREE'">
         <div class="col-sm-2">
           <span class="title">参与门店</span>
         </div>

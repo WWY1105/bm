@@ -4,18 +4,17 @@
     <div class="v-shadow-content">
       <form name="buy_form">
         <div class="form-horizontal">
-          <div class="form-group">
+          <div class="form-group flexStart">
             <label class="col-sm-2 control-label text-right">
               <span class="text-red">*</span>
-              标题()
+              标题
             </label>
-
             <div class="col-sm-4">
-              <input type="text" class="form-control" max='20'  ng-model="posts.title" name="nickname" placeholder="标题"
+              <input type="text" class="form-control" max='20' ng-model="posts.title" name="nickname" placeholder="标题"
                 ng-minlength='2' required></div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group flexStart">
             <label class="col-sm-2 control-label text-right">
               <span class="text-red">*</span>
               图片地址
@@ -26,7 +25,7 @@
             </div>
 
           </div>
-          <div class="form-group">
+          <div class="form-group flexStart">
             <label class="col-sm-2 control-label text-right">
               <span class="text-red">*</span>
               价格
@@ -48,7 +47,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group flexCenter">
+          <div class="form-group flexStart">
             <label class="col-sm-2 control-label text-right">
               <!-- <span class="text-red">*</span> -->
               业务提成
@@ -57,152 +56,164 @@
               <div class="col-sm-10 form-inline" ng-repeat="item in posts.allocates">
                 <div class="mt15">
                   <select ng-model="item.id" class="form-control"
-                    ng-options="item.id as item.name for item in view.allocates" name="member" >
+                    ng-options="item.id as item.name for item in view.allocates" name="member">
                   </select>
 
                 </div>
               </div>
             </div>
           </div>
-          <div class="form-group flexCenter">
+          <!-- ----- -->
+          <div class="form-group flexStart">
             <label class="col-sm-2 control-label text-right">
               <span class="text-red">*</span>
               售卖场景
             </label>
             <div class="col-sm-10 form-inline">
-
-              <div class="text-grey">如不勾选则本活动对全部顾客可见</div>
-              <div class="form-group flexCenter" ng-init="posts.pathway='ALL'">
-                <div class="col-sm-12">
+              <div class="form-group">
+                <div class="col-sm-12" ng-repeat="item in view.scenes">
                   <label>
-                    <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="ONLINE"
-                      ng-false-value="ALL">仅在活动中心可见（即，仅未到店顾客可见）</label>
-                </div>
-                <div class="col-sm-12">
-                  <label>
-                    <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="ARRIVAL"
-                      ng-false-value="ALL">仅在门店首页可见（即，仅已到店顾客可见）</label>
-                </div>
-                <div class="col-sm-12">
-                  <label>
-                    <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="HIDDEN"
-                      ng-false-value="ALL">不对任何顾客可见（仅需要获取到本活动URL地址时勾选）</label>
+                    <input type="checkbox" ng-model="item.value" name="lineway"
+                      >{{item.text}}</label>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="form-group flexCenter">
-          <label class="col-sm-2 control-label text-right">
-            <span class="text-red">*</span>
-            商品
-          </label>
 
-          <div class="col-sm-10 form-inline">
-            <div ng-repeat="item in posts.goods" >
-              <select class="form-control coupon-select" ng-model="item.id"
-                ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.coupons"
-                required>
-                <option value="">--请选择券--</option>
-              </select>
-              <input type="number" class="form-control" ng-model="item.count" name="nickname" placeholder="券的张数" min="1"
-                required>
-              <div class="form-group flexCenter">
-                <a class="add click" ng-if="$first" ng-click="addGoodsFn()"> <i
-                    class="glyphicon glyphicon-plus"></i></a>
-                <a class="remove click" ng-if="!$first" ng-click="removeGoodsFn($index)"> <i
-                    class="glyphicon glyphicon-remove"></i></a>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div class="form-group flexCenter mt15">
-          <label class="col-sm-2 control-label text-right">
-            <span class="text-red">*</span>
-            时间
-          </label>
-          <div class="col-sm-10">
-            <div class="form-inline">
-              <input class="form-control" type="datetime-local" min="{{view.initTime}}" ng-model="posts.startDate"
-                required />
-              <span class="form-control-static"> - </span>
-              <input class="form-control" type="datetime-local" min="{{view.initTime}}" ng-model="posts.endDate"
-                required />
-            </div>
-          </div>
-        </div>
-        <div class="form-group flexCenter mt15">
-          <label class="col-sm-2 control-label text-right">
-            <span class="text-red">*</span>
-            总数量
-          </label>
-          <div class="col-sm-10 form-inline">
-            <input type="number" step="1" class="form-control" ng-model="posts.countLimit" name="countLimit" required>
-          </div>
-        </div>
-
-        <div class="form-group flexCenter">
-          <label class="col-sm-2 control-label text-right">
-            <span class="text-red">*</span>
-            限制
-          </label>
-          <div class="col-sm-10">
-            <div class="form-inline">
-              <span class="form-control-static">每人可购买</span>
-              <input ng-model="posts.timesLimit" type="number" class="form-control" min="0" placeholder="0表示不限制"
-                required />
-              <span class="form-control-static">次。</span>
-              <span >
-                <span class="form-control-static">每人每天可购买</span>
-                <input ng-model="posts.dailyLimit" type="number" class="form-control" min="0" placeholder="0表示不限制"
-                  required />
-                <span class="form-control-static">次</span>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="form-inline">
+          <!-- ----- -->
+          <div class="form-group flexStart">
             <label class="col-sm-2 control-label text-right">
-              购买须知
+              <span class="text-red">*</span>
+              门店
             </label>
+            <div class="col-sm-10 form-inline">
+              <div class="form-control-stack">
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="set.shopAll" ng-change="checkAllShops()">全选</label>
+              </div>
+              <div class="form-control-stack">
+                <label class="checkbox-inline" ng-repeat="(key,shops) in set.list" ng-class="{ml30:$index==0}">
+                  <input type="checkbox" ng-model="posts.shops[key]" ng-true-value="{{shops.id}}">
+                  <span ng-bind="shops.name"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ------ -->
+          <div class="form-group flexStart">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              商品
+            </label>
+            <div class="col-sm-10 ">注意：单张券的数量不得超过20</div>
             <div class="col-sm-10 ">
-              <textarea style="width:100%;height: 150px" ng-model="posts.purchase" required></textarea>
+
+              <div ng-repeat="item in posts.goods" class="flexCenter">
+                <select class="form-control coupon-select" ng-model="item.id"
+                  ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) for item in view.coupons"
+                  required>
+                  <option value="">--请选择券--</option>
+                </select>
+                <input type="number" class="form-control" ng-model="item.count" name="nickname" placeholder="券的张数"
+                  min="1" required>
+                <div class=" ">
+                  <a class="add click" ng-if="$first" ng-click="addGoodsFn()"> <i
+                      class="glyphicon glyphicon-plus"></i></a>
+                  <a class="remove click" ng-if="!$first" ng-click="removeGoodsFn($index)"> <i
+                      class="glyphicon glyphicon-remove"></i></a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="form-group flexCenter">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              时间
+            </label>
+            <div class="col-sm-10">
+              <div class="form-inline">
+                <input class="form-control" type="datetime-local" min="{{view.initTime}}" ng-model="posts.startDate"
+                  required />
+                <span class="form-control-static"> - </span>
+                <input class="form-control" type="datetime-local" min="{{view.initTime}}" ng-model="posts.endDate"
+                  required />
+              </div>
             </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label text-right">
-            使用说明
-          </label>
-          <div class="col-sm-10">
-            <textarea style="width:100%;height: 150px" ng-model="posts.instructions" required></textarea>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label text-right">
-            商品描述
-          </label>
-          <div class="col-sm-10">
-            <div id="div1" style="min-height:500px;">
-              <!-- <p>请输入内容...</p> -->
+          <div class="form-group flexCenter">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              总数量
+            </label>
+            <div class="col-sm-10 form-inline">
+              <input type="number" step="1" class="form-control" ng-model="posts.countLimit" name="countLimit" required>
             </div>
-            <!-- <textarea style="width:100%;height: 150px" ng-model="posts.additional" required></textarea> -->
           </div>
-        </div>
 
+          <div class="form-group flexCenter">
+            <label class="col-sm-2 control-label text-right">
+              <span class="text-red">*</span>
+              限制
+            </label>
+            <div class="col-sm-10">
+              <div class="form-inline">
+                <span class="form-control-static">每人可购买</span>
+                <input ng-model="posts.timesLimit" type="number" class="form-control" min="0" placeholder="0表示不限制"
+                  required />
+                <span class="form-control-static">次。</span>
+                <span>
+                  <span class="form-control-static">每人每天可购买</span>
+                  <input ng-model="posts.dailyLimit" type="number" class="form-control" min="0" placeholder="0表示不限制"
+                    required />
+                  <span class="form-control-static">次</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-inline">
+              <label class="col-sm-2 control-label text-right">
+                购买须知
+              </label>
+              <div class="col-sm-10 ">
+                <textarea style="width:100%;height: 150px" ng-model="posts.purchase" required></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              使用说明
+            </label>
+            <div class="col-sm-10">
+              <textarea style="width:100%;height: 150px" ng-model="posts.instructions" required></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label text-right">
+              商品描述
+            </label>
+            <div class="col-sm-10">
+              <div id="div1" style="min-height:500px;">
+                <!-- <p>请输入内容...</p> -->
+              </div>
+              <!-- <textarea style="width:100%;height: 150px" ng-model="posts.additional" required></textarea> -->
+            </div>
+          </div>
+
+
+
+          <!-- ng-disabled="!buy_form.$valid" -->
+          <button ng-click="postSend()" class="btn btn-primary col-sm-4 col-sm-offset-4">
+            提交
+          </button>
+        </div>
+      </form>
 
     </div>
-    <!-- ng-disabled="!buy_form.$valid" -->
-    <button ng-click="postSend()" class="btn btn-primary col-sm-4 col-sm-offset-4">
-      提交
-    </button>
-
-    </form>
   </div>
-</div>
 </div>
 <style>
   .flexCenter {
@@ -210,5 +221,5 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
+  }
 </style>

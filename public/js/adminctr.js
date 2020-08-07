@@ -1786,11 +1786,17 @@ app.controller('RuleAddCtr', function ($scope, $location, $filter, $routeParams)
     }]; //面包屑
 
     $scope.checkshop = {};
+    var getShopJson = {
+        state: 1002
+    }
+    if ($location.$$path == "/rule/add") {
+        // 线上活动
+        getShopJson.brand = true;
+
+    }
     $scope.set = {
         times: ajaxSendFn({}, "/businesstimes/all", "GET").result,
-        list: ajaxSendFn({
-            state: 1002
-        }, "/shops", "GET").result,
+        list: ajaxSendFn(getShopJson, "/shops", "GET").result,
         list2: [],
         timeType: {
             "1001": "早市",
@@ -1820,10 +1826,56 @@ app.controller('RuleAddCtr', function ($scope, $location, $filter, $routeParams)
         data: {},
         effectDates: {},
         periods: [],
-        zhiding: $scope.config.time
-        //lineWay: {
-        //    "online":"到店顾客不可参与", "arrival":"只允许到店顾客参与", "all":"所有"
-        //}
+        zhiding: $scope.config.time,
+        scenes: [{
+            /**("不在系统中展示，只允许通过链接/小程序码访问"),
+             * **/
+            text: '不在系统中展示，只允许通过链接/小程序码访问',
+            key: 'HIDDEN',
+            value: false
+        }, {
+            /**
+             * 全部平台
+             */
+            text: '发布到全平台',
+            key: 'ALL',
+            value: false
+        }, {
+            /**
+             * 惠买单
+             */
+            text: '发布到惠买单H5',
+            key: 'CHECK',
+            value: false
+        }, {
+            /**
+             * 探长探店
+             */
+            text: '发布到探长探店',
+            key: 'SALER',
+            value: false
+        }, {
+            /**
+             * 上宾生活
+             */
+            text: '发布到上宾生活',
+            key: 'BING',
+            value: false
+        }, {
+            /**
+             * 捷帐宝
+             */
+            text: '发布到捷帐宝',
+            key: 'CMPP',
+            value: false
+        }, {
+            /**
+             * 上宾小栈
+             */
+            text: '发布到上宾小栈',
+            key: 'INNS',
+            value: false
+        }]
     };
     if ($routeParams.activityid) {
         $scope.view.isEdit = true;
@@ -1833,8 +1885,10 @@ app.controller('RuleAddCtr', function ($scope, $location, $filter, $routeParams)
 
     //展示的活动类型
     if ($location.$$path == "/rule/add") {
+        // 线上活动
         $scope.ruleCategory = onlineRuleObj;
     } else if ($location.$$path == "/rule/addconsume") {
+        // 消费活动
         $scope.ruleCategory = consumeRuleObj;
         console.log('活动类型')
         console.log(consumeRuleObj)
@@ -1890,6 +1944,7 @@ app.controller('RuleAddCtr', function ($scope, $location, $filter, $routeParams)
         $scope.view.periods[a] = $scope.view.periods[a] ? null : b;
     }
 
+
     $scope.sendJsons = function () { //arrRemoveNullFN
         sendtype = $routeParams.activityid ? "EDIT" : "ADD";
         sendid = $routeParams.activityid ? $routeParams.activityid : "";
@@ -1915,7 +1970,19 @@ app.controller('RuleAddCtr', function ($scope, $location, $filter, $routeParams)
             json.periods = $scope.posts.periods;
         }
         json.excludeAmount = $scope.posts.excludeAmount;
-        json.pathway = $scope.posts.pathway;
+        // json.pathway = $scope.posts.pathway;
+        var scenesArr = [];
+        $scope.view.scenes.map(function (i) {
+            if (i.value) {
+                scenesArr.push(i.key)
+            }
+        })
+        if (scenesArr.length <= 0) {
+            alert("请选择发布场景");
+            return;
+        }
+        json.scenes = scenesArr;
+
         json.recommend = $scope.posts.recommend;
         if (json.recommend && json.recommend.way !== 'AUTOMATIC') {
             delete json.recommend.proportion;
@@ -2016,8 +2083,11 @@ app.controller('RuleAddCtr', function ($scope, $location, $filter, $routeParams)
         if (tem.followLimit) {
             $scope.posts.followLimit = tem.followLimit
         }
-        if (tem.pathway) {
-            $scope.posts.pathway = tem.pathway;
+        // if (tem.pathway) {
+        //     $scope.posts.pathway = tem.pathway;
+        // }
+        if (tem.scenes) {
+            $scope.posts.scenes = tem.scenes;
         }
         $scope.posts.recommend = tem.recommend;
         if (tem.way) {
@@ -2288,15 +2358,15 @@ app.controller('RuleMemberCtr', function ($scope, $filter) {
     ];
     // validity
     $scope.validity = [{
-        key: true,
-        value: '使用余额支付才参加'
-    }, {
-        key: false,
-        value: '不适用消费余额也参加'
+            key: true,
+            value: '使用余额支付才参加'
+        }, {
+            key: false,
+            value: '不适用消费余额也参加'
 
-    }
+        }
 
-];
+    ];
 
     $scope.upgradeType = {
         "CUSTOMER": "CUSTOMER",
@@ -2663,7 +2733,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
         console.log(key)
         console.log(newkey)
         $scope.posts.detail[key] = newkey;
-      
+
     }
     $scope.ruleFn = {
         openOrClose: function () {
@@ -2675,7 +2745,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             $("#add").modal("hide");
             $scope.isOpenOrClose = false;
             alert("添加成功");
-         
+
         },
         testAddFail: function (result) {
             errorMsg(result);
@@ -2714,8 +2784,8 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             var ruletem = ajaxSendFn({}, "/activity/" + $routeParams.activityid + "/rule", "GET").result;
             console.log(' //从服务器获取目前的规则列表')
             console.log(ruletem)
-            if(ruletem.rules.reduceType&&ruletem.rules.reduceType=="RATIO"){
-                ruletem.rules.reduceType=true;
+            if (ruletem.rules && ruletem.rules.reduceType && ruletem.rules.reduceType == "RATIO") {
+                ruletem.rules.reduceType = true;
             }
             $scope.view = {
                 counponType: {
@@ -2730,7 +2800,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             $scope.ruleFn.getCpouponFn();
             console.log('ruletem.category')
             console.log(ruletem.category)
-           
+
             // 如果是充值活动   处理一下分账规则
             // 如果是充值活动   处理一下分账规则
             if (ruletem.category == 'CHARGE') {
@@ -3250,7 +3320,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
                 if (cb) cb(a, b);
                 console.log(!!cb)
 
-                
+
                 return;
             }
 
@@ -3265,7 +3335,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
                 $scope.posts[a][x].detail.ALL = [{}];
                 if (cb) cb(a, b);
             }
-        
+
         },
         removeFn: function (x, b, c) {
             console.log("1414")
@@ -3298,7 +3368,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             console.log("1616")
             return $scope.ruleFn.sendFn(a, undefined, undefined, function (json) {
                 var obj = json.detail.ALL[0];
-            
+
                 obj.amount = 1;
                 obj.currentAmount = obj.count = 0;
             });
@@ -3417,11 +3487,11 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
                     } else {
                         json.realIncome = false;
                     }
-                 
+
                     if (tem[x].reduceType) {
-                        json.reduceType='RATIO';
-                    }else{
-                        json.reduceType='PRINCIPAL_FIRST'
+                        json.reduceType = 'RATIO';
+                    } else {
+                        json.reduceType = 'PRINCIPAL_FIRST'
                     }
                 }
                 // 会员价
@@ -6790,13 +6860,13 @@ app.controller("addpacketsCtr", ["$scope", "$http", '$routeParams', "$filter", "
                 }
                 // 是否支持充值卡余额通用
                 if (json.type == "CHARGE_CONSUME") {
-                  
+
                     if (tem[x].allpurpose) {
                         json.allpurpose = true;
                     } else {
                         json.allpurpose = false;
                     }
-                 
+
                 }
 
                 typeof tem[x].countLimit == 'number' && (json.countLimit = tem[x].countLimit);
@@ -7041,7 +7111,6 @@ app.controller("addpacketsCtr", ["$scope", "$http", '$routeParams', "$filter", "
     }
     $scope.checkAllShops = function () { //
         console.log($scope.posts.allShop)
-
         if ($scope.posts.allShop) { //
             var shops = [];
             for (var i = 0; i < $scope.set.list.length; i++) {
@@ -7128,9 +7197,6 @@ app.controller("editpacketsCtr", ["$scope", "$http", '$routeParams', "$filter", 
             $scope.view.rewards = $scope.view1.REWARD || [];
             console.log("1111");
             console.log($scope.view);
-            // $scope.view.allocate = $scope.view1.ALLOCATE || [];
-            // $scope.view.coupons = ajaxSendFn({}, "/activity/factor", "GET").result || [];
-            // $scope.view.rewards = ajaxSendFn({}, "/activity/factor", "GET").result || [];
         },
         getCouponType: function (id) {
             for (var i = 0; $scope.view.coupons && i < $scope.view.coupons.length; i++) {
@@ -7174,13 +7240,15 @@ app.controller("editpacketsCtr", ["$scope", "$http", '$routeParams', "$filter", 
                 }
             }
 
-            console.log("222222")
-            console.log($scope.view.rules)
+
             $scope.view.shop = ajaxSendFn({
                 state: "1002"
             }, "/shops", "GET").result || [];
             $scope.tem.shops = [];
-            for (var x in $scope.view.shop) $scope.tem.shops.push($scope.view.shop[x].id);
+            for (var x in $scope.view.shop) {
+                $scope.tem.shops.push($scope.view.shop[x].id);
+            }
+
 
 
         },
@@ -7361,7 +7429,7 @@ app.controller("editpacketsCtr", ["$scope", "$http", '$routeParams', "$filter", 
                     } else {
                         json.allpurpose = false;
                     }
-                      
+
                 }
 
                 typeof tem[x].countLimit == 'number' && (json.countLimit = tem[x].countLimit);
@@ -7645,7 +7713,7 @@ app.controller("editpacketsCtr", ["$scope", "$http", '$routeParams', "$filter", 
     $scope.checkAllShops = function () { //
         console.log($scope.posts.allShop)
 
-        if ($scope.posts.allShop) { //
+        if ($scope.posts.allShop) {
             var shops = [];
             for (var i = 0; i < $scope.set.list.length; i++) {
                 shops.push($scope.set.list[i].id)
@@ -13215,7 +13283,7 @@ app.controller('RuleuEditorCtr', ['$rootScope', '$scope', function ($rootScope, 
     //     }
     //     return item;
     // });
-  
+
 
     function init() {
         var data1 = ajaxSendFn({}, "/medials", "GET");
@@ -15283,13 +15351,62 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
     }]; //面包屑
     var editor = new wangEditor('#div1');
     editor.create();
-    
+
     $scope.obtainRepeatCategory = obtainRepeatCategory;
     $scope.view = {
-        initTime:'',
+        initTime: '',
         mall: ajaxSendFn({}, "/mall", "GET").result || {},
         coupons: ajaxSendFn({}, "/coupon/usable", "GET").result || [],
-        allocates: ajaxSendFn({}, "/activity/allocate/8012", "GET").result
+        allocates: ajaxSendFn({}, "/activity/allocate/8012", "GET").result,
+        scenes: [{
+            /**("不在系统中展示，只允许通过链接/小程序码访问"),
+             * **/
+            text: '不在系统中展示，只允许通过链接/小程序码访问',
+            key: 'HIDDEN',
+            value: false
+        }, {
+            /**
+             * 全部平台
+             */
+            text: '发布到全平台',
+            key: 'ALL',
+            value: false
+        }, {
+            /**
+             * 惠买单
+             */
+            text: '发布到惠买单H5',
+            key: 'CHECK',
+            value: false
+        }, {
+            /**
+             * 探长探店
+             */
+            text: '发布到探长探店',
+            key: 'SALER',
+            value: false
+        }, {
+            /**
+             * 上宾生活
+             */
+            text: '发布到上宾生活',
+            key: 'BING',
+            value: false
+        }, {
+            /**
+             * 捷帐宝
+             */
+            text: '发布到捷帐宝',
+            key: 'CMPP',
+            value: false
+        }, {
+            /**
+             * 上宾小栈
+             */
+            text: '发布到上宾小栈',
+            key: 'INNS',
+            value: false
+        }]
     };
 
     if ($routeParams.id) {
@@ -15299,8 +15416,8 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         $scope.posts.startDate = new Date($scope.posts.startDate);
         $scope.posts.endDate = new Date($scope.posts.endDate);
         $scope.posts.details = [];
-        if(!$scope.posts.allocates){
-            $scope.posts.allocates=[{}];
+        if (!$scope.posts.allocates) {
+            $scope.posts.allocates = [{}];
         }
         for (var i in $scope.posts.detail) {
             $scope.posts.details.push({
@@ -15309,16 +15426,30 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
             });
         }
         delete $scope.posts.detail;
+        // 遍历场景
+        $scope.view.scenes.map((v) => {
+            $scope.posts.scenes.map((p) => {
+                console.log(p +'=='+ v.key)
+                if (p == v.key) {
+                    v.value = true
+                }
+            })
+        })
+        console.log($scope.view.scenes)
+
     } else {
-          // 添加
-          $scope.posts = {
+        // 添加
+        $scope.posts = {
             details: [{}],
             category: "BOUGHT",
             picUrls: [{}],
-            goods:[{}],
-            allocates:[{}],
-            startDate:'',
-            endDate:''
+            goods: [{}],
+            allocates: [{}],
+            startDate: '',
+            endDate: '',
+            allShop: false,
+            scenes: [],
+            shops: []
         };
         $scope.initTimeFn = function () {
             var date = new Date();
@@ -15335,11 +15466,59 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
             $scope.view.initTime = ($filter('date')(new Date(), "yyyy-MM-dd") + "T59:59")
         };
         $scope.initTimeFn();
-      
+
     }
-    
 
+    $scope.allShop = false;
+    $scope.set = {
+        list: ajaxSendFn({
+            state: 1002
+        }, "/shops", "GET").result,
+        shopAll: false,
+        shops: []
+    };
+    $scope.$watch('set.shopAll', function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+            if (newVal) {
+                angular.forEach($scope.set.list, function (value, key) {
+                    this[key] = value.id;
+                }, $scope.posts.shops)
+            } else {
+                $scope.posts.shops = [];
+            }
+        }
+    });
 
+    // 全选门店
+    $scope.checkAllShops = function () { //
+        console.log($scope.posts.allShop)
+
+        if ($scope.posts.allShop) {
+            var shops = [];
+            for (var i = 0; i < $scope.set.list.length; i++) {
+                shops.push($scope.set.list[i].id)
+            }
+            $scope.set.shops = shops
+        } else { //
+            $scope.set.shops = [];
+            $scope.posts.shops = []
+        }
+    }
+    $scope.checkShops = function (key) {
+        if (key == false) {
+            delete key
+            $scope.posts.allShop = false;
+        }
+        var arr = $scope.set.shops.filter(function (s) {
+            return s && s.trim();
+        });
+        if (arr.length == $scope.set.list.length) {
+            $scope.posts.allShop = true
+        } else {
+            $scope.posts.allShop = false;
+        }
+    }
+    // 勾选门店--end
 
     $scope.view.member = ajaxSendFn({}, "/memberGrade", "GET").result || [];
     $scope.view.member = $filter('orderBy')($scope.view.member, 'grade');
@@ -15362,34 +15541,58 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         $scope.posts.details.splice(i, 1);
     }
 
-     // 添加商品
-     $scope.addGoodsFn = function () {
+    // 添加商品
+    $scope.addGoodsFn = function () {
         $scope.posts.goods.push({});
     };
     // 删除商品
     $scope.removeGoodsFn = function (i) {
         $scope.posts.goods.splice(i, 1);
     }
-
+    // 提交数据
     $scope.postSend = function () {
-        console.log($scope.posts)
+        // console.log($scope.posts)
+        // return;
         if (!$scope.posts.picUrl) {
             alert("请先选择图片");
             return;
         }
+
+        // 遍历场景
+        var scenesArr = [];
+        $scope.view.scenes.map(function (i) {
+            if (i.value) {
+                scenesArr.push(i.key)
+            }
+        })
+        $scope.posts.scenes = scenesArr;
+        if (scenesArr.length <= 0) {
+            alert("请选择发布场景");
+            return;
+        }
+        // 遍历门店
+        // if (!$scope.posts.allShop) {
+        //     var shops = [];
+        //     for (var i = 0; i < $scope.set.list.length; i++) {
+        //         shops.push($scope.set.list[i].id)
+        //     }
+        //     $scope.posts.shops = shops;
+        // }
+
+
         // 遍历商品
-        $scope.posts.goods.map((i)=>{
-            i.category='COUPON'
+        $scope.posts.goods.map((i) => {
+            i.category = 'COUPON'
         })
         // 富文本
-        $scope.posts.additional=editor.txt.html()
+        $scope.posts.additional = editor.txt.html()
         var json = angular.copy($scope.posts);
         json.detail = {};
         for (var i in json.details) {
             json.detail[json.details[i].id] = json.details[i].value;
         }
         delete json.details;
-        if(!json.allocates[0].id){
+        if (!json.allocates[0].id) {
             delete json.allocates
         }
         if (JSON.stringify(json.picUrls) == "[{}]") {
@@ -15403,6 +15606,7 @@ app.controller('BuyAddCtr', function ($scope, $location, $http, $filter, $routeP
         }
         json.startDate = $filter('date')(json.startDate, "yyyy-MM-dd HH:mm:ss");
         json.endDate = $filter('date')(json.endDate, "yyyy-MM-dd HH:mm:ss");
+
         if ($routeParams.id) {
             postsend = ajaxSendFn(json, "/mall/" + $routeParams.id, "PUT", 1);
         } else {
@@ -15579,7 +15783,7 @@ app.controller('DocCtr', ['$rootScope', '$scope', '$location', 'shopFactory', fu
 
         STATISTICS_TEXT: ["当前总消费数（笔）", "当前总收款数（笔）", "当前总余额（元）", "当前会员总人数（人）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "当前总余量（分）", "当前总余量（张）", "当前总余额（元）", "短信余额（条）"],
         //TYPE: ["consumption", "receivables", "recharge", "upgrade", "point", "coupon", "shortmessage"],
-        buttons: ["惠买单消费报表", "快速收款报表", "充值报表","充值卡门店结算", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡", '业务推广报表'],
+        buttons: ["惠买单消费报表", "快速收款报表", "充值报表", "充值卡门店结算", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡", '业务推广报表'],
         coupons: ajaxSendFn({}, "/reports/coupon/coupons", "GET").result || [],
         staff: ajaxSendFn({}, "/reports/profits/staffs", "GET").result || [],
         business: [{
