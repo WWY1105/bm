@@ -2834,6 +2834,7 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
         json.picUrl = $scope.posts.picUrl;
         json.participants = $scope.posts.participants;
         json.name = $scope.posts.name;
+        json.orgPrice = $scope.posts.orgPrice;
         json.shops = $scope.posts.shops;
         json.cardId = $scope.posts.cardId;
         json.price = $scope.posts.price;
@@ -4862,10 +4863,7 @@ app.controller("RuleCouponCtr", ['$scope', '$http', 'CouponFactory', function ($
     // 添加券  规则
     $scope.openOrClose = function () {
         $("#add").modal("show");
-
         $scope.isOpenOrClose = true;
-        //$scope.isOpenOrClose = !$scope.isOpenOrClose;
-        console.log($scope.view.allocate)
     };
     $scope.testAddOk = function () {
         $("#add").modal("hide");
@@ -4960,9 +4958,10 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
     }
     $scope.ruleCategory = consumeRuleObj;
     $scope.ruleCategory1 = onlineRuleObj;
-    console.log(consumeRuleObj)
+    $scope.couponTimeSel  = couponRangeCategory;
+
     $scope.cards = {
-        "dateRangeCategory": "PERMANENT",
+        "dateRangeCategory": couponRangeCategory,
         "dateRange": {
             "selectCategory": "NONE"
         },
