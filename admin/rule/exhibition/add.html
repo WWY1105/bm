@@ -32,6 +32,23 @@
             </div>
           </div>
         </div>
+        <div class="out">
+        <div class="col-sm-2">
+          <span class="title">参与门店</span>
+        </div>
+        <div class="col-sm-8">
+          <div class="form-control-stack">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="set.shopAll" ng-change="checkAllShops()">全选</label>
+          </div>
+          <div class="form-control-stack">
+            <label class="checkbox-inline" ng-repeat="(key,shops) in set.list" ng-class="{ml30:$index==0}">
+              <input type="checkbox" ng-model="posts.shops[key]" ng-true-value="{{shops.id}}">
+              <span ng-bind="shops.name"></span>
+            </label>
+          </div>
+        </div>
+      </div>
 
         <div class="out ">
           <div class="col-sm-2">

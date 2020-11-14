@@ -1,0 +1,120 @@
+<div class="container contents bgw">
+    <div class="col-sm-8 col-sm-offset-2 stepshow" ng-if="!view.isEdit">
+        <div class="col-sm-12 ruleadd">
+            <form class="form-horizontal" name="ruleForm" ng-submit="sendJsons()">
+                <!-- 标题 -->
+                <div class="out">
+                    <div class="col-sm-2">
+                        <span class="title">标题</span>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="form-group ">
+                            <div class="col-sm-12">
+                                <input type="text" ng-model="posts.name" name="name" class="form-control"
+                                    autocomplete="off" placeholder="请输入活动名称" ng-minlength='2' ng-maxlength='20'
+                                 required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 发券时间 -->
+                <div class="out">
+                    <div class="col-sm-2">
+                        <span class="title">发券时间</span>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="form-group ">
+                            <div class="col-sm-12 flexStart">
+                                <input type="date" style="color: #18A0D4" ng-model="posts.startDate"
+                                    class="form-control" placeholder="起始时间" name="startDate" required />
+                                ~
+                                <input type="date" style="color: #18A0D4;margin-right: 90px" ng-model="posts.endDate"
+                                    class="form-control" placeholder="结束时间" name="endDate" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 门店 -->
+                <div class="out">
+                    <div class="col-sm-2">
+                        <span class="title">发券门店</span>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-control-stack">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="posts.allShop" ng-change="checkAllShops()">全选</label>
+                        </div>
+                        <div class="form-control-stack">
+                            <label class="checkbox-inline" ng-repeat="(key,shops) in view.shops"
+                                ng-class="{ml30:$index==0}">
+                                <input type="checkbox" ng-model="posts.shops[key]"   ng-checked="posts.shops[key]"  ng-true-value="{{shops.id}}">
+                                <span ng-bind="shops.name"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- 发布场景 -->
+                <div class="out">
+                    <div class="col-sm-2">
+                        <span class="title">发布场景</span>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <div class="col-sm-12" ng-repeat="item in view.scenes">
+                                <label>
+                                    <input type="checkbox" ng-model="item.value" name="lineway"
+                                        >{{item.text}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 券 -->
+                <div class="out">
+                    <div class="col-sm-2">
+                        <span class="title">券</span>
+                    </div>
+                    <div class="col-sm-10" >
+                        <div class="form-group form-inline flexStart" >
+                            <select class="form-control coupon-select" ng-model="posts.benefits"
+                                ng-change="ruleFn.changeCoupon(details.value, dv)"
+                                ng-options="item.id as (item.name + (item.alias?'('+item.alias+')':'')) group by view.counponType[item.type] for item in view.coupons"
+                                required>
+                                <option value="">--请选择券--</option>
+                            </select>
+                        <!-- </div>
+                        <div class="form-group"> -->
+                            <!-- <a class="add click flexCenter" ng-if="index==0"
+                                style="width: 30px;height: 30px;border-radius: 50%;margin-left: 20px;border:1px solid gray;"
+                                ng-click="ruleFn.addFunc()"> <i
+                                    class="glyphicon glyphicon-plus"></i></a>
+                            <a class="remove click flexCenter" ng-if="index>0"
+                                style="width: 30px;height: 30px;border-radius: 50%;margin-left: 20px;border:1px solid gray;"
+                                ng-click="ruleFn.removeFn(index)"> <i
+                                    class="glyphicon glyphicon-remove"></i></a> -->
+                        </div>
+                    </div>
+
+                </div>
+                <!-- 说明 -->
+                <div class="out">
+                    <div class="col-sm-2">
+                        <span class="title">说明</span>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group ">
+                            <div class="col-sm-12 flexStart">
+                                <textarea ng-model="posts.additional" name="name" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="out">
+                    <div class="col-sm-2"></div>
+                    <div class=" col-sm-8">
+                        <button  class="btn btn-primary"  ng-click="ruleFn.saveFn()" style="width: 100px;">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

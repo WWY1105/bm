@@ -1,0 +1,46 @@
+<div class="bgw">
+    <div class="row">
+      <div ng-include="'/admin/rule/leftmenu.html'"></div>
+      <div class="v-shadow-content">
+        <div class="col-md-2 col-md-offset-10">
+          <button class="btn btn-primary btn-block" ng-click="addFn()">上线新活动</button>
+        </div>
+        <div class="col-md-12 time-line1">
+         <table class="table" >
+          <thead>
+            <tr>
+              <th>名称</th>
+              <th>券</th>
+              <!-- <th>门店</th> -->
+              <th>场景</th>
+              <th>开始时间</th>
+              <th>结束时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="(index,item) in view.rule.items">
+              <td>{{item.name}}</td>
+              <td>
+                <p >{{item.benefits.name}}</p>
+              </td>
+              <!-- <td></td> -->
+              <td>
+                <p ng-repeat="i in item.scenes">{{i=='CMPP'?'发布到捷帐宝':'发布到上宾小栈'}}</p>
+              </td>
+              <td>{{item.startDate}}</td>
+              <td>{{item.endDate}}</td>
+              <td>
+                <a  ng-click="ruleFn.online(index)" ng-if="!item.on">上线</a>
+                <a  ng-click="ruleFn.offline(index)" ng-if="item.on">下线</a>
+                <a ng-click="ruleFn.deleteItem(index)">删除</a>
+                <a ng-click="ruleFn.editItem(index)">修改</a>
+              </td>
+            </tr>
+          </tbody>
+         </table>
+        </div>
+        <Div class="col-md-10 col-md-offset-1" ng-if="view.rule.length<1">暂未添加活动</Div>
+      </div>
+    </div>
+  </div>

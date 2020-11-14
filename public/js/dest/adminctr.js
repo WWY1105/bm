@@ -7,6 +7,10 @@ angular.module('app').config(appRouteConfig);
 
 function appRouteConfig($routeProvider) { //路由规则
     $routeProvider
+        .when('/final', {
+            templateUrl: "admin/final/index.html",
+            controller: "FinalCtr"
+        }) //终端管理
         .when('/shops', {
             templateUrl: "admin/shops/index.html",
             controller: "ShopsCtr"
@@ -19,7 +23,7 @@ function appRouteConfig($routeProvider) { //路由规则
             templateUrl: "admin/brand/add.html",
             controller: "BrandAddCtr"
         }) //品牌添加
-        .when('/shops/add', {
+        .when('/shopAdd', {
             templateUrl: "admin/shops/add.html",
             controller: "ShopsAddCtr"
         }) //门店添加
@@ -731,7 +735,7 @@ app.controller('ShopsCtr', function ($scope, $location, $http) { //shoplist over
             name: $scope.name
         }, "/shops/shops", "GET").result;
     }
-    $scope.addSettingPic=function(){
+    $scope.addSettingPic = function () {
         console.log('修改门店的买单设置')
     }
     $scope.detail = function (id, index) {
@@ -760,7 +764,7 @@ app.controller('ShopsCtr', function ($scope, $location, $http) { //shoplist over
 app.controller('ShopsAddCtr', function ($scope, $location) {
     $scope.config.breadset = [{ //
         name: "门店管理",
-        href: indexUrl + "/admin.html#/shops"
+        href: indexUrl + "/admin.html#/shops/add"
     }, {
         name: "添加门店"
     }]; //面包屑
@@ -810,7 +814,7 @@ app.controller('ShopsAddCtr', function ($scope, $location) {
 app.controller('ShopsAdd2Ctr', function ($scope, $location, $routeParams) {
     $scope.config.breadset = [{ //
         name: "门店管理",
-        href: indexUrl + "/admin.html#/shops"
+        href: indexUrl + "/admin.html#/shops/add"
     }, {
         name: "添加店长"
     }]; //面包屑
@@ -849,7 +853,7 @@ app.controller('ShopsAdd2Ctr', function ($scope, $location, $routeParams) {
 app.controller('ShopsAdd3Ctr', function ($scope, $location, $routeParams) {
     $scope.config.breadset = [{ //
         name: "门店管理",
-        href: indexUrl + "/admin.html#/shops"
+        href: indexUrl + "/admin.html#/shops/add"
     }, {
         name: "添加完成"
     }]; //面包屑
@@ -888,11 +892,11 @@ app.controller('StaffCtr', function ($scope, $routeParams) {
         $scope.staffget = ajaxSendFn({}, constUrlDict["staff"] + "/" + id, "GET").result;
         $("#" + name).modal('show');
     }
-     // 禁用员工
-     $scope.stopStaff = function (id) { //
+    // 禁用员工
+    $scope.stopStaff = function (id) { //
         console.log('点击了')
         if (!confirm("是否禁用？")) return false;
-        var staffDelRe = ajaxSendFn({}, '/staffs/staff/'+id+'/off', "POST");
+        var staffDelRe = ajaxSendFn({}, '/staffs/staff/' + id + '/off', "POST");
         if (staffDelRe.code == 200) { //
             alert("操作成功");
             $scope.staff = ajaxSendFn({
@@ -902,7 +906,7 @@ app.controller('StaffCtr', function ($scope, $routeParams) {
             errorMsg(staffDelRe);
         }
     }
-   
+
     // 删除员工
     $scope.delete = function (id) { //
         if (!confirm("一旦删除将不可恢复，是否确认删除？")) return false;
@@ -1456,7 +1460,7 @@ app.controller('Staffoperation', function ($scope, $location, $routeParams) {
             console.log("不修改密码")
             delete sendJson.password
         }
-   
+
         sendJson = JSON.stringify(sendJson);
         result = ajaxSendFn(sendJson, "/staffs/staff/" + $routeParams.guestid + "/permission", "POST", 1);
         if (result.code == 200) { //
@@ -1540,7 +1544,7 @@ app.controller('RuleCtr', function ($rootScope, $scope, $location, $filter, $doc
     }
 
     $scope.pannel = function (nowindex) { //切换显示列表
-       
+
         if ($scope.view.rule[nowindex].show == 1) {
             $scope.view.rule[nowindex].show = 0;
         } else {
@@ -1627,7 +1631,7 @@ app.controller('RuleAddCtr', function ($scope, $location, $filter, $routeParams)
         },
         periods: []
     };
-    
+
     $scope.set.time = getSubtimes($scope.set.times, $scope.set.timeType);
     if (!$scope.set.list) {
         alert("目前还没有添加门店");
@@ -2759,7 +2763,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
                         }
                     };
             }
-            
+
             console.log($scope.view.rules)
             $scope.view.shop = ajaxSendFn({
                 state: "1002"
@@ -2787,7 +2791,7 @@ app.controller('RuleAdd2Ctr', ['$scope', '$location', '$filter', '$routeParams',
             // 会员价
             if (a == 'MEMBER_PRICE') {
                 aRe = 'MEMBERPRICE';
-            }else  if (a == 'COMMENT_REDUCE') {
+            } else if (a == 'COMMENT_REDUCE') {
                 aRe = 'COMMENTREDUCE';
             } else {
                 aRe = a.split("_")[0];
@@ -10008,14 +10012,14 @@ app.controller('RuleuEditorCtr', ['$rootScope', '$scope', function ($rootScope, 
     $scope.config.breadset = [{
         class: "ueditor"
     }];
-    $scope.view={
-        materials:[]
+    $scope.view = {
+        materials: []
     }
     var editor = new wangEditor('#div1');
     editor.customConfig.pasteFilterStyle = false;
     // 配置自定义参数（举例）
     editor.customConfig.uploadParams = {};
-    editor.customConfig.uploadFileName  = "file";
+    editor.customConfig.uploadFileName = "file";
     // 设置 headers（举例）
     editor.customConfig.uploadHeaders = {};
     // editor.config.uploadImgUrl = '/pic';
@@ -12288,7 +12292,7 @@ app.controller('DocCtr', ['$rootScope', '$scope', '$location', 'shopFactory', fu
         STATISTICS_TEXT: ["当前总消费数（笔）", "当前总收款数（笔）", "当前总余额（元）", "当前会员总人数（人）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "当前总余量（分）", "当前总余量（张）", "当前总余额（元）", "短信余额（条）"],
         //TYPE: ["consumption", "receivables", "recharge", "upgrade", "point", "coupon", "shortmessage"],
         //  "快速收款报表", 
-        buttons: ["惠买单消费报表","充值报表", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡"],
+        buttons: ["惠买单消费报表", "充值报表", "会员升级报表", "打赏购买", "砍价购买", "抽奖购买", "商城购买", "积分报表", "优惠券报表", '代用币报表', "短信使用报表", "服务员收益", "营销支出", "探店储值卡"],
         coupons: ajaxSendFn({}, "/reports/coupon/coupons", "GET").result || [],
         staff: ajaxSendFn({}, "/reports/profits/staffs", "GET").result || [],
         business: [{

@@ -78,25 +78,15 @@
       </div>
       <div class="out">
         <div class="col-sm-2">
-          <span class="title">发布途径</span>
+          <span class="title">发布场景</span>
         </div>
         <div class="col-sm-8">
-          <div class="text-grey">如不勾选则本活动对全部顾客可见</div>
-          <div class="form-group" ng-init="posts.pathway='ALL'">
-            <div class="col-sm-12">
+          <!-- <div class="text-grey">如不勾选则本活动会发布到全平台</div> -->
+          <div class="form-group" >
+            <div class="col-sm-12"  ng-repeat="item in view.scenes">
               <label>
-                <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="ONLINE"
-                       ng-false-value="ALL">仅在活动中心可见（即，仅未到店顾客可见）</label>
-            </div>
-            <div class="col-sm-12">
-              <label>
-                <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="ARRIVAL"
-                       ng-false-value="ALL">仅在门店首页可见（即，仅已到店顾客可见）</label>
-            </div>
-            <div class="col-sm-12">
-              <label>
-                <input type="checkbox" ng-model="posts.pathway" name="lineway" ng-true-value="HIDDEN"
-                       ng-false-value="ALL">不对任何顾客可见（仅需要获取到本活动URL地址时勾选）</label>
+                <input type="checkbox" ng-model="item.value" name="lineway" ng-true-value="true"
+                  >{{item.text}}</label>
             </div>
           </div>
         </div>

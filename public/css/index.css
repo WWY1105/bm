@@ -5,13 +5,18 @@ body{
 .bar {
     margin: 18px auto;
 }
-
+.flex1{
+    flex: 1;
+}
 .title {
     padding: 90px 0;
     text-align: center;
     background: url('../img/image/bg.jpg') no-repeat;
     background-size: cover;
     color: white
+}
+.partLine{
+    border-bottom: 1px solid #666;
 }
 
 .special .text {

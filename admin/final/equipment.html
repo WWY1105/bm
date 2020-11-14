@@ -1,0 +1,51 @@
+<div class="row bg-white">
+    <div class="v-shadow">
+        <div ng-include="'/admin/final/leftmenu.html'"></div>
+    </div>
+    <!-- 左边菜单end -->
+    <div class="v-shadow-content  bgw">
+
+        <div class="col-sm-12">
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>渠道</th>
+                        <th>设备品牌</th>
+                        <th>设备模式</th>
+                        <th>系统版本</th>
+                        <th>设备厂商</th>
+                        <th>平台</th>
+                        <th>版本code</th>
+                        <th>版本名称</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in equipmentList.items">
+                        <td>{{$index+1}}</td>
+                        <td>{{item.channel}}</td>
+                        <td>{{item.deviceBrand}}</td>
+                        <td>
+                            {{item.deviceMode}}
+                        </td>
+                        <td>{{item.systemVersion}}</td>
+                        <td>{{item.manufacturer}}</td>
+                        <td>{{item.plateform}}</td>
+                        <td>{{item.versionCode}}</td>
+                        <td>
+                            {{item.versionName}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="col-sm-12" ng-if="equipmentList.pageSize>1">
+                <pagination items-per-page="equipmentList.count" boundary-links="true" rotate="false"
+                    max-size="20" total-items="equipmentList.total" ng-model="equipment.page"
+                    ng-change="pageChangeEquipment()" class="pagination-sm" previous-text="&lsaquo;"
+                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -3052,7 +3052,7 @@ app.controller('resourcesCtr', ['$scope', '$location', 'messageFactory', '$http'
     $scope.addBtn = function () {
         $scope.posts.resources = [{
             'id': '',
-            'category': 'STORECARD',
+            'category': 'CARD',
             "count": '',
             "cost": '',
             "price": '',
@@ -3133,7 +3133,7 @@ app.controller('resourcesCtr', ['$scope', '$location', 'messageFactory', '$http'
     $scope.addcardrow = function () {
         var obj = {
             'id': '',
-            'category': 'STORECARD',
+            'category': 'CARD',
             "count": '',
             "cost": '',
             "price": '',

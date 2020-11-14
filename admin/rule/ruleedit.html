@@ -41,7 +41,7 @@
           <div class="form-group" >
             <div class="col-sm-12"  ng-repeat="item in view.scenes">
               <label>
-                <input type="checkbox" ng-model="item.value" name="lineway" ng-true-value="true"
+                <input type="checkbox" ng-model="item.value"  ng-checked="item.value"  name="lineway" ng-true-value="true"
                   >{{item.text}}</label>
             </div>
           </div>
@@ -245,12 +245,12 @@
           </div>
         </div>
       </div>
-      <div class="out" ng-if="posts.activityCategory == 'CHARGE'">
+      <div class="out" ng-if="posts.activityCategory == 'CHARGE'||posts.activityCategory == 'COUPONFREE'">
         <div class="col-sm-2 text-right">
           <span class="title">参与门店</span>
         </div>
         <div class="col-sm-8 content">
-          <div class="text-grey" ng-if="posts.activityCategory == 'CHARGE'">充值门店不通用设置方法：1.不能开启品牌店充值，需勾选发布途径—仅在门店首页可见（即，仅已到店顾客可见）2.使用充值卡设置中选择各门店不通用</div>
+          <!-- <div class="text-grey" ng-if="posts.activityCategory == 'CHARGE'">充值门店不通用设置方法：1.不能开启品牌店充值，需勾选发布途径—仅在门店首页可见（即，仅已到店顾客可见）2.使用充值卡设置中选择各门店不通用</div> -->
           <div class="form-control-stack text-left">
             <label class="checkbox-inline">
               <input type="checkbox" ng-model="set.shopAll" ng-click="checkAllShops()">全选</label>

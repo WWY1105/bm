@@ -15,7 +15,10 @@
 ul, li {
     list-style: none
 }
-
+.partLine{
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+}
 html, body {
     font-size: 12px;
     background: #f0f0f0;
@@ -968,6 +971,9 @@ header .menushow a:hover {
 .ml15 {
     margin-left: 15px
 }
+.mb5{
+    margin-bottom: 5px;
+}
 
 .mt15 {
     padding-top: 15px
@@ -977,7 +983,7 @@ header .menushow a:hover {
     padding-top: 20px
 }
 
-.mb15 {
+.pb15 {
     padding-bottom: 15px
 }
 
@@ -3540,4 +3546,41 @@ input[type=checkbox] {
 }
 #editModal .tab-content>.tab-pane.active{
     display: block;
+}
+
+
+
+/*  */
+.flex1{
+    flex: 1;
+}
+.flexCenter{
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+.flexStart{
+    display: flex !important;
+    justify-content: flex-start;
+    align-items: center;
+}
+.flexSpace{
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+}
+/*  */
+.mr15{
+    margin-right: 15px;
+}
+.mb15{
+    margin-bottom: 15px;
+}
+input[type=radio]:focus{
+outline: none;
+}
+
+/* cards */
+#cards .form-inline{
+min-height: 50px;
 }
