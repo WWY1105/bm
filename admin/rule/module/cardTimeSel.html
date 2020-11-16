@@ -1,0 +1,79 @@
+<div class="form-inline">
+  <label class="control-label col-sm-2"><span class="text-red">*</span>日期策略</label>
+
+  <div class="form-group">
+    <label class="radio-inline" ng-repeat="(key,value) in couponTimeSel">
+      <input type="radio" name="dateRangeCategory" ng-model="cards.dateRangeCategory" ng-value="key"
+             ng-click="test(key)" required/>
+      <span ng-bind="value"></span>
+    </label>
+  </div>
+</div>
+
+<div class="form-inline">
+  <div class="animate-switch-container col-md-offset-2" ng-switch="cards.dateRangeCategory">
+    <div class="animate-switch" ng-switch-when="CONTINUOUS">
+
+      <div class="form-group">
+        <p class="input-group">
+          <span class="form-control-static">开始日期</span>
+        </p>
+        <p class="input-group">
+          <input class="form-control" datepicker-popup ng-model="cards.dateRange.startDate" is-open="opened.startTime"
+                 min-date="dateOptions.dftDate" max-date="dateOptions.maxDate" datepicker-options="dateOptions"
+                 date-disabled="disabled(date, mode)" ng-required="true" show-weeks="flase" ng-change="changeEnd()"
+                 name="startTime"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="open($event,'startTime')"><i
+                          class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+        </p>
+        <p class="input-group">
+          <span class="form-control-static">,&nbsp;&nbsp;结束日期</span>
+        </p>
+
+        <p class="input-group">
+          <input class="form-control" datepicker-popup ng-model="cards.dateRange.endDate" is-open="opened.endTime"
+                 min-date="dateOptions.dftDate" max-date="dateOptions.maxDate" datepicker-options="dateOptions"
+                 date-disabled="disabled(date, mode)" ng-required="true" show-weeks="flase" ng-change="changeEnd()"
+                 name="endTime"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="open($event,'endTime')"><i
+                          class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+        </p>
+
+        <!--<input class="form-control" type="date" min="{{today}}" ng-model="cards.dateRange.startDate"/>-->
+        <!--<span class="form-control-static">,&nbsp;&nbsp;结束日期</span>-->
+        <!--<input type="date" class="form-control" min="{{today}}" ng-model="cards.dateRange.endDate"/>-->
+      </div>
+    </div>
+
+    <div class="animate-switch" ng-switch-when="AUTOMATIC_DAY_DELAY">
+
+      <div class="form-group">
+        <label class="form-control-static">自领取之日起</label>
+        <input type="number" min="0" class="form-control" ng-model="cards.dateRange.delayedDays"/>
+        <span class="form-control-static">天后生效,有效期为</span>
+        <input type="number" min="1" class="form-control" ng-model="cards.dateRange.effectDays"/>
+        <span class="form-control-static">天。</span>
+      </div>
+
+    </div>
+
+    <div class="animate-switch" ng-switch-when="AUTOMATIC_MONTH_DELAY">
+      <div class="form-group">
+        <span class="form-control-static">自领取之日起，到领取月份的月底有效。</span>
+      </div>
+    </div>
+    <div  class="form-control-stack text-left" ng-if="cards.dateRangeCategory">
+    <label class="checkbox-inline mb15">
+    <input type="checkbox" ng-model="cards.dateRange.selectCategory" ng-true-value="EXCLUDE" ng-false-value="NONE">排除指定日期</input>
+    </label>
+    <!--<div ng-include="'public/js/directive/specialDate.html'" ng-if="check==='TRUE'"></div>-->
+
+    <my-special-date special-date="cards.data" ng-if="cards.dateRange.selectCategory==='EXCLUDE'"></my-special-date>
+    </div>
+
+  </div>
+</div>

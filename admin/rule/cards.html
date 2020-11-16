@@ -111,20 +111,7 @@
               </div>
             </div>
             <div class="out mb5">
-              <label class="control-label col-sm-2">有效期</label>
-              <div class="form-group col-sm-10">
-                <!-- <div class="mb5" style="width: 100%;" my-date-picker data="view.date" date-range="view.dateRange"
-                  is-edit="post.isEdit"></div> -->
-                  <div class="form-group">
-                    <label class="radio-inline" ng-repeat="(key,value) in couponTimeSel">
-                      <input type="radio" name="dateRangeCategory" ng-model="view.couponRangeCategory" ng-value="key"
-                             ng-click="test(key)" required/>
-                      <span ng-bind="value"></span>
-                    </label>
-                  </div>
-              
-              
-              </div>
+              <div ng-include="'admin/rule/module/cardTimeSel.html'"></div>
             </div>
             <div class="form-inline col-sm-12 mb5">
               <div class="col-sm-2">

@@ -116,7 +116,7 @@ function appRouteConfig($routeProvider) { //路由规则
             controller: "addShareActivityCtr"
         }) //修改共享活动
 
-        
+
         //活动列表
         .when('/ruleconsume', {
             templateUrl: "admin/rule/index.html",
@@ -985,8 +985,8 @@ app.controller('FinalCtr', function ($scope, $location, $http, $routeParams, $fi
         }
 
     }
- 
-    $scope.linkPicUrl=''
+
+    $scope.linkPicUrl = ''
     //   上传图片
     $scope.promoteImgUpload = function (t) {
         if (t.files[0].size > 5 * 1024 * 1024) {
@@ -1002,7 +1002,7 @@ app.controller('FinalCtr', function ($scope, $location, $http, $routeParams, $fi
                     $scope.postPromote.linkPicUrl = data.result.url;
                     $scope.linkPicUrl = data.result.url;
                     $('#linkPicUrl').attr('src', data.result.url)
-                  
+
                 } else {
                     alert(data.message);
                 }
@@ -1010,9 +1010,9 @@ app.controller('FinalCtr', function ($scope, $location, $http, $routeParams, $fi
             }
         };
         $("#iimgform").ajaxSubmit(options);
-    
+
     };
-   
+
     // 绑定
     $scope.submitPromote = function () {
         console.log($scope.postPromote)
@@ -2445,7 +2445,7 @@ app.controller('ShareActivityCtr', function ($rootScope, $routeParams, $scope, $
     }]; //面包屑
     $scope.view = {};
     let shareResult = ajaxSendFn({}, "/activity/share", "GET").result
-    $scope.view.rule = shareResult?shareResult.items :[]
+    $scope.view.rule = shareResult ? shareResult.items : []
     // $scope.view = {
     //     rule: $filter("orderBy")(rule, "createTime", true)
     // };
@@ -2505,6 +2505,11 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
     var getShopJson = {
         state: 1002
     }
+    // 富文本编辑器
+    var editor = new wangEditor('#activity');
+    editor.create();
+
+
     $scope.view = {
         scenes: [{
             /**("不在系统中展示，只允许通过链接/小程序码访问"),
@@ -2578,16 +2583,19 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
         periods: []
     };
     $scope.posts = {
-        cardId:'',
+        allocates: [{
+            id: ''
+        }],
+        cardId: '',
         allpurpose: false,
         shops: [],
         grows: [{
                 subject: 'FIRST',
                 timesLimit: 1,
                 detail: {
-                    'CONSUME':[{
-                        amountLimit:0,
-                        value:0
+                    'CONSUME': [{
+                        amountLimit: 1,
+                        value: 1
                     }],
                 }
             },
@@ -2596,9 +2604,9 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
                 times: 1,
                 timesLimit: 1,
                 detail: {
-                    'CONSUME':[{
-                        amountLimit:0,
-                        value:0
+                    'CONSUME': [{
+                        amountLimit: 1,
+                        value: 1
                     }],
                 }
             }
@@ -2631,48 +2639,57 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
         }
     }
     // 添加成长规则
-    $scope.addGrows=function (type) {
-        if(type==0){
+    $scope.addGrows = function (type) {
+        if (type == 0) {
             // 主卡
             $scope.posts.grows[0].detail.CONSUME.push({
-                amountLimit:0,
-                value:0
+                amountLimit: 0,
+                value: 0
             })
-        }else{
+        } else {
             $scope.posts.grows[1].detail.CONSUME.push({
-                amountLimit:0,
-                value:0
+                amountLimit: 0,
+                value: 0
             })
         }
     }
     // 移除成长规则
-    $scope.removeGrows=function(index,type){
-        if(type==0){
-            $scope.posts.grows[0].detail.CONSUME.splice(index,1)
-        }else {
-            $scope.posts.grows[1].detail.CONSUME.splice(index,1)
+    $scope.removeGrows = function (index, type) {
+        if (type == 0) {
+            $scope.posts.grows[0].detail.CONSUME.splice(index, 1)
+        } else {
+            $scope.posts.grows[1].detail.CONSUME.splice(index, 1)
         }
     }
     // 添加券
     $scope.addFn = function (type) {
-            $scope.posts[type].push(
-                {
+        let obj = {}
+        if (type == 'allocates') {
+            obj = {
+                id: ''
+            }
+        } else {
+            obj = {
                 category: 'COUPON',
                 count: 1,
                 id: ''
-               }
-            )
+            }
+        }
+        $scope.posts[type].push(
+            obj
+        )
     };
     // 移除券
-    $scope.removeFn=function(index,type){
-      
-            $scope.posts[type].splice(index,1)
-      
+    $scope.removeFn = function (index, type) {
+
+        $scope.posts[type].splice(index, 1)
+
     };
 
 
-    if($routeParams.activityid){
-         $scope.posts = ajaxSendFn({}, "/activity/share/" + $routeParams.activityid, "GET").result;
+    if ($routeParams.activityid) {
+        $scope.posts = ajaxSendFn({}, "/activity/share/" + $routeParams.activityid, "GET").result;
+
         $scope.view.scenes.forEach(i => {
             $scope.posts.scenes.forEach(j => {
                 if (j == i.key) {
@@ -2681,58 +2698,59 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
             })
         })
         var tem = $scope.posts;
+        editor.txt.html(tem.additional);
         var temShops = {};
         if (tem.shops) {
             for (var i = 0, j = tem.shops.length || 0; i < j; i++) {
                 temShops[tem.shops[i]] = 1;
             }
         };
-        let benefits=[];
-        let participants=[];
-        $scope.posts.benefits.map(i=>{
-            let obj={};
-            obj.category=i.category;
-            obj.id=i.id;
-            obj.count=i.count;
+        let benefits = [];
+        let participants = [];
+        $scope.posts.benefits.map(i => {
+            let obj = {};
+            obj.category = i.category;
+            obj.id = i.id;
+            obj.count = i.count;
             benefits.push(obj)
         })
-        $scope.posts.benefits=benefits;
-        $scope.posts.participants.map(i=>{
-            let obj={};
-            obj.category=i.category;
-            obj.id=i.id;
-            obj.count=i.count;
+        $scope.posts.benefits = benefits;
+        $scope.posts.participants.map(i => {
+            let obj = {};
+            obj.category = i.category;
+            obj.id = i.id;
+            obj.count = i.count;
             participants.push(obj)
         })
-        $scope.posts.participants=participants;
+        $scope.posts.participants = participants;
 
         for (var i = 0, j = $scope.set.list.length || 0; i < j; i++) {
             if ($scope.set.list[i].id in temShops) $scope.posts.shops[i] = $scope.set.list[i].id;
         }
-          // 有效期start
-          $scope.view.data.dateType = tem.dateRangeCategory;
-          if (tem.dateRangeCategory === "AROUND_FIX_DATE" || tem.dateRangeCategory === "MONTH_EFFECTIVE") {
-              $scope.view.data.dateType = "AROUND_FIX_DATE";
-              $scope.view.data.subType = tem.dateRangeCategory;
-          }
-          $scope.view.data[$scope.view.data.dateType] = {
-              dateRange: tem.dateRange
-          };
-          $scope.view.dateRange = $scope.view.data[$scope.view.data.dateType].dateRange;
-          if (tem.dateRange) {
-              if (tem.dateRange.selectDates) {
-                  $scope.view.dateRange.subType = "MANUAL_SELECT";
-                  $scope.view.dateRange.selectDates = arrayMap($scope.view.dateRange.selectDates, function (data) {
-                      return data.split(/\s+/)[0];
-                  });
-              } else if (tem.dateRange.selectDays) {
-                  $scope.view.dateRange.subType = "MONTH_DAYS";
-              } else {
-                  $scope.view.dateRange.subType = "WEEKLY_DAY";
-              }
-          }
-          // 有效期end
-          $scope.view.isEdit = true;
+        // 有效期start
+        $scope.view.data.dateType = tem.dateRangeCategory;
+        if (tem.dateRangeCategory === "AROUND_FIX_DATE" || tem.dateRangeCategory === "MONTH_EFFECTIVE") {
+            $scope.view.data.dateType = "AROUND_FIX_DATE";
+            $scope.view.data.subType = tem.dateRangeCategory;
+        }
+        $scope.view.data[$scope.view.data.dateType] = {
+            dateRange: tem.dateRange
+        };
+        $scope.view.dateRange = $scope.view.data[$scope.view.data.dateType].dateRange;
+        if (tem.dateRange) {
+            if (tem.dateRange.selectDates) {
+                $scope.view.dateRange.subType = "MANUAL_SELECT";
+                $scope.view.dateRange.selectDates = arrayMap($scope.view.dateRange.selectDates, function (data) {
+                    return data.split(/\s+/)[0];
+                });
+            } else if (tem.dateRange.selectDays) {
+                $scope.view.dateRange.subType = "MONTH_DAYS";
+            } else {
+                $scope.view.dateRange.subType = "WEEKLY_DAY";
+            }
+        }
+        // 有效期end
+        $scope.view.isEdit = true;
 
     }
     console.log($scope.posts)
@@ -2830,6 +2848,7 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
             return;
         }
         json.scenes = scenesArr;
+        json.allocates = $scope.posts.allocates;
         json.benefits = $scope.posts.benefits;
         json.picUrl = $scope.posts.picUrl;
         json.participants = $scope.posts.participants;
@@ -2845,6 +2864,7 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
         json.growLimit = $scope.posts.growLimit;
         json.richMediaId = $scope.posts.richMediaId;
         json.allShop = $scope.set.shopAll;
+        json.additional = editor.txt.html();
 
         if (json.benefits && json.benefits.length) {
             for (var x in json.benefits) {
@@ -2865,8 +2885,8 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
         } else {
             postsend = ajaxSendFn(sendJson, "/activity/share", "POST", 1);
         }
-      
-        if (postsend.code == 200) { 
+
+        if (postsend.code == 200) {
             alert("保存成功");
             history.back();
         } else { //
@@ -4946,9 +4966,7 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
 
     $scope.view = {
         cards: ajaxSendFn({}, '/cards', 'GET').result || [],
-        data: {
-            dateType: "PERMANENT"
-        },
+     
         shared: [],
         periods: []
     };
@@ -4958,10 +4976,10 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
     }
     $scope.ruleCategory = consumeRuleObj;
     $scope.ruleCategory1 = onlineRuleObj;
-    $scope.couponTimeSel  = couponRangeCategory;
+    $scope.couponTimeSel = couponRangeCategory;
 
     $scope.cards = {
-        "dateRangeCategory": couponRangeCategory,
+        // "dateRangeCategory": couponRangeCategory,
         "dateRange": {
             "selectCategory": "NONE"
         },
@@ -4990,30 +5008,29 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
     // 可用门--end
     $scope.init = function () {
         var tem = $scope.view;
-        $scope.view.data = {};
-        $scope.view.data.dateType = tem.dateRangeCategory;
+        // $scope.view.data = {};
+        // $scope.view.data.dateType = tem.dateRangeCategory;
 
-
-        if (tem.dateRangeCategory === "AROUND_FIX_DATE" || tem.dateRangeCategory === "MONTH_EFFECTIVE") {
-            $scope.view.data.dateType = "AROUND_FIX_DATE";
-            $scope.view.data.subType = tem.dateRangeCategory;
-        }
-        $scope.view.data[$scope.view.data.dateType] = {
-            dateRange: tem.dateRange
-        };
-        $scope.view.dateRange = $scope.view.data[$scope.view.data.dateType].dateRange;
-        if (tem.dateRange) {
-            if (tem.dateRange.selectDates) {
-                $scope.view.dateRange.subType = "MANUAL_SELECT";
-                $scope.view.dateRange.selectDates = arrayMap($scope.view.dateRange.selectDates, function (data) {
-                    return data.split(/\s+/)[0];
-                });
-            } else if (tem.dateRange.selectDays) {
-                $scope.view.dateRange.subType = "MONTH_DAYS";
-            } else {
-                $scope.view.dateRange.subType = "WEEKLY_DAY";
-            }
-        }
+        // if (tem.dateRangeCategory === "AROUND_FIX_DATE" || tem.dateRangeCategory === "MONTH_EFFECTIVE") {
+        //     $scope.view.data.dateType = "AROUND_FIX_DATE";
+        //     $scope.view.data.subType = tem.dateRangeCategory;
+        // }
+        // $scope.view.data[$scope.view.data.dateType] = {
+        //     dateRange: tem.dateRange
+        // };
+        // $scope.view.dateRange = $scope.view.data[$scope.view.data.dateType].dateRange;
+        // if (tem.dateRange) {
+        //     if (tem.dateRange.selectDates) {
+        //         $scope.view.dateRange.subType = "MANUAL_SELECT";
+        //         $scope.view.dateRange.selectDates = arrayMap($scope.view.dateRange.selectDates, function (data) {
+        //             return data.split(/\s+/)[0];
+        //         });
+        //     } else if (tem.dateRange.selectDays) {
+        //         $scope.view.dateRange.subType = "MONTH_DAYS";
+        //     } else {
+        //         $scope.view.dateRange.subType = "WEEKLY_DAY";
+        //     }
+        // }
     };
     console.log($scope.shareRuleCategory)
     // 同享活动
@@ -5031,7 +5048,7 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
         });
     };
     $scope.checkAllCatagory = function () {
-        
+
         $scope.ruleCategory.map(i => {
             i.checked = $scope.cards.catagoryAll;
         })
@@ -5074,13 +5091,8 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
             }
         }
         $scope.cards.shops = [];
-        // $scope.shops = ajaxSendFn({
-        //     "state": "1002"
-        // }, "/shops", "GET").result || []
         $("#addCard").modal("show");
-        // $scope.isOpenOrClose = true;
-        //$scope.isOpenOrClose = !$scope.isOpenOrClose;
-    };
+       };
 
     $scope.detailFn = function (id) {
         delete $scope.cards;
@@ -5105,9 +5117,7 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
         $("#edit").modal("hide");
     };
     $scope.submitFn = function (id) {
-        // $scope.cards.shops = $scope.cards.shops.filter(function (s) {
-        //     return s && s.trim(); 
-        // })
+     
         var arr = []
         for (var i = 0; i < $scope.cards.shops.length; i++) {
             if ($scope.cards.shops[i] != '' && $scope.cards.shops[i] != null) {
@@ -5116,8 +5126,8 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
         }
         $scope.cards.shops = arr;
         $scope.cards.shared = [];
-        console.log($scope.cards);
-        console.log($scope.ruleCategory);
+        // console.log($scope.cards);
+        // console.log($scope.ruleCategory);
         $scope.ruleCategory.forEach(i => {
             if (i.checked) {
                 $scope.cards.shared.push(i.id)
@@ -5130,6 +5140,9 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
         })
 
         $scope.cards.allShop = $scope.checkAllShop;
+        console.log($scope.view.periods)
+        console.log($scope.cards.periods)
+
         if ($scope.view.periods.length == 0) {
             $scope.cards.periods = $scope.view.periods;
         }
@@ -5146,6 +5159,7 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
         // return;
         delete $scope.cards.catagoryAll;
         delete $scope.cards.allDay;
+        delete $scope.cards.data;
         var data = ajaxSendFn($scope.cards, "/cards", "POST");
         console.log(data)
         if (data.code == 200) {
@@ -14668,7 +14682,7 @@ app.controller('RuleuEditorCtr', ['$rootScope', '$scope', function ($rootScope, 
     };
 
     $scope.add = function (index) {
-        $scope.editFlag=false;
+        $scope.editFlag = false;
         $('#modal').modal('show');
         $scope.index = index ? index : "";
     };
@@ -14676,9 +14690,9 @@ app.controller('RuleuEditorCtr', ['$rootScope', '$scope', function ($rootScope, 
         var json = {};
         json.title = $scope.post.title;
         json.content = "<div style='" + $("#div1").attr("style").substr(33) + "'>" + editor.txt.html() + "</div>";
-       
+
         if ($scope.editFlag) {
-            $scope.editFlag=false;
+            $scope.editFlag = false;
             var data = ajaxSendFn(json, "/medials/" + $scope.view.items[$scope.index].id, "POST");
         } else {
             var data = ajaxSendFn(json, "/medials", "POST");
@@ -14692,9 +14706,9 @@ app.controller('RuleuEditorCtr', ['$rootScope', '$scope', function ($rootScope, 
             alert(data.message);
         }
     }
-    $scope.editFlag=false;
+    $scope.editFlag = false;
     $scope.edit = function (index) {
-        $scope.editFlag=true;
+        $scope.editFlag = true;
         $scope.index = index;
         $scope.post.title = $scope.view.items[index].title;
         editor.txt.html($scope.view.items[index].content);

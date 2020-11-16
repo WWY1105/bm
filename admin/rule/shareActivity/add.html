@@ -63,6 +63,25 @@
             </div>
             <div class="row partLine mb15">
                 <div class="col-sm-2">
+                    <div class="title">分账</div>
+                </div>
+                <div class="col-sm-10 " >
+                    <div class="col-sm-8 flexStart mb15" ng-repeat="(key,item) in posts.allocates  track by $index">
+                        <select  name="" id="" class="col-sm-8 form-control" ng-model="posts.allocates[key].id">
+                            <option value="{{i.id}}" ng-repeat="i in view.factor.allocates">{{i.name}}</option>
+                        </select>
+                        <span class="col-sm-4 sm-click" ng-if="$first"><a class="add click ng-scope"
+                            ng-click="addFn('allocates')"> <i class="glyphicon glyphicon-plus"></i></span>
+                    </a>
+                    <span class="col-sm-4 sm-click" ng-if="!$first"><a class="remove click ng-scope"
+                            ng-click="removeFn($index,'allocates')"> <i class="glyphicon glyphicon-remove"></i>
+                        </a></span>
+                    </div>
+                  
+                </div>
+            </div>
+            <div class="row partLine mb15">
+                <div class="col-sm-2">
                     <div class="title">权益卡</div>
                 </div>
                 <div class="col-sm-5">
@@ -232,10 +251,17 @@
             <div class="col-sm-2">
                 <span class="title">活动说明</span>
             </div>
-            <div class="col-sm-5">
+            <div class="col-sm-10">
                 <div class="form-group ">
                     <div class="col-sm-12">
-                        <textarea ng-model="posts.additional" name="name" class="form-control"></textarea>
+
+
+
+
+
+                        
+                        <div id="activity" style="min-width:300px;min-height:300px;"></div>
+                        <!-- <textarea ng-model="posts.additional" name="name" class="form-control"></textarea> -->
                     </div>
                 </div>
             </div>
