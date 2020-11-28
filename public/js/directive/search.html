@@ -10,7 +10,7 @@
       <ul class="select_option" ng-show="posts.check">
         <li ng-click="posts.shopId = '';posts.shopName = '所有';posts.check=0;selectShop()">所有</li>
         <!--<li ng-click="posts.shopId = 'brand';posts.shopName = '品牌虚拟店';posts.check=0">品牌虚拟店</li>-->
-        <li ng-if="posts.selector!=9&&posts.selector!=7&&posts.selector!=8" ng-repeat="o in view.shops"
+        <li ng-if="posts.selector!=7&&posts.selector!=8" ng-repeat="o in view.shops"
             ng-click="selectShop(o)">
           {{o.name}}
         </li>

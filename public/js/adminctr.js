@@ -2690,6 +2690,9 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
     if ($routeParams.activityid) {
         $scope.posts = ajaxSendFn({}, "/activity/share/" + $routeParams.activityid, "GET").result;
 
+        if(!$scope.posts.allocates){
+            $scope.posts.allocates= [{id: ''}]
+        }
         $scope.view.scenes.forEach(i => {
             $scope.posts.scenes.forEach(j => {
                 if (j == i.key) {
