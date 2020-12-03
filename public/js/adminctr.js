@@ -2851,7 +2851,11 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
             return;
         }
         json.scenes = scenesArr;
-        json.allocates = $scope.posts.allocates;
+        if($scope.posts.allocates&&$scope.posts.allocates[0].id){
+            json.allocates = $scope.posts.allocates;
+        }
+        
+
         json.benefits = $scope.posts.benefits;
         json.picUrl = $scope.posts.picUrl;
         json.participants = $scope.posts.participants;
