@@ -225,6 +225,11 @@
               <input type="checkbox" ng-model="coupon.shared[4]" ng-true-value="MEMBERPRICE" />
               <span>会员价</span>
             </label>
+            <label class="checkbox-inline"
+            ng-if="coupon.category!='904'">
+            <input type="checkbox" ng-model="coupon.shared[5]" ng-true-value="CARD" />
+            <span>权益卡</span>
+          </label>
             <!--
             <label class="checkbox-inline" ng-if="coupon.category=='902'">
               <input type="checkbox" ng-model="coupon.shared[4]" ng-true-value="DISCOUNT"/>

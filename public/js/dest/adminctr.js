@@ -1737,7 +1737,12 @@ app.controller('RuleAddCtr', function ($scope, $location, $filter, $routeParams)
         json.name = $scope.posts.name;
         json.descriptor = $scope.posts.descriptor;
         json.activityCategory = $scope.posts.activityCategory;
-        json.shops = $scope.posts.shops;
+        let shops=$scope.posts.shops.filter(i=>{
+            if(!i){
+                return true;
+            }
+        })
+        json.shops = shops;
         json.additional = $scope.posts.additional;
         if ($scope.posts.picUrl) json.picUrl = $scope.posts.picUrl;
         if ($scope.posts.allDay) {
@@ -10016,12 +10021,12 @@ app.controller('RuleuEditorCtr', ['$rootScope', '$scope', function ($rootScope, 
         materials: []
     }
     var editor = new wangEditor('#div1');
-    editor.customConfig.pasteFilterStyle = false;
+    // editor.config.pasteFilterStyle = false;
     // 配置自定义参数（举例）
-    editor.customConfig.uploadParams = {};
-    editor.customConfig.uploadFileName = "file";
+    editor.config.uploadParams = {};
+    editor.config.uploadFileName = "file";
     // 设置 headers（举例）
-    editor.customConfig.uploadHeaders = {};
+    editor.config.uploadHeaders = {};
     // editor.config.uploadImgUrl = '/pic';
 
     // // 配置自定义参数（举例）
@@ -12288,7 +12293,6 @@ app.controller('DocCtr', ['$rootScope', '$scope', '$location', 'shopFactory', fu
     $scope.posts = {};
     $scope.view = {
         shops: shopFac.getAllShops(),
-
         STATISTICS_TEXT: ["当前总消费数（笔）", "当前总收款数（笔）", "当前总余额（元）", "当前会员总人数（人）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "累计金额（元）", "当前总余量（分）", "当前总余量（张）", "当前总余额（元）", "短信余额（条）"],
         //TYPE: ["consumption", "receivables", "recharge", "upgrade", "point", "coupon", "shortmessage"],
         //  "快速收款报表", 

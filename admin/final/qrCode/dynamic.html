@@ -13,13 +13,38 @@
         <div class="row mb15">
             <div class="col-xs-4 flexStart">
                 <p class="mr15">类型</p>
+                <!-- BM的动态二维码按下面这个来：
+    // ---------普通二维码---------
+    /**
+     * 活码-客户公众号微信参数二维码，永久有效
+     */
+    DYNAMIC_WX("V", "8010"),
+    /**
+     * 活码-上宾短链接，永久有效
+     */
+    DYNAMIC_SHORT("S", "8011"),
+    // ---------小程序二维码---------
+    /**
+     * 活码-共享卡小程序二维码
+     */
+    DYNAMIC_SALER_QR("R", "8020"),
+    /**
+     * 活码-上宾生活小程序二维码
+     */
+    DYNAMIC_LIFE_APP("L", "8021"),
+    // ---------小程序码---------
+    /**
+     * 活码-共享卡小程序码
+     */
+    DYNAMIC_SALER_APP("A", "8030"), -->
                 <select name="" id="" ng-model="dynamic.type" class="form-control flex1">
                     <option value="">请选择</option>
-                    <option value="8010">微信参数二维码</option>
-                    <option value="8011">短链接</option>
-                    <option value="8012">小程序二维码</option>
-                    <option value="8013">共享卡小程序二维码</option>
-                    <option value="8014">共享卡小程序码</option>
+                    <option value="8010">客户公众号微信参数二维</option>
+                    <option value="8011">上宾短链接</option>
+                    <!-- <option value="8012">小程序二维码</option> -->
+                    <option value="8020">共享卡小程序二维码</option>
+                    <option value="8021">上宾生活小程序二维码</option>
+                    <option value="8030">共享卡小程序码</option>
                 </select>
             </div>
             <div class="col-xs-4 flexStart">
@@ -96,11 +121,13 @@
                         <p class="mr15">类型</p>
                         <select name="" id="" ng-model="supply.type" class="form-control flex1">
                             <option value="">请选择</option>
-                            <option value="8010">微信参数二维码</option>
-                            <option value="8011">短链接</option>
-                            <option value="8012">小程序二维码</option>
-                            <option value="8013">共享卡小程序二维码</option>
-                            <option value="8014">共享卡小程序码</option>
+                            <option value="8010">客户公众号微信参数二维</option>
+                            <option value="8011">上宾短链接</option>
+                            <!-- <option value="8012">小程序二维码</option> -->
+                            <option value="8020">共享卡小程序二维码</option>
+                            <option value="8021">上宾生活小程序二维码</option>
+                            <option value="8030">共享卡小程序码</option>
+                        
                         </select>
                     </div>
                 </div>

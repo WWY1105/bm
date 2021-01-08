@@ -258,6 +258,9 @@ app.controller('ShopCtr', function ($scope, $location, $filter) { //店铺
         }, {
             code: '102',
             text: '用户主动输入金额'
+        }, {
+            code: '103',
+            text: '收银系统买单'
         }];
     $scope.view = {};
     $scope.tem = {

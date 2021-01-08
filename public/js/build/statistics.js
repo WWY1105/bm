@@ -198,6 +198,7 @@ angular.module('app').directive('couponNew', ['CouponFactory', 'memberGradeFacto
                 maxDate: new Date(now.getTime() + 10 * 365 * 3600 * 24 * 1000),
             };
             scope.open = function ($event, a) {
+                console.log('点击了')
                 $event.preventDefault();
                 $event.stopPropagation();
                 scope.opened[a] = true;

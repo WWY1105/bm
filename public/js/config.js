@@ -120,10 +120,19 @@ var ruleCategory = [
     {id: "FIRSTGIFT", name: "新人礼"},
     {id: "TICKET", name: "红票"},
     {id: "MEMBERPRICE", name: "会员价"}
+    
+];
+// 卡同享活动
+var cardRuleCategory = [
+    {id: "EXCHANGE", name: "积分兑换"},
+    {id: "DISCOUNT", name: "打折"},
+    {id: "COUPON", name: "消费返券"},
+    {id: "POINT", name: "消费积分"},
+    {id: "CHARGECONSUME", name: "使用充值卡"},
+    {id: "MEMBERPRICE", name: "会员价"}
 ];
 //线上活动类型
 var onlineRuleObj = [
-    //{id: "GAMEBUY", name: "游戏"},
     {id: "FOLLOW", name: "关注有礼"},
     {id: "COUPONFREE", name: "送券"},
     {id: "CHARGE", name: "充值"},

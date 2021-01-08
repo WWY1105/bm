@@ -64,24 +64,16 @@
             <div class="form-inline mb5">
               <label class="control-label col-sm-2">类型</label>
               <div class="form-group">
-                <div class="col-sm-4">
-                  
-                  <label for=""  class="checkbox-inline">
-                    <input class="form-control" name="card" type="radio" value="1000" ng-model="cards.type" />
-                 <span>储值卡</span> </label>
+                <div class="col-sm-4" ng-repeat="i in view.cardList">
+                  <label for=""  class="checkbox-inline" ng-click='chooseCardType($index,i.value)'>
+                    <!-- <input class="form-control" name="card" type="radio" value="{{i.value}}" ng-model="cards.type" /> -->
+                  <span ng-if="!i.active" style="width: 50px;height: 30px; border: 1px solid #0297CF;display: inline-block;text-align: center;line-height: 30px;
+                  border-radius: 5px;">{{i.name}}</span> 
+                    <span ng-if="i.active" style="background:#0297CF;color:#fff;width: 50px;height: 30px; border: 1px solid #0297CF;display: inline-block;text-align: center;line-height: 30px;
+                    border-radius: 5px;">{{i.name}}</span> 
+                    </label>
                 </div>
-                <div class="col-sm-4">
-                  <label for=""  class="checkbox-inline">
-                  <input class="form-control" name="card" type="radio" value="2000" ng-model="cards.type" />
-                  <span>折扣卡</span>
-                 </label>
-                </div>
-                <div class="col-sm-4">
-                  <label for=""  class="checkbox-inline">
-                  <input class="form-control" name="card" type="radio" value="3000" ng-model="cards.type" />
-                  <span>满减卡</span>
-                </label>
-                </div>
+            
               </div>
             </div>
             <div class="form-inline mb5">
@@ -93,9 +85,32 @@
             </div>
             <div class="form-inline mb5">
               <label class="control-label col-sm-2">权益</label>
-              <div class="form-group flexCenter col-sm-10 flexStart">
-                <input class="form-control col-sm-12" type="number" ng-model="cards.amount" />
-                <label for="">元/折</label>
+              <div class="form-group col-sm-10 ">
+                <!--  -->
+                <div class=" flexCenter flexStart" >
+                  <input class="form-control col-sm-12" type="number" ng-model="cards.amount" />
+                  <label for="">元/折</label>
+                </div>
+                <div class=" flexCenter  flexStart" ng-if="cards.type=='3000'">
+                  <label for="">每满</label>
+                  <input class="form-control col-sm-12" type="number" ng-model="cards.amountLimit" />
+                  <label for="">元,减</label>
+                  <input class="form-control col-sm-12" type="number" ng-model="cards.amount" />
+                  <label for="">元</label>
+                </div>
+                <div class=" flexCenter  flexStart" ng-if="cards.type=='3000'||cards.type=='2000'">
+                  <label for="">最高优惠</label>
+                  <input class="form-control col-sm-12" type="number" ng-model="cards.reduceLimit" />
+                </div>
+                <div class=" flexCenter  flexStart" ng-if="cards.type=='2000'">
+                  <label for="">增加一项使用条件</label>
+                  <input class="form-control col-sm-12" type="number" ng-model="cards.amountLimit" />
+                </div>
+              <!-- ------ -->
+           
+
+
+
               </div>
             </div>
             <div class="form-inline mb5">
@@ -112,6 +127,7 @@
             </div>
             <div class="out mb5">
               <div ng-include="'admin/rule/module/cardTimeSel.html'"></div>
+              
             </div>
             <div class="form-inline col-sm-12 mb5">
               <div class="col-sm-2">
@@ -158,11 +174,11 @@
                   <input type="checkbox" ng-model="cards.catagoryAll" ng-change="checkAllCatagory()" value="option1" />全选
                 </label>
                 <div class="form-control-stack" id="check-son">
-                  <label class="checkbox-inline" ng-repeat="item in ruleCategory">
+                  <!-- <label class="checkbox-inline cardRuleCategory" ng-repeat="item in cardRuleCategory">
                     <input type="checkbox" ng-true-value="{{item.id}}"  ng-model="item.checked" ng-checked="item.checked" >
                     <span ng-bind="item.name"></span>
-                  </label>
-                  <label class="checkbox-inline" ng-repeat="item in ruleCategory1" >
+                  </label> -->
+                  <label class="checkbox-inline ruleCategory1" ng-repeat="item in ruleCategory1" >
                     <input type="checkbox"  ng-true-value="{{item.id}}"  ng-model="item.checked"  ng-checked="item.checked"/>
                     <span ng-bind="item.name"></span>
                   </label>

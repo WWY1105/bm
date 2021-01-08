@@ -1147,6 +1147,9 @@ app.controller('ShopsCtr', function ($scope, $location, $http, $routeParams) { /
     }, {
         code: '102',
         text: '用户主动输入金额'
+    }, {
+        code: '103',
+        text: '收银系统买单'
     }];
     // 提交买单页配置
     $scope.addSettingPic = function () {
@@ -2166,7 +2169,13 @@ app.controller('ShopActivityCtr', function ($rootScope, $scope, $location, $filt
                 alert('请选择门店');
                 return;
             } else {
-                json.shops = $scope.posts.shops
+                json.shops = $scope.posts.shops.filter(i=>{
+                    if(!i){
+                        return false
+                    }else{
+                        return true;
+                    }
+                });
             }
             json.scenes = []
             $scope.view.scenes.map((i) => {
@@ -2583,6 +2592,8 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
         periods: []
     };
     $scope.posts = {
+        name:'',
+        picUrl:'',
         allocates: [{
             id: ''
         }],
@@ -2861,7 +2872,14 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
         json.participants = $scope.posts.participants;
         json.name = $scope.posts.name;
         json.orgPrice = $scope.posts.orgPrice;
-        json.shops = $scope.posts.shops;
+
+        json.shops = $scope.posts.shops.filter(i=>{
+            if(!i){
+                return false
+            }else{
+                return true;
+            }
+        });
         json.cardId = $scope.posts.cardId;
         json.price = $scope.posts.price;
         json.allpurpose = $scope.posts.allpurpose;
@@ -2887,6 +2905,7 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
         console.log(json);
         sendJson = JSON.stringify(json);
         var sendid = $routeParams.activityid ? $routeParams.activityid : "";
+         var  postsend={}
         if ($routeParams.activityid) {
             postsend = ajaxSendFn(sendJson, "/activity/share/" + sendid, "POST", 1);
         } else {
@@ -3089,7 +3108,7 @@ app.controller('RuleAddCtr', function ($scope, $location, $filter, $routeParams)
         json.name = $scope.posts.name;
         json.descriptor = $scope.posts.descriptor;
         json.activityCategory = $scope.posts.activityCategory;
-        json.shops = $scope.posts.shops;
+        json.shops = arrRemoveNullFN($scope.posts.shops);
         json.additional = $scope.posts.additional;
         if ($scope.posts.picUrl) json.picUrl = $scope.posts.picUrl;
         if ($scope.posts.allDay) {
@@ -3358,7 +3377,7 @@ app.controller('RuleExhibitionAddCtr', function ($scope, $location, $filter, $ro
         var json = {
             dateRange: {}
         };
-        json.shops = $scope.posts.shops;
+        json.shops = arrRemoveNullFN($scope.posts.shops);
         json.name = $scope.posts.name;
         json.activityCategory = $scope.posts.activityCategory;
         json.additional = $scope.posts.additional;
@@ -4973,16 +4992,23 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
 
     $scope.view = {
         cards: ajaxSendFn({}, '/cards', 'GET').result || [],
-     
+        cardList:[{name:'储值卡',value:1000,active:false},{name:'折扣卡',value:2000,active:false},{name:'满减卡',value:2000,active:false}],
         shared: [],
         periods: []
     };
+    $scope.chooseCardType=function(index,type){
+        $scope.cards.type=type;
+        $scope.view.cardList.map(i=>{
+            i.active=false;
+        })
+        $scope.view.cardList[index].active=true;
+    }
     $scope.set.time = getSubtimes($scope.set.times, $scope.set.timeType);
     $scope.settime = function (a, b) { //
         $scope.view.periods[a] = $scope.view.periods[a] ? null : b;
     }
     $scope.ruleCategory = consumeRuleObj;
-    $scope.ruleCategory1 = onlineRuleObj;
+    $scope.ruleCategory1 = cardRuleCategory;
     $scope.couponTimeSel = couponRangeCategory;
 
     $scope.cards = {
@@ -6943,7 +6969,6 @@ app.controller("RuleNonParticipationCtr", ["$scope", "$http", "$filter", "$docum
     }
     $scope.edit = function (item) {
         $("#editModal").modal("show");
-        // $scope.shopClick(0);
         $scope.editItemArr = [];
         if (item) {
             $scope.editItemArr[0] = item;
@@ -7107,17 +7132,11 @@ app.controller("RuleNonParticipationCtr", ["$scope", "$http", "$filter", "$docum
     // 选择门店
     $scope.shopClick = function (index) {
         console.log(index)
-        if ($('.shopName' + index).hasClass('shopNameActive')) {
-            $('.shopName' + index).removeClass('shopNameActive')
-        } else {
-            $('.shopName' + index).addClass('shopNameActive')
-        }
-        // $('.shopName' + index).addClass('shopNameActive').siblings().removeClass('shopNameActive')
+        $scope.view.nonParticipation.items[index].chose=true;
+        
         // 记录门店的id
         if ($scope.view.nonParticipation.items.length > 0) {
             $scope.view.shopId = $scope.view.nonParticipation.items[index].shopId;
-            console.log(index)
-
         }
 
     }

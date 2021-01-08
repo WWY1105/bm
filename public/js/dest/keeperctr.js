@@ -318,6 +318,9 @@ app.controller('ShopCtr', function ($scope, $location, $filter) { //店铺
     }, {
         code: '102',
         text: '用户主动输入金额'
+    }, {
+        code: '103',
+        text: '收银系统买单'
     }];
     $scope.view = {};
     $scope.tem = {
@@ -718,16 +721,16 @@ app.controller('ShopCtr', function ($scope, $location, $filter) { //店铺
     }
     /*门店介绍--------------start*/
     var editor = new wangEditor('#div1');
-    editor.customConfig.pasteFilterStyle = false;
+    editor.config.pasteFilterStyle = false;
    
     // 配置自定义参数（举例）
-    editor.customConfig.uploadParams = {};
-    editor.customConfig.uploadFileName  = "file";
+    editor.config.uploadParams = {};
+    editor.config.uploadFileName  = "file";
     // 设置 headers（举例）
-    editor.customConfig.uploadHeaders = {};
+    editor.config.uploadHeaders = {};
     // 自定义load事件
     // 上传图片
-    // editor.customConfig.uploadImgServer = '/materials';
+    // editor.config.uploadImgServer = '/materials';
 
     console.log('执行了')
     console.log(editor)
