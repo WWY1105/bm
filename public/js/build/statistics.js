@@ -203,10 +203,6 @@ angular.module('app').directive('couponNew', ['CouponFactory', 'memberGradeFacto
                 $event.stopPropagation();
                 scope.opened[a] = true;
             };
-            scope.allocate={
-                id:'',
-                bought:false
-            }
             scope.opened = {
                 startDate: false,
                 endDate: false
@@ -214,6 +210,12 @@ angular.module('app').directive('couponNew', ['CouponFactory', 'memberGradeFacto
             scope.disabled = function (date, mode) {
                 return false;
             }
+            
+            scope.allocate={
+                id:'',
+                bought:false
+            }
+          
             /*datepicker*/
 
             scope.$watch('coupon.dateRangeCategory', function (newVal, oldVal) {

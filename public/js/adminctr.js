@@ -1151,6 +1151,7 @@ app.controller('ShopsCtr', function ($scope, $location, $http, $routeParams) { /
         code: '103',
         text: '收银系统买单'
     }];
+    $scope.settingPicUrls=ajaxSendFn({}, "/shops/shop/setting", "GET").result;
     // 提交买单页配置
     $scope.addSettingPic = function () {
         var data = ajaxSendFn($scope.settingObj, "/shops/shop/" + $scope.shop.id + "/setting", "POST");
@@ -4969,7 +4970,7 @@ app.controller("RuleCouponCtr", ['$scope', '$http', 'CouponFactory', function ($
 }]);
 
 // 卡管理
-app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($scope, $http, couponFac, shopFac) {
+app.controller("RuleCardsCtr", ['$scope', '$filter','$http', 'shopFactory', function ($scope, $filter,$http, couponFac, shopFac) {
     $scope.config.breadset = [{ //
         name: "活动管理",
         href: indexUrl + "/admin.html#/rule",
@@ -5012,7 +5013,6 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
     $scope.couponTimeSel = couponRangeCategory;
 
     $scope.cards = {
-        // "dateRangeCategory": couponRangeCategory,
         "dateRange": {
             "selectCategory": "NONE"
         },
@@ -5022,6 +5022,65 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
         allDay: false
 
     }
+// ----------------------------------------
+
+
+
+
+var dftDate = new Date();
+dftDate.setFullYear(2017);
+dftDate.setMonth(1);
+dftDate.setDate(1);
+
+var today = new Date();
+today.setDate(today.getDate() - 1);
+today.setHours(23);
+today.setMinutes(59);
+today.setSeconds(59);
+var now = new Date();
+
+$scope.dateOptions = {
+    formatYear: 'yy',
+    startingDay: 1,
+    minDate: dftDate,
+    maxDate: new Date(now.getTime() + 10 * 365 * 3600 * 24 * 1000),
+};
+$scope.open = function ($event, a) {
+    console.log('点击了')
+    $event.preventDefault();
+    $event.stopPropagation();
+    $scope.opened[a] = true;
+};
+$scope.opened = {
+    startDate: false,
+    endDate: false
+};
+$scope.disabled = function (date, mode) {
+    return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// ======================
+
+
+
+
+
+
+
+
+
+
     // 可用门--start
     $scope.shops = ajaxSendFn({
         "state": "1002"
@@ -5159,8 +5218,7 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
         }
         $scope.cards.shops = arr;
         $scope.cards.shared = [];
-        // console.log($scope.cards);
-        // console.log($scope.ruleCategory);
+      
         $scope.ruleCategory.forEach(i => {
             if (i.checked) {
                 $scope.cards.shared.push(i.id)
@@ -5186,7 +5244,26 @@ app.controller("RuleCardsCtr", ['$scope', '$http', 'shopFactory', function ($sco
                 "1005"
             ];
         }
-
+        if ($scope.cards.dateRange.endDate < $scope.cards.dateRange.startDate) {
+            alert("结束时间不能小于开始时间");
+            return;
+        }
+        if ($scope.cards.dateRange.endDate < today) {
+            alert("结束时间不得小于今天");
+            return;
+        }
+        if ($scope.cards.dateRange.startDate < today) {
+            alert("开始时间不能小于今天");
+            return;
+        }
+        if ($scope.cards.dateRange.startDate) {
+            $scope.cards.dateRange.startDate = $filter('date')($scope.cards.dateRange.startDate, "yyyy-MM-dd 00:00:00");
+        }
+        ;
+        if ($scope.cards.dateRange.endDate) {
+            $scope.cards.dateRange.endDate = $filter('date')($scope.cards.dateRange.endDate, "yyyy-MM-dd 23:59:59");
+        }
+        ;
         console.log($scope.cards)
         // 添加卡
         // return;
