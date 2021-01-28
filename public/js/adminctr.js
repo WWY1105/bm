@@ -291,6 +291,13 @@ function appRouteConfig($routeProvider) { //路由规则
             templateUrl: "admin/rule/source/addsource.html",
             controller: "addsourceCtr"
         }) //素材管理-添加素材
+        .when('/rule/editsource/:id', {
+            templateUrl: "admin/rule/source/editsource.html",
+            controller: "editsourceCtr"
+        }) //素材管理-修改素材
+
+        
+
         .when('/rule/video', {
             templateUrl: "admin/rule/video/index.html",
             controller: "videoCtr"
@@ -1151,11 +1158,26 @@ app.controller('ShopsCtr', function ($scope, $location, $http, $routeParams) { /
         code: '103',
         text: '收银系统买单'
     }];
-    $scope.settingPicUrls=ajaxSendFn({}, "/shops/shop/setting", "GET").result;
+    $scope.displays=[
+        {
+            text:'显示',
+            value:true
+        }, {
+            text:'不显示',
+            value:false
+        }
+    ]
+    $scope.settingObj=ajaxSendFn({}, "/shops/shop/setting", "GET").result;
+
     // 提交买单页配置
     $scope.addSettingPic = function () {
-        var data = ajaxSendFn($scope.settingObj, "/shops/shop/" + $scope.shop.id + "/setting", "POST");
-        if (data.code == 200) alert("操作成功！");
+        if(! $scope.shop.id){
+            alert("请选择店铺")
+        }else{
+            var data = ajaxSendFn($scope.settingObj, "/shops/shop/" + $scope.shop.id + "/setting", "POST");
+            if (data.code == 200) alert("操作成功！");
+        }
+      
     }
     // 买单图片是否显示
     $scope.submitSetting = function () {
@@ -1226,6 +1248,9 @@ app.controller('ShopsCtr', function ($scope, $location, $http, $routeParams) { /
         $scope.detailShow = index;
         // 获取买单页信息
         $scope.settingObj = ajaxSendFn({}, "/shops/shop/" + id + '/setting', "GET", 1).result || {};
+        if($scope.settingObj.display){
+            $scope.settingObj.display=Boolean($scope.settingObj.display)
+        }
         console.log($scope.settingObj)
     }
     $scope.view = {
@@ -14599,30 +14624,55 @@ app.controller("editreferralCtr", ["$scope", "$http", '$routeParams', "$filter",
 
 
 
-
-
-
 app.controller("sourceCtr", ["$scope", "$http", '$routeParams', "$filter", "$location", 'CouponFactory', function ($scope, $http, $routeParams, $filter, $location, couponFac) {
     $scope.config.breadset = [{ //
         name: "素材管理",
-        href: indexUrl + "/admin.html#/rule/source",
+        href: indexUrl + "/keeper.html#/rule/source",
         class: "source"
     }, {
         name: "素材管理"
     }]; //面包屑;
     $scope.posts = {};
-
+    $scope.types = ajaxSendFn({}, '/posters/types', "get").result;
+    
+    var data = ajaxSendFn({}, "/posters", "GET");
+    console.log(data)
+    if (data.code == 200) {
+        console.log("data 200")
+        let result=data.result.items;
+        result.map(i=>{
+            $scope.types.map(j=>{
+                if(j.code==i.type){
+                    i.typeText=j.text;
+                }
+            })
+        })
+        $scope.posts =result
+    } else {
+        console.log("data errer")
+        console.log(data)
+    }
+    $scope.removeFn = function (id) {
+        var datas = ajaxSendFn({}, "/posters/" + id, "DELETE");
+        if (datas.code == 200) {
+            alert("操作成功");
+        } else {
+            alert(datas.message);
+        }
+    }
 }]);
 
 app.controller("addsourceCtr", ["$scope", "$http", '$routeParams', "$filter", "$location", 'CouponFactory', function ($scope, $http, $routeParams, $filter, $location, couponFac) {
     $scope.config.breadset = [{ //
         name: "素材管理",
-        href: indexUrl + "/admin.html#/rule/addsource",
+        href: indexUrl + "/keeper.html#/rule/addsource",
         class: "addsource"
     }, {
         name: "素材管理"
     }]; //面包屑;
     $scope.posts = {};
+  
+    $scope.types = ajaxSendFn({}, '/posters/types', "get").result;
     $scope.sendJsons = function () {
         console.log($scope.posts)
         if (!$scope.posts.picUrl) {
@@ -14638,6 +14688,7 @@ app.controller("addsourceCtr", ["$scope", "$http", '$routeParams', "$filter", "$
         var data = ajaxSendFn(json, url, "POST");
         if (data.code == 200) {
             alert("操作成功");
+            window.history.go(-1)
         } else {
             alert(data.message);
         }
@@ -14645,6 +14696,38 @@ app.controller("addsourceCtr", ["$scope", "$http", '$routeParams', "$filter", "$
 
 }]);
 
+app.controller("editsourceCtr", ["$scope", "$http", '$routeParams', "$filter", "$location", 'CouponFactory', function ($scope, $http, $routeParams, $filter, $location, couponFac) {
+    $scope.config.breadset = [{ //
+        name: "素材管理",
+        href: indexUrl + "/keeper.html#/rule/editsource",
+        class: "editsource"
+    }, {
+        name: "素材管理"
+    }]; //面包屑;
+    $scope.posts = {};
+    $scope.types = ajaxSendFn({}, '/posters/types', "get").result;
+    $scope.posts = ajaxSendFn({}, "/posters/" + $routeParams.id, "GET").result;
+    $scope.sendJsons = function () {
+        if (!$scope.posts.picUrl) {
+            alert("请先上传图片");
+            return;
+        }
+        var json = angular.copy($scope.posts)
+        console.log(json);
+        var url = "/posters/" + $routeParams.id;
+        // if ($routeParams.id) {
+        //     url += "/" + $routeParams.id;
+        // }
+        var data = ajaxSendFn(json, url, "PUT");
+        if (data.code == 200) {
+            alert("操作成功");
+            window.history.go(-1)
+        } else {
+            alert(data.message);
+        }
+    }
+
+}]);
 
 // 图文管理
 app.controller('RuleuEditorCtr', ['$rootScope', '$scope', function ($rootScope, $scope) { //shoplist over

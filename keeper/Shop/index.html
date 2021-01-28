@@ -105,23 +105,33 @@
     <div class="col-xs-6">
       <div class="panel panel-default">
         <div class="panel-body">
-          <div class="title">买单设置
-            <a class=" pull-right" ng-click="submitSetting()">提交</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="title">买单设置settingPicUrls
+            <a class="btn btn-primary btn-sm pull-right" ng-click="submitSetting()">提交</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </div>
           <table class="table table-bordered">
             <tbody>
               <tr class="titlePin" id="picshow" style="max-width: none">
-                <div class="piclist  form-group">
-                  <label for="shoptel" class="col-sm-3 control-label text-right">
-                    <a class="pull-right" style="color: royalblue;"
+                <div class="piclist ">
+                  <label for="shoptel" class="col-sm-12 control-label flexStart">
+                    <span >会员弹窗图片: </span> <a class="pull-right" style="color: royalblue;"
                       ng-click="addpic('addSetting')">{{settingPicUrls.picUrl?'修改图片':'新增图片'}}</a>
                   </label>
-                  <div class="col-sm-9 btn-checked">
-                    <img ng-src="{{settingPicUrls.picUrl}}" alt="" style="max-height:100px" />
-                    <span>是否显示: </span><label class="checkbox-inline"> <input type="checkbox" ng-model="settingPicUrls.display" ng-click="settingInputChange" />
-                      {{settingPicUrls.display?'是':'否'}}</label>
-                    </div>
+               
                 </div>
+                <div class="col-sm-12 btn-checked">
+                  <img ng-src="{{settingPicUrls.picUrl}}" alt="" style="max-height:100px" />
+               
+                  </div>
+                  <div class="flexStart col-sm-12">
+                    <span class="col-sm-4">会员邀请弹窗: </span><label class="col-sm-8 checkbox-inline"> 
+                    
+                      <select  ng-options="item.value as item.text  for item in displays" class="form-control" name="display" ng-model="settingPicUrls.display" >
+                        <!-- <option  value="true">是</option>
+                        <option value="false">否</option> -->
+                      </select>
+                    
+                    </label>
+                  </div>
               </tr>
               <tr>
                 <div class="form-group">

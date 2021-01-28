@@ -155,46 +155,41 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-xs-6">
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <h4 >买单页图片 <a class="btn btn-primary pull-right" ng-click="addSettingPic()">提交</a></div> </h4>
-              <pic-send style="padding: 15px" pic-url="settingObj.picUrl" min-width="" min-height=""></pic-send>
-              <div class="flexBox flexCenter">
-                <h4 class="col-xs-10">是否显示:<input type="checkbox" ng-model="settingObj.display" class="" name="display"> {{settingObj.display?'是':'否'}}</h4>
-              </div>
-            </div>
-          </div>
-        </div> -->
+     
         <div class="col-xs-6">
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="title">买单设置
-                <a class=" pull-right" ng-click="submitSetting()">提交</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a class="btn btn-primary btn-sm pull-right" ng-click="submitSetting()">提交</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               </div>
               <table class="table table-bordered">
                 <tbody>
                   <tr class="titlePin" id="picshow" style="max-width: none">
-                    <div class="piclist  form-group">
-                      <label for="shoptel" class="col-sm-3 control-label text-right">
-                        <a class="pull-right" style="color: royalblue;"
-                          ng-click="addpic('addSetting')">{{settingObj.picUrl?'修改图片':'新增图片'}}</a>
+                    <div class="piclist ">
+                      <label for="shoptel" class="col-sm-6 control-label flexStart">
+                        <p >会员弹窗图片: </p><p class="pull-right" style="color: royalblue;"
+                          ng-click="addpic('addSetting')">{{settingObj.picUrl?'修改图片':'新增图片'}}</p>
                       </label>
-                      <div class="col-sm-9 btn-checked">
+                      <div class="col-sm-6">
                         <img ng-src="{{settingObj.picUrl}}" ng-if="settingObj.picUrl" alt=""
-                          style="max-height:100px;max-height: 100px;display: inline-block;min-width: 100px;height: 100px;" />
-                        <p ng-if="!settingObj.picUrl"
-                          style="max-height:100px;max-height: 100px;display: inline-block;min-width: 100px;height: 100px;">
-                        </p>
-                        <span ng-if="settingObj.picUrl">是否显示: </span><label ng-if="settingObj.picUrl"
-                          class="checkbox-inline"> <input type="checkbox" ng-model="settingObj.display"
-                            ng-click="settingInputChange" />
-                          {{settingObj.display?'是':'否'}}</label>
+                        style="max-height:100px;max-height: 100px;display: inline-block;min-width: 100px;height: 100px;" />   
                       </div>
+                    </div>
+                 
+                    <div class="flexStart col-sm-12">
+                      <span class="col-sm-4">会员邀请弹窗: </span>
+                      <label 
+                        class="checkbox-inline col-sm-8"> 
+                      
+                        <select  ng-options="item.value as item.text  for item in displays" class="form-control" name="display" ng-model="settingObj.display" >
+                          <!-- <option  value="true">显示</option>
+                          <option value="false">不显示</option> -->
+                        </select>
+                      </label>
                     </div>
                   </tr>
                   <tr>
-                    <div class="form-group">
+                    <div class="form-group col-sm-12">
                       <label for="shoptel" class="col-sm-3 control-label  text-right">
                         买单类型
                       </label>

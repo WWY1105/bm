@@ -16,7 +16,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="item in posts">
-                    <td>{{types[item.type]}}</td>
+                    <td>{{item.typeText}}</td>
                     <td> <p>{{item.content}}</p></td>
                     <td>
                         <img ng-if="item.picUrl" style="height: 100px" ng-src="{{item.picUrl||''}}">

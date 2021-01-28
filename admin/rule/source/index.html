@@ -1,33 +1,48 @@
 <div class="row bg-white">
-    <div ng-include="'/admin/rule/leftmenu.html?v=12'"></div>
+    <div ng-include="'/keeper/rule/leftmenu.html?v=12'"></div>
     <div class="v-shadow-content ruleadd">
         <div class="col-sm-12 mb15">
-            <!-- <button type="button" class="btn btn-primary pull-right" ng-click="goto('rule/addsource')">新增
-            </button> -->
+            <button type="button" class="btn btn-primary pull-right" ng-click="goto('rule/addsource')">新增
+            </button>
         </div>
-
-        <!-- <div class="time-line1" ng-repeat="item in view.list.items">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>标题</th>
+                    <th>内容</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in posts">
+                    <td>{{item.typeText}}</td>
+                    <td> <p>{{item.content}}</p></td>
+                    <td>
+                        <img ng-if="item.picUrl" style="height: 100px" ng-src="{{item.picUrl||''}}">
+                       
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" ng-click="goto('rule/editsource/' +item.id)">修改
+                        </button>
+                        <button type="button" class="btn btn-danger" ng-click="removeFn(item.id)">删除
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- <div class="time-line1" ng-repeat="item in posts">
             <div class="line-in">
-                <h4>{{item.name}} <span class="text-red">{{item.state=='DISABLED'?'已结束':''}}</span></h4>
                 <img ng-if="item.picUrl" style="height: 200px" ng-src="{{item.picUrl||''}}">
 
-                <div ng-repeat="text in item.text">
-                    <p>{{text}}</p>
-                </div>
-                <div ng-if="item.url">
-                    <div>活动分享链接</div>
-                    <input value="{{item.url}}" readonly>
-                    <button ng-click="copyFn(item.url)">复制链接</button>
+                <div>
+                    <p>{{item.content}}</p>
+                    <p>类型:{{types[item.type]}}</p>
                 </div>
                 <div class="mt15">
-                    <button type="button" ng-if="!item.on" class="btn btn-primary"
-                        ng-click="goto('rule/editcommission/' +item.id)">修改
+                    <button type="button" class="btn btn-primary" ng-click="goto('rule/editsource/' +item.id)">修改
                     </button>
-                    <button type="button" class="btn btn-warning" ng-click="onFn(item.id)" ng-if="!item.on">上线
-                    </button>
-                    <button type="button" class="btn btn-warning" ng-click="offFn(item.id)" ng-if="item.on">下线
-                    </button>
-                    <button type="button" class="btn btn-danger" ng-click="removeFn(item.id)" ng-if="!item.on">删除
+                    <button type="button" class="btn btn-danger" ng-click="removeFn(item.id)">删除
                     </button>
                 </div>
             </div>

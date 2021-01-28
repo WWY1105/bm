@@ -309,6 +309,15 @@ app.controller('ShopCtr', function ($scope, $location, $filter) { //店铺
         code: '102',
         text: '用户主动输入金额'
     }];
+    $scope.displays=[
+        {
+            text:'显示',
+            value:true
+        }, {
+            text:'不显示',
+            value:false
+        }
+    ]
     $scope.tableCheck = [{
         code: '100',
         text: '点击买单后呼叫捷账宝'
@@ -4396,22 +4405,21 @@ app.controller("sourceCtr", ["$scope", "$http", '$routeParams', "$filter", "$loc
         name: "素材管理"
     }]; //面包屑;
     $scope.posts = {};
-    $scope.types = {
-        "1000": '转介绍首页',
-        "1001": "转介绍任务分享",
-        "2001": "预定首页",
-        "3000": '分享金首页',
-        "3001": "分享金红包分享Canvas(无现金)",
-        "3002": "分享金红包分享Canvas(有现金)",
-        "3003": '分享金红包分享(无现金)',
-        "3004": "分享金红包分享(有现金)"
-    }
+    $scope.types = ajaxSendFn({}, '/posters/types', "get").result;
     
     var data = ajaxSendFn({}, "/posters", "GET");
     console.log(data)
     if (data.code == 200) {
         console.log("data 200")
-        $scope.posts = data.result.items
+        let result=data.result.items;
+        result.map(i=>{
+            $scope.types.map(j=>{
+                if(j.code==i.type){
+                    i.typeText=j.text;
+                }
+            })
+        })
+        $scope.posts =result
     } else {
         console.log("data errer")
         console.log(data)
@@ -4435,34 +4443,8 @@ app.controller("addsourceCtr", ["$scope", "$http", '$routeParams', "$filter", "$
         name: "素材管理"
     }]; //面包屑;
     $scope.posts = {};
-    $scope.types = [{
-            "id": '1000',
-            'name': '转介绍首页'
-        }, {
-            "id": '1001',
-            'name': '转介绍任务分享'
-        }, {
-            "id": '2001',
-            'name': '预定首页'
-        },
-        {
-            "id": '3000',
-            'name': '分享金首页'
-        }, {
-            "id": '3001',
-            'name': '分享金红包分享Canvas(无现金)'
-        }, {
-            "id": '3002',
-            'name': '分享金红包分享Canvas(有现金)'
-        },
-        {
-            "id": '3003',
-            'name': '分享金红包分享(无现金)'
-        }, {
-            "id": '3004',
-            'name': '分享金红包分享(有现金)'
-        },
-    ]
+  
+    $scope.types = ajaxSendFn({}, '/posters/types', "get").result;
     $scope.sendJsons = function () {
         console.log($scope.posts)
         if (!$scope.posts.picUrl) {
@@ -4478,6 +4460,7 @@ app.controller("addsourceCtr", ["$scope", "$http", '$routeParams', "$filter", "$
         var data = ajaxSendFn(json, url, "POST");
         if (data.code == 200) {
             alert("操作成功");
+            window.history.go(-1)
         } else {
             alert(data.message);
         }
@@ -4494,34 +4477,7 @@ app.controller("editsourceCtr", ["$scope", "$http", '$routeParams', "$filter", "
         name: "素材管理"
     }]; //面包屑;
     $scope.posts = {};
-    $scope.types = [{
-            "id": '1000',
-            'name': '转介绍首页'
-        }, {
-            "id": '1001',
-            'name': '转介绍任务分享'
-        }, {
-            "id": '2001',
-            'name': '预定首页'
-        },
-        {
-            "id": '3000',
-            'name': '分享金首页'
-        }, {
-            "id": '3001',
-            'name': '分享金红包分享Canvas(无现金)'
-        }, {
-            "id": '3002',
-            'name': '分享金红包分享Canvas(有现金)'
-        },
-        {
-            "id": '3003',
-            'name': '分享金红包分享(无现金)'
-        }, {
-            "id": '3004',
-            'name': '分享金红包分享(有现金)'
-        }
-    ]
+    $scope.types = ajaxSendFn({}, '/posters/types', "get").result;
     $scope.posts = ajaxSendFn({}, "/posters/" + $routeParams.id, "GET").result;
     $scope.sendJsons = function () {
         if (!$scope.posts.picUrl) {
