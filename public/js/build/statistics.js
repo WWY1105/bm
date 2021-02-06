@@ -970,11 +970,12 @@ var StatisticsDirective = {
                         url += "/statistics/shop";
                     }
                     // $scope.title = ajaxSendFn(param, "/reports/chargeuse/statistics/shop", "GET").result;
-                }else if ($scope.post.shopId) {
+                }else  if ($scope.post.shopId) {
+                   
                     param.shopId = $scope.post.shopId
                     $scope.title = ajaxSendFn(param, url + "/summary/shop", "GET").result;
                     url += "/detail/shop";
-                } else {
+                } else  {
                     //title2
                     $scope.title = ajaxSendFn(param, url + "/summary", "GET").result;
                     url += "/statistics/shop";

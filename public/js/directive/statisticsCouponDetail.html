@@ -17,7 +17,7 @@
           <thead>
           <tr>
             <td>序号</td>
-            <td>上宾号</td>
+            <td>会员号</td>
             <td>券名称</td>
             <td>数量</td>
             <td>原因</td>
@@ -28,7 +28,7 @@
           <tbody class="slide-down">
           <tr ng-repeat="row in view.result.items">
             <td ng-bind="((page-1)*count)+$index+1"></td>
-            <td><a ng-click="goto('customer/details/'+ row.userId)">{{row.username}}</a></td>
+            <td><a ng-click="goto('customer/details/'+ row.userId)">{{row.memberNo}}<span ng-if="row.memberNo">({{row.memberGradeName}})</span></a></td>
             <td ng-bind="row.name + (row.alias?'('+row.alias+')':'')"></td>
             <td ng-bind="row.count||0"></td>
             <td class="center" ng-bind="row.reason"></td>
@@ -41,7 +41,7 @@
           <thead>
           <tr>
             <td>序号</td>
-            <td>上宾号</td>
+            <td>会员号</td>
             <td>券名称</td>
             <td>数量</td>
             <td>核销途径</td>
@@ -52,7 +52,7 @@
           <tbody class="slide-down">
           <tr ng-repeat="row in view.result.items">
             <td ng-bind="((page-1)*count)+$index+1"></td>
-            <td ng-bind="row.username"></td>
+            <td >{{row.memberNo}}<span ng-if="row.memberNo">({{row.memberGradeName}})</span></td>
             <td ng-bind="row.name + (row.alias?'('+row.alias+')':'')"></td>
             <td ng-bind="row.count||0"></td>
             <td class="center" ng-bind="row.reason"></td>

@@ -50,7 +50,7 @@
             <tr ng-repeat="row in view.result.items">
               <td ng-bind="((page-1)*count)+$index+1"></td>
               <td ng-bind="row.name"></td>
-              <td ng-bind="row.memberNo"></td>
+              <td >{{row.memberNo}}<span ng-if="row.memberNo">({{row.memberGradeName}})</span></td>
               <td ng-bind="row.code"></td>
               <td ng-bind="row.reason"></td>
               <td ng-bind="row.count||0"></td>

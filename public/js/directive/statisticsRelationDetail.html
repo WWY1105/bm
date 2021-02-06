@@ -18,7 +18,7 @@
       <td>序号</td>
       <td>订单号</td>
       <td>桌台</td>
-      <td>上宾号</td>
+      <td>会员号</td>
       <td>
         <div>消费总额</div>
         <div>(元)</div>
@@ -34,6 +34,7 @@
       <td>支付方式</td>
       <td>操作员</td>
       <td>状态</td>
+      <td>结账方式</td>
       <td>时间</td>
     </tr>
     </thead>
@@ -42,14 +43,15 @@
       <td ng-bind="((page-1)*count)+$index+1"></td>
       <td><a ng-click="goto('doc/detail/'+ item.no)">{{item.no}}</a></td>
       <td ng-bind="item.tableNo"></td>
-      <td><a ng-click="goto('customer/details/'+ item.userId)">{{item.userName}}</a></td>
+      <td><a ng-click="goto('customer/details/'+ item.userId)">{{item.memberNo}}<span ng-if="item.memberNo">({{item.memberGradeName}})</span></a></td>
       <td ng-bind="item.amount"></td>
       <td ng-class="{'triangle':item.strategy.used||item.strategy.got||item.strategy.nonPart}"
           ng-bind="item.reduceAmount"></td>
       <td ng-bind="item.strategy.finalAmount"></td>
       <td ng-bind="types[item.paymentMode]"></td>
       <td ng-bind="item.staffName||'自助'"></td>
-      <td ng-bind="item.state=='909'?'已付款':'已退款'"></td>
+      <td ng-bind="item.state=='909'?'已付款':'已退款'" ng-style="{'background-color':item.state=='1000'?'red':''}"></td>
+      <td ng-bind="item.cashier?'收银系统自动结账':'手动结账'"></td>
       <td ng-bind="item.checkTime"></td>
     </tr>
     <tr ng-if="item.strategy.used||item.strategy.got||item.strategy.nonPart">

@@ -15,7 +15,7 @@
       <tr>
         <td>序号</td>
         <td>订单号</td>
-        <td>上宾号</td>
+        <td>会员号</td>
         <td>
           <div>充值总金额</div>
           <div>(元)</div>
@@ -40,7 +40,7 @@
       <tr ng-repeat="row in view.result.items">
         <td ng-bind="((page-1)*count)+$index+1"></td>
         <td><a ng-click="goto('doc/detail/'+ row.orderNo)">{{row.orderNo}}</a></td>
-        <td ng-bind="row.username"></td>
+        <td >{{row.memberNo}}<span ng-if="row.memberNo">({{row.memberGradeName}})</span>></td>
         <td ng-bind="row.amount||0"></td>
         <td ng-bind="row.principal||0"></td>
         <td ng-bind="row.given||0"></td>
@@ -57,7 +57,7 @@
       <tr>
         <td>序号</td>
         <td>订单号</td>
-        <td>上宾号</td>
+        <td>会员号</td>
         <td>
           <div>使用</div>
           <div>(元)</div>
@@ -80,7 +80,7 @@
       <tr ng-repeat="row in view.result.items">
         <td ng-bind="((page-1)*count)+$index+1"></td>
         <td><a ng-click="goto('doc/detail/'+ row.orderNo)">{{row.orderNo}}</a></td>
-        <td><a ng-click="goto('customer/details/'+ row.userId)">{{row.username}}</a></td>
+        <td><a ng-click="goto('customer/details/'+ row.userId)">{{row.memberNo}}<span ng-if="row.memberNo">({{row.memberGradeName}})</span></a></td>
         <td ng-bind="'-' + row.amount|number"></td>
         <td ng-bind="'-' + row.principal|number"></td>
         <td ng-bind="'-' + row.given|number"></td>

@@ -984,7 +984,7 @@ app.controller('userShareCtr', ['$scope', '$location', '$http', '$routeParams', 
             }
         ]
     }
-    $scope.username = $routeParams.name
+    $scope.memberNo = $routeParams.name
     $scope.post = {
 
     };
@@ -1130,7 +1130,7 @@ app.controller('userActivityCtr', ['$scope', '$location', '$http', '$routeParams
         // '6032': '生日活动'
 
     }
-    $scope.username = $routeParams.name
+    $scope.memberNo = $routeParams.name
     $scope.post = {};
     // '6001': false,
     // '6002': false,
@@ -1889,7 +1889,7 @@ app.controller('allocateWalletsCtr', ['$scope', '$location', 'messageFactory', '
 app.controller('orderCtr', ['$scope', '$location', 'messageFactory', '$http', '$filter', '$routeParams', function ($scope, $location, msgFac, $http, $filter, $routeParams, ) {
     $scope.view = {};
     $scope.posts = {};
-    $scope.username = $routeParams.name
+    $scope.memberNo = $routeParams.name
     // $scope.posts.shopId = $routeParams.id;
     $scope.initTimeFn = function () {
         var date1 = new Date();
@@ -2274,7 +2274,7 @@ app.controller('userAcountsCtr', ['$scope', '$location', 'messageFactory', '$htt
     $scope.showpop = false;
     $scope.view = {}
     console.log($routeParams.name)
-    $scope.username = $routeParams.name;
+    $scope.memberNo = $routeParams.name;
     $scope.guestId = $routeParams.id;
     $scope.set = {
         list: [],
@@ -2532,7 +2532,7 @@ app.controller('brokerageCtr', ['$scope', '$location', 'messageFactory', '$http'
     $scope.showpop = false;
     $scope.view = {}
     console.log($routeParams.name)
-    $scope.username = $routeParams.name
+    $scope.memberNo = $routeParams.name
     $scope.set = {
         list: [],
         shops: [],

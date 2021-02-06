@@ -10,7 +10,7 @@
         <tr>
           <td>序号</td>
           <td>订单号</td>
-          <td>上宾号</td>
+          <td>会员卡号</td>
           <td>
             <div>消费总额</div>
             <div>(元)</div>
@@ -32,7 +32,7 @@
         <tr>
           <td>01</td>
           <td>{{view.orderId}}</td>
-          <td ng-bind="view.item.userName"></td>
+          <td ng-bind="view.item.memberNo"></td>
           <td ng-bind="view.item.amount"></td>
           <td ng-class="{'triangle':view.item.show}" style="color: red" ng-bind="view.item.reduceAmount||0"></td>
           <td ng-bind="view.item.strategy?view.item.strategy.finalAmount:view.item.amount"></td>

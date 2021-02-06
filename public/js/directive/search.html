@@ -2,27 +2,26 @@
   <form class="form-inline time-search" ng-class="{'project':view.projects}" name="searchData" ng-submit="doSearch()">
     <div class="form-group" ng-if="view.shops" ng-mouseenter="posts.check=1" ng-mouseleave="posts.check=0">
       <label>门店：</label>
-
-      <div class="select_showbox" ng-model="posts.shopId">{{posts.shopName || "请点击选择"}} <span
-              class="caret pull-right" style="margin-top: 7px"></span>
+      <div class="select_showbox" ng-model="posts.shopId">{{posts.shopName || "请点击选择"}} <span class="caret pull-right"
+          style="margin-top: 7px"></span>
       </div>
       <div style="height: 5px"></div>
       <ul class="select_option" ng-show="posts.check">
         <li ng-click="posts.shopId = '';posts.shopName = '所有';posts.check=0;selectShop()">所有</li>
         <!--<li ng-click="posts.shopId = 'brand';posts.shopName = '品牌虚拟店';posts.check=0">品牌虚拟店</li>-->
-        <li ng-if="posts.selector!=7&&posts.selector!=8" ng-repeat="o in view.shops"
-            ng-click="selectShop(o)">
+        <li ng-if="posts.selector!=7&&posts.selector!=8" ng-repeat="o in view.shops" ng-click="selectShop(o)">
           {{o.name}}
         </li>
         <li class="select_last text-center">没有更多了</li>
       </ul>
     </div>
+    
     <div class="form-group" ng-if="view.coupons&&posts.selector==10" ng-mouseenter="posts.check0=1"
-         ng-mouseleave="posts.check0=0">
+      ng-mouseleave="posts.check0=0">
       <label>券名：</label>
 
       <div class="select_showbox" ng-model="posts.couponId">{{posts.couponName || "请点击选择"}} <span
-              class="caret pull-right" style="margin-top: 7px"></span>
+          class="caret pull-right" style="margin-top: 7px"></span>
       </div>
       <div style="height: 5px"></div>
       <ul class="select_option" ng-show="posts.check0">
@@ -40,13 +39,14 @@
       <!--<li class="select_last text-center">没有更多了</li>-->
       <!--</ul>-->
     </div>
- 
-    <div class="form-group" ng-if="(view.staffs&&posts.shopId&&posts.selector==13)||(view.staffs&&posts.shopId&&posts.selector==16)" ng-mouseenter="posts.check2=1"
-         ng-mouseleave="posts.check2=0">
+
+    <div class="form-group"
+      ng-if="(view.staffs&&posts.shopId&&posts.selector==13)||(view.staffs&&posts.shopId&&posts.selector==16)"
+      ng-mouseenter="posts.check2=1" ng-mouseleave="posts.check2=0">
       <label>员工：</label>
 
-      <div class="select_showbox" ng-model="posts.staffId">{{posts.staffName || "请点击选择"}} <span
-              class="caret pull-right" style="margin-top: 7px"></span>
+      <div class="select_showbox" ng-model="posts.staffId">{{posts.staffName || "请点击选择"}} <span class="caret pull-right"
+          style="margin-top: 7px"></span>
       </div>
       <div style="height: 5px"></div>
       <ul class="select_option" ng-show="posts.check2">
@@ -66,11 +66,11 @@
     </div>
 
     <div class="form-group" ng-if="view.business&&posts.selector==14&&posts.shopId" ng-mouseenter="posts.check2=1"
-         ng-mouseleave="posts.check2=0">
+      ng-mouseleave="posts.check2=0">
       <label>业务：</label>
 
       <div class="select_showbox" ng-model="posts.businessId">{{posts.businessName || "请点击选择"}} <span
-              class="caret pull-right" style="margin-top: 7px"></span>
+          class="caret pull-right" style="margin-top: 7px"></span>
       </div>
       <div style="height: 5px"></div>
       <ul class="select_option" ng-show="posts.check2">
@@ -83,11 +83,11 @@
     </div>
 
     <div class="form-group" ng-if="view.card&&posts.selector==15" ng-mouseenter="posts.check3=1"
-         ng-mouseleave="posts.check3=0">
+      ng-mouseleave="posts.check3=0">
       <label>卡：</label>
 
-      <div class="select_showbox" ng-model="posts.cardId">{{posts.cardName || "请点击选择"}} <span
-              class="caret pull-right" style="margin-top: 7px"></span>
+      <div class="select_showbox" ng-model="posts.cardId">{{posts.cardName || "请点击选择"}} <span class="caret pull-right"
+          style="margin-top: 7px"></span>
       </div>
       <div style="height: 5px"></div>
       <ul class="select_option" ng-show="posts.check3">
@@ -102,13 +102,12 @@
     <div class="form-group">
       <label>时间：</label>
       <input type="date" style="color: #18A0D4" ng-model="posts.startTime" class="form-control" placeholder="起始时间"
-             name="startDate" required/>
+        name="startDate" required />
       ~
       <input type="date" style="color: #18A0D4;margin-right: 90px" ng-model="posts.endTime" class="form-control"
-             placeholder="结束时间"
-             name="endDate" required/>
+        placeholder="结束时间" name="endDate" required />
     </div>
-    
+
     <div class="form-group">
       <button class="btn btn-default btn-primary" ng-disabled="searchData.$invalid">筛选</button>
       <!--<button class="btn btn-default btn-primary">下载excel</button>-->

@@ -2931,7 +2931,11 @@ app.controller('addShareActivityCtr', function ($rootScope, $routeParams, $scope
         console.log(json);
         sendJson = JSON.stringify(json);
         var sendid = $routeParams.activityid ? $routeParams.activityid : "";
-         var  postsend={}
+         var  postsend={};
+         if(sendJson.name.length>20){
+             alert('标题不能超过20');
+             return;
+         }
         if ($routeParams.activityid) {
             postsend = ajaxSendFn(sendJson, "/activity/share/" + sendid, "POST", 1);
         } else {

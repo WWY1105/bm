@@ -12,7 +12,7 @@
           <td>消费订单</td>
           <td ng-if="!post.shopId">门店</td>
           <td>服务员</td>
-          <td>上宾号</td>
+          <td>会员卡号</td>
           <td>打赏金额</td>
           <td>时间</td>
           <td>标签</td>
@@ -24,7 +24,7 @@
           <td><a ng-click="goto('doc/detail/'+ item.orderNo)">{{item.orderNo}}</a></td>
           <td ng-if="!post.shopId">{{item.shopName}}</td>
           <td ng-bind="item.staffName"></td>
-          <td><a ng-click="goto('customer/details/'+ item.userId)">{{item.username}}</a></td>
+          <td><a ng-click="goto('customer/details/'+ item.userId)">{{item.memberNo}}</a></td>
           <td ng-bind="item.gratuityAmount||0"></td>
           <td ng-bind="item.time"></td>
           <td><span ng-repeat=" tag in item.tags">#{{tag}} </span></td>
